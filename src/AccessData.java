@@ -1,4 +1,4 @@
-public abstract class AccessData {
+public class AccessData {
     //accounts
     public Account getAccountData(String fileName);
     public void saveAccountData(String fileName,boolean isStudent, Account account);
