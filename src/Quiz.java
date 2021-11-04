@@ -23,7 +23,7 @@ public class Quiz implements Serializable {
         this(name, quiz);
         this.attempt = attempt;
     }
-
+    //returns name
     public String getName() {
         return name;
     }
@@ -60,6 +60,7 @@ public class Quiz implements Serializable {
     public void addAttempt() {
         attempt++;
     }
+    //set number of attempts
     public void setAttempt(int attempt) {
         this.attempt = attempt;
     }
@@ -74,12 +75,14 @@ public class Quiz implements Serializable {
         getQuestion(num).setStudentAnswer(answer);
         return true;
     }
+    //returns question given number. If the number is outside of the size of the quiz or is negative, return null
     public Question getQuestion(int num) {
         if (num > quiz.size() || num <= 0) {
             return null;
         }
         return quiz.get(num - 1);
     }
+    //takes question number and grade and sets the grade 
     public void gradeQuestion(int num, int grade) {
         getQuestion(num).setGrade(grade);
     }

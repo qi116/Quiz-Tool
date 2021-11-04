@@ -30,10 +30,12 @@ public class Question {
         this.studentAnswer = -1;
     }
 
+    //sets student answer.
     public void setStudentAnswer(int studentAnswer) {
         this.studentAnswer = studentAnswer;
     }
 
+    //returns student's answer. is -1 if not answered
     public int getStudentAnswer() {
         return studentAnswer;
     }
@@ -47,7 +49,7 @@ public class Question {
             originalChoices[i] = choices[i];
         }
     }
-
+    //Gets array of choices in their original order
     public String[] getOriginalChoices() {
         return originalChoices;
     }
@@ -64,7 +66,7 @@ public class Question {
         }
         this.grade = grade;
     }
-
+    //returns grade. is -1 if unanswered
     public int getGrade() {
         return grade;
     }
@@ -80,6 +82,7 @@ public class Question {
         return s += "]\n    ";
     }
 
+    //returns array of choices
     public String[] getChoices() {
         return choices;
     }
