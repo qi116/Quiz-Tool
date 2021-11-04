@@ -1,30 +1,57 @@
 package src;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Arrays;
+import java.util.*;
+import java.util.Collections;
 
 public class Question {
     private String question;
     private String answer; //not necessary
     private String[] choices;
     private int grade;
+    private int studentAnswer;
+    private String[] originalChoices;
 
     // saves index of original choices order
 
     public Question(String question, String[] choices) {
         this.question = question;
         this.choices = choices;
+        originalChoices = new String[choices.length];
+        for (int i = 0; i < choices.length; i++) {
+            originalChoices[i] = choices[i];
+        }
         this.grade = -1;
+        this.studentAnswer = -1;
     }
     public Question(String question) {
         this.question = question;
         this.grade = -1;
+        this.studentAnswer = -1;
     }
+
+    public void setStudentAnswer(int studentAnswer) {
+        this.studentAnswer = studentAnswer;
+    }
+
+    public int getStudentAnswer() {
+        return studentAnswer;
+    }
+
     //set choices for the question
+    //makes a copy into original choices to maintain student's answer
     public void setChoices(String [] choices) {
         this.choices = choices;
+        originalChoices = new String[choices.length];
+        for (int i = 0; i < choices.length; i++) {
+            originalChoices[i] = choices[i];
+        }
     }
+
+    public String[] getOriginalChoices() {
+        return originalChoices;
+    }
+
     //returns the question string
     public String getQuestion() {
         return question;
@@ -55,5 +82,17 @@ public class Question {
 
     public String[] getChoices() {
         return choices;
+    }
+
+    //Uses the random Object to randomly move the order of choices around.
+    public void randomizeChoices() {
+        Random r = new Random();
+        for (int i = choices.length - 1; i > 0; i--)
+        {
+            int num = r.nextInt(i + 1);
+            String a = choices[num];
+            choices[num] = choices[i];
+            choices[i] = a;
+        }
     }
 }

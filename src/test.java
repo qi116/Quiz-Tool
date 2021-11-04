@@ -15,7 +15,9 @@ public class test {
         quiz.answerQuestion(1, 1);
         //System.out.println(quiz.getQuestion(1));
         quiz.gradeQuestion(1, 100);
-        System.out.println(quiz.toStringPostTake());
+        System.out.println(quiz.toStringPreTake());
+        q1.randomizeChoices();
+        System.out.println(quiz.toStringPreTake());
 
 
     }

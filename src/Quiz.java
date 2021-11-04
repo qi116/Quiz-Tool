@@ -17,9 +17,7 @@ public class Quiz implements Serializable {
         for (int i = 0; i < quiz.length; i++) {
             this.quiz.add(quiz[i]);
         }
-        for (int i = 0; i < this.quiz.size(); i++) {
-            this.studentAnswers.add(-1); //Adds default answer of -1.
-        }
+
     }
     public Quiz(String name, Question[] quiz, int attempt) {
         this(name, quiz);
@@ -52,10 +50,11 @@ public class Quiz implements Serializable {
     }
     //returns string of selected answer for given question number
     public String getSelected(int num) {
-        if (studentAnswers.get(num - 1) == - 1) {
+        if (getQuestion(num).getStudentAnswer() == - 1) {
             return "Not Answered";
         }
-        return quiz.get(num - 1).getChoices()[studentAnswers.get(num - 1)];
+        Question q =  getQuestion(num);
+        return q.getOriginalChoices()[q.getStudentAnswer()];
     }
     //increments attempts.
     public void addAttempt() {
@@ -68,11 +67,11 @@ public class Quiz implements Serializable {
     //Answer must be in format of integer corresponding to answer
     //Returns false if improper input
     public boolean answerQuestion(int num, int answer) {
-        if (answer <= 0 || answer > quiz.get(num - 1).getChoices().length) {
+        if (answer <= 0 || answer > getQuestion(num).getChoices().length) {
             //Error
             return false;
         }
-        studentAnswers.set(num - 1, answer - 1);
+        getQuestion(num).setStudentAnswer(answer);
         return true;
     }
     public Question getQuestion(int num) {
@@ -83,6 +82,10 @@ public class Quiz implements Serializable {
     }
     public void gradeQuestion(int num, int grade) {
         getQuestion(num).setGrade(grade);
+    }
+    //Shuffles the order of the questions. Original question order is not maintained.
+    public void randomize() {
+        Collections.shuffle(quiz);
     }
 
 }
