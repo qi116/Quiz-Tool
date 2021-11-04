@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.*;
+
 /**
  * @author Hawkins Peterson
  * @version 11.03.21
@@ -5,9 +8,6 @@
  * Anything that stores or gets data in our project
  */
 public abstract class AccessData {
-    private final String ACCOUNT_FILE_NAME = "data/accounts.txt";
-    private final String QUIZZES_FILE_NAME = "data/quizzes.txt";
-    //accounts
     /**
      * verifies the username and password of the user and then returns an account object corosponding to that user
      * 
@@ -15,46 +15,83 @@ public abstract class AccessData {
      * @param password the password of the user
      * @return an account object corosponding to the username and password given 
      */
-    public abstract Account getAccountData(String username, String password) throws NullPointerException;
+    public Account getAccountData(String username, String password) throws NullPointerException {
+        try {
+            Acount account = (Account) getObjectFromFile("accounts/" + username + ".txt");
+            if (account.getPassword().equals(password))
+                return account;
+            else
+                throw new NullPointerException("No account with that username / password combination");
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("No account with that username / password combination");
+        }
+    }
     /**
-     * creates a user object using the username, password and if the account is a student or teacher account
-     * @param username the username of the account
-     * @param password the password of the account
-     * @param isStudent if the account is a student account
+     * saves a user object using the account name
+     * @param account the account to be added
      */
-    public abstract void addUser(String username, String password, boolean isStudent);
-    /**
-     * saves an account using the account object and which type of account the user is.
-     * @param account the account of the user (mainly uses the toString method)
-     * @param isStudent if the account is a student account
-     */
-    public abstract void saveAccountData(Account account, boolean isStudent);
+    public void writeAccountData(Account account) throws Exception {
+        writeObjectToFile("accounts/" + account.getUsername() + ".txt", account);
+    }
 
-    //quizzes
     /**
      * allows a teacher to create a quiz
-     * @param quizName the name of the quiz
      * @param quiz the quiz object (uses the toString method mainly)
      */
-    public abstract void addQuiz(String quizName, Quiz quiz) throws NullPointerException;
+    public void addQuiz(Quiz quiz) throws Exception {
+        try {
+            new File("quizes/"+quiz.getName().replace(" ","-") + ".txt");
+            throw new Exception("File already exists");
+        } catch (FileNotFoundException e) {
+            writeObjectToFile("quizes/" + quiz.getName().replace(" ","-") + ".txt", quiz);
+        }
+    }
+
     /**
      * Modifies an already existing quiz
      * @param quizName the name of the quiz
      * @param quiz the quiz object (uses the toString mainly)
      */
-    public abstract void modifyQuiz(String quizName, Quiz quiz) throws NullPointerException;
+    public void modifyQuiz(String quizName, Quiz quiz) throws NullPointerException {
+        try {
+            new File("quizes/"+quiz.getName().replace(" ","-") + ".txt");
+            writeObjectToFile("quizes/" + quiz.getName().replace(" ","-") + ".txt", quiz);
+        } catch (FileNotFoundException e) {
+            throw new Exception("File already exists");
+        }
+    }
+
     /**
      * Removes a quiz with name quizName
      * @param quizName the name of the quiz
      */ 
-    public abstract void removeQuiz(String quizName) throws NullPointerException;
+    public void removeQuiz(String quizName) throws NullPointerException {
+        try {
+            File f = new File("quizes/" + quiz.getName().replace(" ","-" + ".txt"));
+            f.delete();
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("Quiz does not exist");
+        }
+    }
+
+    private Object getObjectFromFile(String fileName) throws FileNotFoundException {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("data/" + fileName)));
+            Object toReturn = ois.readObject();
+            ois.close();
+            return toReturn;
+        } catch (IOException e) {
+            System.out.println("error initalizing file output stream");
+        }
+    }
     
-    //student
-    /**
-     * saves a quiz the student's taken
-     * @param username the username of the student
-     * @param quizName the name of the quiz
-     * @param answers the student's answers to the quiz (might be changed to int[])
-     */
-    public abstract void saveTakenQuiz(String username, String quizName, char[] answers);
+    private void writeObjectToFile(String fileName, Object o) {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("data/" + fileName)));
+            oos.writeObject(o);
+            oos.close();
+        } catch (IOException e) {
+            System.out.println("error initalizing file output stream");
+        }
+    }
 }
