@@ -41,6 +41,18 @@ public class Quiz implements Serializable {
         return course;
     }
 
+    //Sets course for Quiz. Returns false if course doesn't exist.
+    //Does not add quiz to course (must do manually)
+    //Be sure to remove quiz from course if changing courses
+    public boolean setCourse(String name) {
+        Course a = Course.getCourse(name);
+        if (course == null) {
+            return false;
+        }
+        this.course = a;
+        return true;
+    }
+
     //Prints Quiz name and every question
     public String toStringPreTake() {
         String s = String.format("Quiz name: %s\n", name);
