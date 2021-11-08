@@ -1,4 +1,3 @@
-//package src;
 import java.io.Serializable;
 import java.util.*;
 public class Quiz implements Serializable {
@@ -44,6 +43,8 @@ public class Quiz implements Serializable {
     //Sets course for Quiz. Returns false if course doesn't exist.
     //Does not add quiz to course (must do manually)
     //Be sure to remove quiz from course if changing courses
+    //Also note. Just this method working does not mean that Quiz doesn't already exist in course
+    //This condition is checked in addQuiz() in Course
     public boolean setCourse(String name) {
         Course a = Course.getCourse(name);
         if (course == null) {

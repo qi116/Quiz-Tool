@@ -1,4 +1,3 @@
-//package src;
 
 import java.util.ArrayList;
 
@@ -35,6 +34,16 @@ public class Course {
             }
         }
         return null; //No course with such name
+    }
+
+    //Gets quiz by name from course. If quiz doesn't exist, return null;
+    public Quiz getQuiz(String name) {
+        for (Quiz q : quizzes) {
+            if (q.getName().equals(name)) {
+                return q;
+            }
+        }
+        return null;
     }
     //Adds quiz to course. Returns false if fails. Fails when quiz is null or already exists
     public boolean addQuiz(Quiz quiz) {
