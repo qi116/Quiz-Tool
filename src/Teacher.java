@@ -20,4 +20,10 @@ public class Teacher extends Account{
     public void removeCourse(Course course) {
         this.courses.remove(course);
     }
+
+    public Course createCourse(String name) {
+        Course c = new Course(name);
+        courses.add(c);
+        return c;
+    }
 }
