@@ -34,50 +34,70 @@ public abstract class AccessData {
         writeObjectToFile("accounts/" + account.getUsername(), account);
     }
 
-    public Quiz getQuiz(String quizName) throws NullPointerException {
+    /**
+     * Gets an already existing course
+     * @param courseName the name of the course to be fetched
+     * @return an already existing course
+     */
+    public Quiz getCourse(String courseName) throws NullPointerException {
         try {
-            return (Quiz) getObjectFromFile("quizes/" + quizName.replace(" ","-"));
+            return (Course) getObjectFromFile("courses/" + courseName.replace(" ","-"));
         } catch (FileNotFoundException e) {
             throw new NullPointerException("A quiz with that name does not exist");
         }
     }
     /**
-     * allows a teacher to create a quiz
-     * @param quiz the quiz object (uses the toString method mainly)
+     * allows a teacher to create a course
+     * @param course the course object
      */
-    public void addQuiz(Quiz quiz) throws FileAlreadyExistsException {
+    public void addCourse(Course course) throws FileAlreadyExistsException {
         try {
-            new File("quizes/"+quiz.getName().replace(" ","-"));
+            new File("courses/" + course.getName().replace(" ","-"));
             throw new Exception("File already exists");
         } catch (FileNotFoundException e) {
-            writeObjectToFile("quizes/" + quiz.getName().replace(" ","-"), quiz);
+            writeObjectToFile("course/" + course.getName().replace(" ","-"), quiz);
         }
     }
 
     /**
-     * Modifies an already existing quiz
-     * @param quizName the name of the quiz
-     * @param quiz the quiz object (uses the toString mainly)
+     * Modifies an already existing course
+     * @param courseName the name of the course
+     * @param course the course object
      */
-    public void modifyQuiz(String quizName, Quiz quiz) throws NullPointerException {
+    public void modifyCourse(String courseName, Course course) throws NullPointerException {
         try {
-            new File("quizes/"+quiz.getName().replace(" ","-"));
-            writeObjectToFile("quizes/" + quiz.getName().replace(" ","-"), quiz);
+            new File("courses/" + course.getName().replace(" ","-"));
+            writeObjectToFile("courses/" + course.getName().replace(" ","-"), course);
         } catch (FileNotFoundException e) {
             throw new Exception("File already exists");
         }
     }
 
     /**
-     * Removes a quiz with name quizName
-     * @param quizName the name of the quiz
+     * Removes a course with name courseName
+     * @param courseName the name of the course
      */ 
-    public void removeQuiz(String quizName) throws NullPointerException {
+    public void removeCourse(String courseName) throws NullPointerException {
         try {
-            File f = new File("quizes/" + quiz.getName().replace(" ","-"));
+            File f = new File("course/" + course.getName().replace(" ", "-"));
             f.delete();
         } catch (FileNotFoundException e) {
-            throw new NullPointerException("Quiz does not exist");
+            throw new NullPointerException("Course does not exist");
+        }
+    }
+    
+    /**
+     * Returns a quiz from within a course (courseName)
+     * @param courseName the name of the course the quiz is in
+     * @param quizName the name of the quiz to be fetched
+     */
+    public Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
+        try {
+            File f = new File("course/" + courseName.replace(" ", "-"));
+            Course c = (course) getObjectFromFile(courseName);
+            return c.getQuiz(quizName);
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("Course does not exist");
         }
     }
 
