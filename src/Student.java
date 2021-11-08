@@ -3,12 +3,12 @@ import java.util.ArrayList;
 public class Student extends Account{
     private ArrayList<Quiz> quizSubmissions;
 
-    public Student(String username) {
-        super(username);
+    public Student(String username, String password) {
+        super(username, password);
         this.quizSubmissions = new ArrayList<Quiz>();
     }
 
-    public addQuizSubmission(Quiz q) {
+    public void addQuizSubmission(Quiz q) {
         quizSubmissions.add(q);
     }
 

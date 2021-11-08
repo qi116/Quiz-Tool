@@ -1,9 +1,8 @@
 public abstract class Account {
     protected String username;
     protected String password;
-    protected ArrayList<Course> courses;
 
-    public Account(String username) {
+    public Account(String username, String password) {
         this.username = username;
     }
 
@@ -11,8 +10,16 @@ public abstract class Account {
         return username;
     }
 
-    public ArrayList<Courses> getCourses() {
-        return courses;
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean isTeacher() {
+        return (this instanceof Teacher);
+    }
+
+    public boolean isStudent() {
+        return (this instanceof Student);
     }
 
 
