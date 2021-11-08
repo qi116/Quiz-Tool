@@ -7,7 +7,7 @@ public class Quiz implements Serializable {
     private ArrayList<Integer> studentAnswers;
     private int attempt;
     private static final long serialVersionUID = 1L;
-    private String course;
+    private Course course;
 
 
     public Quiz(String name, Question[] quiz) {
@@ -24,11 +24,11 @@ public class Quiz implements Serializable {
         this(name, quiz);
         this.attempt = attempt;
     }
-    public Quiz(String name, Question[] quiz, int attempt, String course) {
+    public Quiz(String name, Question[] quiz, int attempt, Course course) {
         this(name, quiz, attempt);
         this.course = course;
     }
-    public Quiz(String name, Question[] quiz, String course) {
+    public Quiz(String name, Question[] quiz, Course course) {
         this(name, quiz);
         this.course = course;
     }
@@ -37,7 +37,7 @@ public class Quiz implements Serializable {
         return name;
     }
     //returns course
-    public String getCourse() {
+    public Course getCourse() {
         return course;
     }
 
