@@ -46,6 +46,37 @@ public abstract class AccessData {
             throw new NullPointerException("A quiz with that name does not exist");
         }
     }
+
+    /**
+     * Returns a list of all courses
+     * @return a list of all courses
+     */
+    public Course[] getAllCourses() {
+        try {
+            File folder = new File("courses");
+            ArrayList<Course> courseArrayList = new ArrayList<Course>();
+            for (File f : folder.listFiles())
+                courseArrayList.add((Course) getObjectFromFile(f));
+            Course[] courses = new Course[courseArrayList.size()];
+            for (int i = 0; i < courses.length(); i++) {
+                courses[i] = courseArrayList.get(i);
+            }
+            return courses;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Returns a string of all course names
+     * @return a string of all course names
+     */
+    public String[] getAllCourseNames() {
+        Course[] courses = getAllCourses();
+        String[] courseNames = String[courses.length()];
+        for (int i = 0; i < courses.length(); i++)
+            courseNames[i] = courses[i].getName();
+        return courseNames;
+    }
     /**
      * allows a teacher to create a course
      * @param course the course object
