@@ -1,4 +1,6 @@
-public abstract class Account {
+import java.io.Serializable;
+
+public abstract class Account implements Serializable {
     protected String username;
     protected String password;
 
@@ -22,12 +24,4 @@ public abstract class Account {
         return (this instanceof Student);
     }
 
-
-    /*public static Account loadAccount(String username, boolean isTeacher) {
-        if (isTeacher) {
-            return new Teacher(username);
-        } else {
-            return new Student(username);
-        }
-    }*/
 }
