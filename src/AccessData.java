@@ -7,7 +7,7 @@ import java.util.*;
  * 
  * Anything that stores or gets data in our project
  */
-public abstract class AccessData {
+public class AccessData {
     /**
      * verifies the username and password of the user and then returns an account object corosponding to that user
      * 
@@ -17,7 +17,7 @@ public abstract class AccessData {
      */
     public Account getAccountData(String username, String password) throws NullPointerException {
         try {
-            Acount account = (Account) getObjectFromFile("accounts/" + username);
+            Account account = (Account) getObjectFromFile("accounts/" + username);
             if (account.getPassword().equals(password))
                 return account;
             else
@@ -26,6 +26,16 @@ public abstract class AccessData {
             throw new NullPointerException("No account with that username / password combination");
         }
     }
+
+    public void addAccount(Account account) throws FileAlreadyExistsException {
+        try {
+            File f = new File(account.getUsername());
+            throw new FileAlreadyExistsException("Account already exists");
+        } catch (FileNotFoundException e) {
+            writeObjectToFile("accounts/" + account.getUsername(), account);
+        }
+    }
+
     /**
      * saves a user object using the account name
      * @param account the account to be added
@@ -132,6 +142,28 @@ public abstract class AccessData {
         }
     }
 
+    /**
+     * returns a string holding the contents of a file given the file name
+     * @return a string holding the contents of a file given the file name
+     */
+    private String getStringFromFile(String fileName) throws NullPointerException {
+        String output = "";
+        try {
+            BufferedReader bfr = new BufferedReader(new FileReader(fileName));
+            String line;
+            while (!line.isEmpty()) {
+                line = bfr.readLine() + "\n";
+                output += line;
+            }
+        } catch (IOException e) {
+            System.out.println("Error fetching from file");
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("File path doesn't exist");
+        }
+        return output;
+    }
+
+
     private Object getObjectFromFile(String fileName) throws FileNotFoundException {
         try {
             ObjectInputStream ois = new ObjectInputStream(
@@ -143,7 +175,7 @@ public abstract class AccessData {
             System.out.println("error initalizing file output stream");
         }
     }
-    
+
     private void writeObjectToFile(String fileName, Object o) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
