@@ -22,6 +22,12 @@ public class QuizTool {
                         System.out.println("Enter your password:");
                         password = scan.nextLine();
                         //runs a login process here. if successful, menuActive false.
+                        try {
+                            account = getAccountData(username, password);
+                            menuActive = false;
+                        } catch (NullPointerException) {
+                            System.out.println("Invalid login");
+                        }
                         //if failure, print fail message and loop.
                     }
                     break;
@@ -35,6 +41,11 @@ public class QuizTool {
                     boolean isTeacher = teacherSelection.equalsIgnoreCase("Y");
                     //checks to make sure the username doesn't already exist
                     //creates account using given information
+                    if (isTeacher) {
+                        account = new Teacher(username, password);
+                    } else {
+                        account = new Student(username, password);
+                    }
                     menuActive = false;
                     break;
                 case "3":
@@ -45,6 +56,7 @@ public class QuizTool {
                     break;
             }
         }
+        menuActive = true;
         if (account instanceof Teacher) { //checks if the account is a teacher
             while (menuActive) {
                 System.out.println("1. Add Quiz\n2. Remove Quiz\n3. Modify Quiz\n4. Grade Quiz\n5. Exit");
