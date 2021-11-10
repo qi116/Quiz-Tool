@@ -26,7 +26,24 @@ public class AccessData {
             throw new NullPointerException("No account with that username / password combination");
         }
     }
-
+    /**
+     * returns if a username already exists (true = yell at user, false = ok)
+     * @return if a username already exists (true = yell at user, false = ok)
+     * @param username the username to check
+     */
+    public boolean usernameExists(String username) {
+        try {
+            new FileInputStream("data/accounts/" + username + ".obj");
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+    /**
+     * Creates a new account (throws FileAlreadyExistsException if username taken)
+     * I will add a checkUsername(String username) class later
+     * @param Account an account to be added to the system
+     */
     public void addAccount(Account account) throws FileAlreadyExistsException {
         try {
             new FileInputStream("data/accounts/" + account.getUsername() + ".obj");
