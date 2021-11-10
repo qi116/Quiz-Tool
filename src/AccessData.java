@@ -29,7 +29,8 @@ public class AccessData {
 
     public void addAccount(Account account) throws FileAlreadyExistsException {
         try {
-            File f = new File(account.getUsername());
+            new FileInputStream("data/accounts/" + account.getUsername() + ".obj");
+            File f = new File(account.getUsername() + ".obj");
             throw new FileAlreadyExistsException("Account already exists");
         } catch (FileNotFoundException e) {
             writeObjectToFile("accounts/" + account.getUsername(), account);
@@ -49,7 +50,7 @@ public class AccessData {
      * @param courseName the name of the course to be fetched
      * @return an already existing course
      */
-    public Quiz getCourse(String courseName) throws NullPointerException {
+    public Course getCourse(String courseName) throws NullPointerException {
         try {
             return (Course) getObjectFromFile("courses/" + courseName.replace(" ","-"));
         } catch (FileNotFoundException e) {
@@ -62,19 +63,20 @@ public class AccessData {
      * @return a list of all courses
      */
     public Course[] getAllCourses() {
+        Course[] courses = {null};
         try {
             File folder = new File("courses");
             ArrayList<Course> courseArrayList = new ArrayList<Course>();
             for (File f : folder.listFiles())
-                courseArrayList.add((Course) getObjectFromFile(f));
-            Course[] courses = new Course[courseArrayList.size()];
-            for (int i = 0; i < courses.length(); i++) {
+                courseArrayList.add((Course) getObjectFromFile(f.getName()));
+            courses = new Course[courseArrayList.size()];
+            for (int i = 0; i < courses.length; i++) {
                 courses[i] = courseArrayList.get(i);
             }
-            return courses;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return courses;
     }
     /**
      * Returns a string of all course names
@@ -82,8 +84,8 @@ public class AccessData {
      */
     public String[] getAllCourseNames() {
         Course[] courses = getAllCourses();
-        String[] courseNames = String[courses.length()];
-        for (int i = 0; i < courses.length(); i++)
+        String[] courseNames = new String[courses.length];
+        for (int i = 0; i < courses.length; i++)
             courseNames[i] = courses[i].getName();
         return courseNames;
     }
@@ -93,10 +95,10 @@ public class AccessData {
      */
     public void addCourse(Course course) throws FileAlreadyExistsException {
         try {
-            new File("courses/" + course.getName().replace(" ","-"));
-            throw new Exception("File already exists");
+            new FileInputStream("data/course/" + course.getName().replace(" ", "-") + ".obj");
+            throw new FileAlreadyExistsException("File already exists");
         } catch (FileNotFoundException e) {
-            writeObjectToFile("course/" + course.getName().replace(" ","-"), quiz);
+            writeObjectToFile("course/" + course.getName().replace(" ", "-"), course);
         }
     }
 
@@ -107,10 +109,11 @@ public class AccessData {
      */
     public void modifyCourse(String courseName, Course course) throws NullPointerException {
         try {
-            new File("courses/" + course.getName().replace(" ","-"));
+            new FileInputStream("data/course/" + courseName);
+            new File("data/courses/" + course.getName().replace(" ","-"));
             writeObjectToFile("courses/" + course.getName().replace(" ","-"), course);
         } catch (FileNotFoundException e) {
-            throw new Exception("File already exists");
+            throw new NullPointerException("File does not exists");
         }
     }
 
@@ -120,7 +123,8 @@ public class AccessData {
      */ 
     public void removeCourse(String courseName) throws NullPointerException {
         try {
-            File f = new File("course/" + course.getName().replace(" ", "-"));
+            new FileInputStream("data/course/" + courseName);
+            File f = new File("data/course/" + courseName);
             f.delete();
         } catch (FileNotFoundException e) {
             throw new NullPointerException("Course does not exist");
@@ -135,7 +139,7 @@ public class AccessData {
     public Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
         try {
             File f = new File("course/" + courseName.replace(" ", "-"));
-            Course c = (course) getObjectFromFile(courseName);
+            Course c = (Course) getObjectFromFile(courseName);
             return c.getQuiz(quizName);
         } catch (FileNotFoundException e) {
             throw new NullPointerException("Course does not exist");
@@ -149,31 +153,35 @@ public class AccessData {
     private String getStringFromFile(String fileName) throws NullPointerException {
         String output = "";
         try {
+            new FileInputStream(fileName);
             BufferedReader bfr = new BufferedReader(new FileReader(fileName));
-            String line;
-            while (!line.isEmpty()) {
+            String line = "";
+            do {
                 line = bfr.readLine() + "\n";
                 output += line;
-            }
-        } catch (IOException e) {
-            System.out.println("Error fetching from file");
+            } while (!line.isEmpty());
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File path doesn't exist");
+        } catch (IOException e) {
+            System.out.println("Error fetching from file");
         }
         return output;
     }
 
 
-    private Object getObjectFromFile(String fileName) throws FileNotFoundException {
+    public Object getObjectFromFile(String fileName) throws FileNotFoundException {
+        Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
                     new FileInputStream(new File("data/" + fileName + ".obj")));
-            Object toReturn = ois.readObject();
+            toReturn = ois.readObject();
             ois.close();
-            return toReturn;
         } catch (IOException e) {
             System.out.println("error initalizing file output stream");
+        } catch (ClassNotFoundException e) {
+            throw new FileNotFoundException("Error, object empty");
         }
+        return toReturn;
     }
 
     private void writeObjectToFile(String fileName, Object o) {
