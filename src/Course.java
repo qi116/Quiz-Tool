@@ -1,6 +1,13 @@
 
 import java.util.ArrayList;
-
+/**
+ * A class that manages Courses.
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Purdue CS
+ * @version November 12, 2021
+ */
 public class Course {
     private String name;
     private ArrayList<Quiz> quizzes; //quizzes in the course

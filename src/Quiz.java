@@ -7,8 +7,16 @@ public class Quiz implements Serializable {
     private int attempt;
     private static final long serialVersionUID = 1L;
     private Course course;
+    private boolean isRandomized;
 
-
+    /**
+     * A class that manages Quizzes.
+     *
+     * <p>Purdue University -- CS18000 -- Fall 2021</p>
+     *
+     * @author Purdue CS
+     * @version November 12, 2021
+     */
     public Quiz(String name, Question[] quiz) {
         this.name = name;
         this.quiz = new ArrayList<Question>();
@@ -26,10 +34,12 @@ public class Quiz implements Serializable {
     public Quiz(String name, Question[] quiz, int attempt, Course course) {
         this(name, quiz, attempt);
         this.course = course;
+        course.addQuiz(this);
     }
     public Quiz(String name, Question[] quiz, Course course) {
         this(name, quiz);
         this.course = course;
+        course.addQuiz(this);
     }
     //returns name
     public String getName() {
@@ -116,5 +126,6 @@ public class Quiz implements Serializable {
     public void randomize() {
         Collections.shuffle(quiz);
     }
+
 
 }

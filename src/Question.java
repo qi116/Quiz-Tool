@@ -4,6 +4,14 @@ import java.util.Arrays;
 import java.util.*;
 import java.util.Collections;
 
+/**
+ * A class that manages Questions.
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Purdue CS
+ * @version November 12, 2021
+ */
 public class Question {
     private String question;
     private String answer; //not necessary
