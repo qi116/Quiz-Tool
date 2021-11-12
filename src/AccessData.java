@@ -17,11 +17,17 @@ public class AccessData {
      */
     public Account getAccountData(String username, String password) throws NullPointerException {
         try {
-            Account account = (Account) getObjectFromFile("accounts/" + username);
-            if (account.getPassword().equals(password))
-                return account;
-            else
-                throw new NullPointerException("No account with that username / password combination");
+            Object o = getObjectFromFile("accounts/" + username);
+            if ( o instanceof Student) {
+                Student s = (Student) o;
+                if (s.getPassword().equals(password))
+                    return s;
+            } else if (o instanceof Teacher) {
+                Teacher t = (Teacher) o;
+                if (t.getPassword().equals(password))
+                    return t;
+            }
+            throw new NullPointerException("No account with that username / password combination");
         } catch (FileNotFoundException e) {
             throw new NullPointerException("No account with that username / password combination");
         }
@@ -191,6 +197,7 @@ public class AccessData {
         try {
             ObjectInputStream ois = new ObjectInputStream(
                     new FileInputStream(new File("data/" + fileName + ".obj")));
+            System.out.println("data/" + fileName + ".obj");
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {

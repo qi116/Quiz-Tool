@@ -6,6 +6,7 @@ public abstract class Account implements Serializable {
 
     public Account(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
