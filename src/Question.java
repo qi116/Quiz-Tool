@@ -14,7 +14,6 @@ import java.util.Collections;
  */
 public class Question {
     private String question;
-    private String answer; //not necessary
     private String[] choices;
     private int grade;
     private int studentAnswer;

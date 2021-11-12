@@ -3,7 +3,6 @@ import java.util.*;
 public class Quiz implements Serializable {
     private ArrayList<Question> quiz;
     private String name;
-    private ArrayList<Integer> studentAnswers;
     private int attempt;
     private static final long serialVersionUID = 1L;
     private Course course;
@@ -20,7 +19,6 @@ public class Quiz implements Serializable {
     public Quiz(String name, Question[] quiz) {
         this.name = name;
         this.quiz = new ArrayList<Question>();
-        this.studentAnswers = new ArrayList<Integer>();
 
         for (int i = 0; i < quiz.length; i++) {
             this.quiz.add(quiz[i]);
