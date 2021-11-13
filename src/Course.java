@@ -1,8 +1,10 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Course {
+public class Course implements Serializable {
     private String name;
+    private static final long serialVersionUID = 1L;
     private ArrayList<Quiz> quizzes; //quizzes in the course
     private static ArrayList<Course> courses;
     static {
