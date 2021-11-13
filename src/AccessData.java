@@ -25,6 +25,21 @@ public class AccessData {
             throw new NullPointerException("No account with that username / password combination");
         }
     }
+
+    /**
+     * used for teachers to fetch student's quizes submissions without requiring their password
+     * @param username
+     * @return
+     * @throws NullPointerException
+     */
+    public static Account getAccountData(String username) throws NullPointerException {
+        try {
+            Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
+            return account;
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("No account with that username");
+        }
+    }
     /**
      * returns if a username already exists (true = yell at user, false = ok)
      * @return if a username already exists (true = yell at user, false = ok)
