@@ -1,8 +1,21 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Course {
+/**
+ * A class that manages Courses.
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Purdue CS
+ * @version November 12, 2021
+ */
+
+public class Course implements Serializable {
+
+
     private String name;
+    private static final long serialVersionUID = 1L;
     private ArrayList<Quiz> quizzes; //quizzes in the course
     private static ArrayList<Course> courses;
     static {
