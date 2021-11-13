@@ -1,6 +1,10 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * @author Nathan Leakeas
+ * @version 11.13.2021
+ */
 public class Teacher extends Account implements Serializable {
     public ArrayList<Course> courses;
 

@@ -2,6 +2,10 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * @author Nathan Leakeas
+ * @version 11.13.2021
+ */
 public class Student extends Account implements Serializable {
     private ArrayList<Quiz> quizSubmissions;
 
