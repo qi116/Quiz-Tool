@@ -29,7 +29,7 @@ public class AccessData {
     /**
      * used for teachers to fetch student's quizes submissions without requiring their password
      * @param username
-     * @return
+     * @return an account of a student that a teacher is fetching
      * @throws NullPointerException
      */
     public static Account getAccountData(String username) throws NullPointerException {
@@ -69,7 +69,7 @@ public class AccessData {
 
     /**
      * Gets all accounts in /data/accounts/
-     * @return Returns a List of all accoutns
+     * @return Returns a List of all student accounts
      * @throws NullPointerException (if there is no /data/accounts/)
      */
     public static Account[] getAllAccounts() throws NullPointerException {
@@ -77,9 +77,15 @@ public class AccessData {
         try {
             File folder = new File("data/accounts");
             File[] files = folder.listFiles();
-            accounts = new Account[files.length];
+            ArrayList<Account> accountsArrayList= new ArrayList<Account>();
             for (int i = 0; i < files.length; i++) {
-                accounts[i] = (Account) getObjectFromFile("/accounts/" + files[i].getName());
+                Account a = (Account) getObjectFromFile("/accounts/" + files[i].getName());
+                if (a instanceof Student)
+                    accountsArrayList.add(a);
+            }
+            accounts = new Account[accountsArrayList.size()];
+            for (int i = 0; i < accountsArrayList.size(); i++) {
+                accounts[i] = accountsArrayList.get(i);
             }
         } catch (NullPointerException e) {
             accounts = new Account[0];
