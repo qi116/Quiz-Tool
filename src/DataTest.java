@@ -1,10 +1,9 @@
+import java.io.*;
 public class DataTest {
     public static void main(String[] args) throws Exception {
         Student stud1 = new Student("user1", "Password");
         Teacher teach1 = new Teacher("user2", "Password");
         Student stud2 = new Student("user3", "Password");
-
-        System.out.println("Password: " + stud1.getPassword());
     
         String[] ans = {"Yes", "No"};
         Question q1 = new Question("can you read this question?", ans);
@@ -12,8 +11,8 @@ public class DataTest {
         String[] ans2 = {"a", "b", "c", "d"};
         Question q2 = new Question("answer a, b, c, d", ans2);
 
-        Question[] quLst = {q1, q2};
-        Quiz quiz1 = new Quiz("quiz 1", quLst);
+        Question[] questionLst = {q1, q2};
+        Quiz quiz1 = new Quiz("quiz 1", questionLst);
 
         Course cou1 = new Course("Course 1");
         cou1.addQuiz(quiz1);
@@ -22,7 +21,7 @@ public class DataTest {
         
         //ad.addAccount(stud1);
         //ad.addAccount(teach1);
-        //ad.addAccount(stud1);
+        //ad.addAccount(stud2);
         //ad.addCourse(cou1);
 
         //if (ad.usernameExists("user1"))
@@ -37,12 +36,11 @@ public class DataTest {
 
         Account acc1 = ad.getAccountData("user1", "Password");
         teach1 = (Teacher) ad.getAccountData("user2", "Password");
-        stud2 = (Student) ad.getAccountData("User2", "Password");
+        stud2 = (Student) ad.getAccountData("User1", "Password");
 
-        System.out.println(ad.getAllCourseNames());
+        System.out.println(ad.getAllCourseNames()[0]);//bugged
         cou1 = ad.getCourse("Course 1");
 
 
-        
     }
 }
