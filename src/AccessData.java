@@ -15,7 +15,7 @@ public class AccessData {
      * @param password the password of the user
      * @return an account object corosponding to the username and password given 
      */
-    public Account getAccountData(String username, String password) throws NullPointerException {
+    public static Account getAccountData(String username, String password) throws NullPointerException {
         try {
             Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
             if (account.getPassword().equals(password))
@@ -25,12 +25,27 @@ public class AccessData {
             throw new NullPointerException("No account with that username / password combination");
         }
     }
+
+    /**
+     * used for teachers to fetch student's quizes submissions without requiring their password
+     * @param username
+     * @return an account of a student that a teacher is fetching
+     * @throws NullPointerException
+     */
+    public static Account getAccountData(String username) throws NullPointerException {
+        try {
+            Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
+            return account;
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("No account with that username");
+        }
+    }
     /**
      * returns if a username already exists (true = yell at user, false = ok)
      * @return if a username already exists (true = yell at user, false = ok)
      * @param username the username to check
      */
-    public boolean usernameExists(String username) {
+    public static boolean usernameExists(String username) {
         try {
             new FileInputStream("data/accounts/" + username + ".obj");
             return true;
@@ -43,7 +58,7 @@ public class AccessData {
      * I will add a checkUsername(String username) class later
      * @param account an account to be added to the system
      */
-    public void addAccount(Account account) throws FileAlreadyExistsException {
+    public static void addAccount(Account account) throws FileAlreadyExistsException {
         try {
             new FileInputStream("data/accounts/" + account.getUsername() + ".obj");
             throw new FileAlreadyExistsException("Account already exists");
@@ -53,10 +68,51 @@ public class AccessData {
     }
 
     /**
+     * Gets all accounts in /data/accounts/
+     * @return Returns a List of all student accounts
+     * @throws NullPointerException (if there is no /data/accounts/)
+     */
+    public static Account[] getAllAccounts() throws NullPointerException {
+        Account[] accounts;
+        try {
+            File folder = new File("data/accounts");
+            File[] files = folder.listFiles();
+            ArrayList<Account> accountsArrayList= new ArrayList<Account>();
+            for (int i = 0; i < files.length; i++) {
+                Account a = (Account) getObjectFromFile("/accounts/" + files[i].getName());
+                if (a instanceof Student)
+                    accountsArrayList.add(a);
+            }
+            accounts = new Account[accountsArrayList.size()];
+            for (int i = 0; i < accountsArrayList.size(); i++) {
+                accounts[i] = accountsArrayList.get(i);
+            }
+        } catch (NullPointerException e) {
+            accounts = new Account[0];
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("Folders not created! (data/accounts && data/courses required)");
+        }
+        return accounts;
+    }
+
+    /**
+     * gets all usernames
+     * @return all usernames
+     */
+    public static String[] getAllUsernames() {
+        Account[] accounts = getAllAccounts();
+        String[] usernames = new String[accounts.length];
+        for (int i = 0; i < accounts.length; i++) {
+            usernames[i] = accounts[i].getUsername();
+        }
+        return usernames;
+    }
+
+    /**
      * saves a user object using the account name
      * @param account the account to be added
      */
-    public void writeAccountData(Account account) {
+    public static void writeAccountData(Account account) {
         writeObjectToFile("accounts/" + account.getUsername(), account);
     }
 
@@ -65,7 +121,7 @@ public class AccessData {
      * @param courseName the name of the course to be fetched
      * @return an already existing course
      */
-    public Course getCourse(String courseName) throws NullPointerException {
+    public static Course getCourse(String courseName) throws NullPointerException {
         try {
             return (Course) getObjectFromFile("courses/" +
                     courseName.replace(" ","-") + ".obj");
@@ -79,7 +135,7 @@ public class AccessData {
      * If no courses are to be found, returns an empty list
      * @return a list of all courses
      */
-    public Course[] getAllCourses() throws NullPointerException {
+    public static Course[] getAllCourses() throws NullPointerException {
         Course[] courses;
         try {
             File folder = new File("data/courses");
@@ -89,7 +145,7 @@ public class AccessData {
                 courses[i] = (Course) getObjectFromFile("/courses/" + files[i].getName());
             }
         } catch (NullPointerException e) {
-            System.out.println("null error");
+            //
             courses = new Course[0];
         } catch (FileNotFoundException e) {
             throw new NullPointerException("Folders not created! (data/accounts && data/courses required)");
@@ -100,7 +156,7 @@ public class AccessData {
      * Returns a string of all course names
      * @return a string of all course names
      */
-    public String[] getAllCourseNames() {
+    public static String[] getAllCourseNames() {
         Course[] courses = getAllCourses();
         String[] courseNames = new String[courses.length];
         for (int i = 0; i < courses.length; i++) {
@@ -112,9 +168,8 @@ public class AccessData {
      * allows a teacher to create a course
      * @param course the course object
      */
-    public void addCourse(Course course) throws FileAlreadyExistsException {
+    public static void addCourse(Course course) throws FileAlreadyExistsException {
         try {
-            System.out.println(course.getName().replace(" ", "-"));
             new FileInputStream("data/courses/" + course.getName().replace(" ", "-") + ".obj");
             throw new FileAlreadyExistsException("File already exists");
         } catch (Exception e) {
@@ -127,7 +182,7 @@ public class AccessData {
      * @param courseName the name of the course
      * @param course the course object
      */
-    public void modifyCourse(String courseName, Course course) throws NullPointerException {
+    public static void modifyCourse(String courseName, Course course) throws NullPointerException {
         try {
             new FileInputStream("data/course/" + courseName);
             new File("data/courses/" + course.getName().replace(" ","-"));
@@ -141,7 +196,7 @@ public class AccessData {
      * Removes a course with name courseName
      * @param courseName the name of the course
      */ 
-    public void removeCourse(String courseName) throws NullPointerException {
+    public static void removeCourse(String courseName) throws NullPointerException {
         try {
             new FileInputStream("data/courses/" + courseName);
             File f = new File("data/courses/" + courseName);
@@ -156,7 +211,7 @@ public class AccessData {
      * @param courseName the name of the course the quiz is in
      * @param quizName the name of the quiz to be fetched
      */
-    public Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
+    public static Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
         try {
             File f = new File("courses/" + courseName.replace(" ", "-"));
             Course c = (Course) getObjectFromFile(courseName);
@@ -170,7 +225,7 @@ public class AccessData {
      * returns a string holding the contents of a file given the file name
      * @return a string holding the contents of a file given the file name
      */
-    private String getStringFromFile(String fileName) throws NullPointerException {
+    private static String getStringFromFile(String fileName) throws NullPointerException {
         String output = "";
         try {
             new FileInputStream(fileName);
@@ -183,13 +238,13 @@ public class AccessData {
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File path doesn't exist");
         } catch (IOException e) {
-            System.out.println("Error fetching from file");
+            //
         }
         return output;
     }
 
 
-    public Object getObjectFromFile(String fileName) throws FileNotFoundException {
+    public static Object getObjectFromFile(String fileName) throws FileNotFoundException {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
@@ -197,23 +252,21 @@ public class AccessData {
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
-            System.out.println("error initalizing file output stream");
-            e.printStackTrace();
+            //
         } catch (ClassNotFoundException e) {
             throw new FileNotFoundException("Error, object empty");
         }
         return toReturn;
     }
 
-    private void writeObjectToFile(String fileName, Object o) {
+    private static void writeObjectToFile(String fileName, Object o) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File("data/" + fileName + ".obj")));
             oos.writeObject(o);
             oos.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("error initalizing file output stream");
+            //
         }
     }
 }
