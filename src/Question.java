@@ -5,10 +5,21 @@ import java.util.Arrays;
 import java.util.*;
 import java.util.Collections;
 
+/**
+ * A class that manages Questions.
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Purdue CS
+ * @version November 12, 2021
+ */
 public class Question implements Serializable {
     private String question;
     private static final long serialVersionUID = 1L;
     private String answer; //not necessary
+
+
+
     private String[] choices;
     private int grade;
     private int studentAnswer;

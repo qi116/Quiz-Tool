@@ -3,16 +3,22 @@ import java.util.*;
 public class Quiz implements Serializable {
     private ArrayList<Question> quiz;
     private String name;
-    private ArrayList<Integer> studentAnswers;
     private int attempt;
     private static final long serialVersionUID = 1L;
     private Course course;
+    private boolean isRandomized;
 
-
+    /**
+     * A class that manages Quizzes.
+     *
+     * <p>Purdue University -- CS18000 -- Fall 2021</p>
+     *
+     * @author Purdue CS
+     * @version November 12, 2021
+     */
     public Quiz(String name, Question[] quiz) {
         this.name = name;
         this.quiz = new ArrayList<Question>();
-        this.studentAnswers = new ArrayList<Integer>();
 
         for (int i = 0; i < quiz.length; i++) {
             this.quiz.add(quiz[i]);
@@ -26,11 +32,29 @@ public class Quiz implements Serializable {
     public Quiz(String name, Question[] quiz, int attempt, Course course) {
         this(name, quiz, attempt);
         this.course = course;
+        course.addQuiz(this);
     }
     public Quiz(String name, Question[] quiz, Course course) {
         this(name, quiz);
         this.course = course;
+        course.addQuiz(this);
     }
+    //Returns quiz size
+    public int getLength() {
+        return quiz.size();
+    }
+    //Removes question at index and replaces it with given Question.
+    public boolean setQuestion(int num, Question q) {
+
+        int index = num - 1;
+        if (index > quiz.size() - 1 || index < 0) {
+            return false;
+        }
+        quiz.remove(index);
+        quiz.add(index, q);
+        return true;
+    }
+
     //returns name
     public String getName() {
         return name;
@@ -117,4 +141,7 @@ public class Quiz implements Serializable {
         Collections.shuffle(quiz);
     }
 
+
+
 }
+
