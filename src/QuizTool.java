@@ -85,7 +85,7 @@ public class QuizTool {
             }
         } else { //assumes the account is a student
             while (menuActive) {
-                System.out.println("1. Take Quiz\n2. View Grades\n3. Exit");
+                System.out.prntln("1. Take Quiz\n2. View Grades\n3. Exit");
                 menuChoice = scan.nextLine();
                 switch (menuChoice) {
                     case "1":
@@ -104,7 +104,5 @@ public class QuizTool {
                 }
             }
         }
-
-
     }
 }
