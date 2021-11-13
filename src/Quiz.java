@@ -7,6 +7,7 @@ public class Quiz implements Serializable {
     private static final long serialVersionUID = 1L;
     private Course course;
     private boolean isRandomized;
+    private String timeStamp = "NA";
 
     /**
      * A class that manages Quizzes.
@@ -39,6 +40,15 @@ public class Quiz implements Serializable {
         this.course = course;
         course.addQuiz(this);
     }
+    //set time stamp
+    public void setTimeStamp(String t) {
+        this.timeStamp = t;
+    }
+    //get time stamp
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
     //Returns quiz size
     public int getLength() {
         return quiz.size();
@@ -90,6 +100,7 @@ public class Quiz implements Serializable {
     //Prints Quiz name and every question and selected choices
     public String toStringPostTake() {
         String s = String.format("Quiz name: %s\n", name);
+        s += String.format("Time taken: %d\n", timeStamp);
         s += String.format("Attempt: %d\n", attempt);
         for (int i = 0; i < quiz.size(); i++) {
             s += String.format("%d. %s; Grade: %d\n", i + 1, quiz.get(i).getQuestion(), quiz.get(i).getGrade());
@@ -113,6 +124,10 @@ public class Quiz implements Serializable {
     //set number of attempts
     public void setAttempt(int attempt) {
         this.attempt = attempt;
+    }
+    //returns number of attempts
+    public int getAttempt() {
+        return attempt;
     }
     //Takes question number and answer as integers and puts answer into answers ArrayList
     //Answer must be in format of integer corresponding to answer
