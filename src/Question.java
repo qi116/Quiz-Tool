@@ -10,7 +10,7 @@ import java.util.Collections;
  *
  * <p>Purdue University -- CS18000 -- Fall 2021</p>
  *
- * @author Purdue CS
+ * @author Brian Qi
  * @version November 12, 2021
  */
 public class Question implements Serializable {
