@@ -39,6 +39,22 @@ public class Quiz implements Serializable {
         this.course = course;
         course.addQuiz(this);
     }
+    //Returns quiz size
+    public int getLength() {
+        return quiz.size();
+    }
+    //Removes question at index and replaces it with given Question.
+    public boolean setQuestion(int num, Question q) {
+
+        int index = num - 1;
+        if (index > quiz.size() - 1 || index < 0) {
+            return false;
+        }
+        quiz.remove(index);
+        quiz.add(index, q);
+        return true;
+    }
+
     //returns name
     public String getName() {
         return name;
