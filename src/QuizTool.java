@@ -1,6 +1,10 @@
-
 import java.util.*;
-
+/**
+ * Main class to run the Quiz Tool
+ *
+ * @author Peter Olsen
+ * @version 2021-11-13
+ */
 public class QuizTool {
     public static void main(String[] args) {
         System.out.println("Welcome to the Learning Management System Quiz Tool!");
@@ -147,8 +151,8 @@ public class QuizTool {
                                                     System.out.println("Enter answer choice " + (j + 1) + ":");
                                                     choices[j] = scan.nextLine();
                                                 }
-                                                selectedQuiz.setQuestion(new Question(questionName, choices),
-                                                        questionNum);
+                                                selectedQuiz.setQuestion(questionNum,
+                                                        new Question(questionName, choices));
 
                                             }
                                         }
