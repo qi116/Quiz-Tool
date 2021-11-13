@@ -74,6 +74,10 @@ public class QuizTool {
                 menuChoice = scan.nextLine();
                 switch (menuChoice) {
                     case "1":
+                        String[] allCourses = AccessData.getAllCourseNames();
+                        for (int i = 0; i < allCourses.length; i++) {
+                            System.out.println(allCourses[i]);
+                        }
                         System.out.println("Enter the course name:");
                         currentCourse = scan.nextLine();
                         for (Course c : courseList) {
@@ -142,8 +146,8 @@ public class QuizTool {
                                                     System.out.println("Enter answer choice " + (j + 1) + ":");
                                                     choices[j] = scan.nextLine();
                                                 }
-                                                // = new Question(questionName, choices);
-                                                //TODO: question constructor with all parameters, quiz method to replace a question
+                                                selectedQuiz.setQuestion(new Question(questionName, choices),
+                                                        questionNum);
 
                                             }
                                         }
@@ -170,7 +174,51 @@ public class QuizTool {
                         ((Teacher) account).removeCourse(currentCourse);
                         break;
                     case "4":
-                        //TODO: STUDENT GRADING ZONE
+                        //lists out all student usernames
+                        System.out.println("Select a Student:");
+                        String studentName = scan.nextLine();
+                        if (AccessData.usernameExists(studentName)) {
+                            Account studentTemp = AccessData.getAccountData(studentName);
+                            if (studentTemp instanceof Student) {
+                                Student student = (Student) studentTemp;
+                                ArrayList<Quiz> submissions = student.getQuizSubmissions();
+                                for (Quiz q : submissions) {
+                                    System.out.println(q.getName());
+                                }
+                                System.out.println("Select A Quiz:");
+                                String quizName = scan.nextLine();
+                                ArrayList<Quiz> submissionsForQuiz = student.getQuizSubmissionByName();
+                                for (Quiz q : submissionsForQuiz) {
+                                    System.out.println(q.getTimestamp());
+                                }
+                                System.out.println("Select a Timestamp");
+                                String timestamp = scan.nextLine();
+                                Quiz gradeQuiz = null;
+                                for (Quiz q : submissionsForQuiz) {
+                                    if (q.getTimestamp().equals(timestamp)) {
+                                        gradeQuiz = q;
+                                        break;
+                                    }
+                                }
+                                if (gradeQuiz == null) {
+                                    System.out.println("Invalid Timestamp");
+                                    break;
+                                } else {
+                                    for (int i = 1; i <= gradeQuiz.getLength(); i++) {
+                                        System.out.println(gradeQuiz.getQuestion(i));
+                                        System.out.println("Student Answer: " + gradeQuiz.getQuestion(i).getChoices()
+                                                [gradeQuiz.getQuestion(i).getStudentAnswer()]);
+                                        System.out.println("Enter the grade for this question: ");
+                                        gradeQuiz.getQuestion(i).setGrade(Integer.parseInt(scan.nextLine()));
+                                    }
+                                }
+                            } else {
+                                System.out.println("Account is not a student");
+                            }
+                        } else {
+                            System.out.println("Invalid Selection");
+                        }
+
                         break;
                     case "5":
                         System.out.println("Closing Quiz Tool");
@@ -188,9 +236,36 @@ public class QuizTool {
                 switch (menuChoice) {
                     case "1":
                         //implement take quiz system
+                        String[] allCourses = AccessData.getAllCourseNames();
+                        for (int i = 0; i < allCourses.length; i++) {
+                            System.out.println(allCourses[i]);
+                        }
+                        System.out.println("Select a course:");
+                        try {
+                            currentCourse = scan.nextLine();
+                            selectedCourse = AccessData.getCourse(currentCourse);
+                            System.out.println("Select a quiz:");
+                            currentQuiz = scan.nextLine();
+                            selectedQuiz = AccessData.getQuiz(currentCourse, currentQuiz);
+                            for (int i = 1; i <= selectedQuiz.getLength(); i++) {
+                                Question currentQuestion = selectedQuiz.getQuestion(i);
+                                System.out.println(currentQuestion);
+                                char studentAnswer = scan.nextLine().charAt(0);
+                                currentQuestion.setStudentAnswer(studentAnswer - 65);
+                            }
+                            ((Student) account).addQuizSubmission(selectedQuiz);
+
+                        } catch (NullPointerException e) {
+                            System.out.println(e.getMessage());
+                            break;
+                        }
                         break;
                     case "2":
                         //implement grade viewing system
+                        ArrayList<Quiz> submissions = ((Student) account).getQuizSubmissions();
+                        for (Quiz q : submissions) {
+                            System.out.println(q.toStringPostTake());
+                        }
                         break;
                     case "3":
                         System.out.println("Closing Quiz Tool");
