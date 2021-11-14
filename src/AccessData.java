@@ -191,6 +191,20 @@ public class AccessData {
             throw new NullPointerException("File does not exists");
         }
     }
+
+     /**
+     * Removes a course with name courseName
+     * @param courseName the name of the course
+     */
+    public static void removeCourse(String courseName) throws NullPointerException {
+        try {
+            new FileInputStream("data/courses/" + courseName);
+            File f = new File("data/courses/" + courseName);
+            f.delete();
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("Course does not exist");
+        }
+    }
     
     /**
      * Returns a quiz from within a course (courseName)
