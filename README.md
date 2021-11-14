@@ -50,5 +50,5 @@ after compiling.
   * Teacher Course Modification, Quiz Modification, and Quiz Grading
   * Student Quiz Taking and Submission Viewing
   * Uses classes Course, Quiz, Question, Student, Teacher, Account, and AccessData
-* QuizToolTest
+* QuizToolTest - Peter Olsen
   * Tests QuizTool class implementation
