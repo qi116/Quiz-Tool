@@ -208,21 +208,7 @@ public class AccessData {
             throw new NullPointerException("Course does not exist");
         }
     }
-    
-    /**
-     * Returns a quiz from within a course (courseName)
-     * @param courseName the name of the course the quiz is in
-     * @param quizName the name of the quiz to be fetched
-     */
-    public static Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
-        try {
-            File f = new File("courses/" + courseName.replace(" ", "-") + ".obj");
-            Course c = (Course) getObjectFromFile(courseName);
-            return c.getQuiz(quizName);
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("Course does not exist");
-        }
-    }
+
 
     private static Object getObjectFromFile(String fileName) throws FileNotFoundException {
         Object toReturn = null;
