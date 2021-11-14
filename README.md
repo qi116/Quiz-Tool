@@ -52,3 +52,8 @@ after compiling.
   * Uses classes Course, Quiz, Question, Student, Teacher, Account, and AccessData
 * QuizToolTest - Peter Olsen
   * Tests QuizTool class implementation
+* AccessData - Hawkins Peterson
+  * Allows saving of accounts and courses
+  * Allows getting accounts and courses
+  * Allows user to get list of students
+  * Allows user to get list of courses
