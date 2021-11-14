@@ -41,6 +41,19 @@ public class AccessData {
         }
     }
     /**
+     * returns if a username already exists (true = yell at user, false = ok)
+     * @return if a username already exists (true = yell at user, false = ok)
+     * @param username the username to check
+     */
+    public static boolean usernameExists(String username) {
+        try {
+            new FileInputStream("data/accounts/" + username + ".obj");
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+    /**
      * Creates a new account (throws FileAlreadyExistsException if username taken)
      * I will add a checkUsername(String username) class later
      * @param account an account to be added to the system
