@@ -23,15 +23,15 @@ public class DataTest {
 
         //should not throw error
 
-        ad.addAccount(stud1);
-        ad.addAccount(teach1);
-        ad.addAccount(stud2);
-        ad.addCourse(cou1);
+        AccessData.addAccount(stud1);
+        AccessData.addAccount(teach1);
+        AccessData.addAccount(stud2);
+        AccessData.addCourse(cou1);
 
         System.out.println("added accounts / users");
 
         try {
-            ad.addAccount(stud1);
+            AccessData.addAccount(stud1);
             System.out.println("I'm an idiot my code is broken"); // should not be printed
         } catch (Exception e) {
             System.out.println("Does not allow you to recreate an account");
@@ -39,23 +39,23 @@ public class DataTest {
 
         //shouldn't throw error
         System.out.println("Saved account 1");
-        ad.writeAccountData(stud1);
+        AccessData.writeAccountData(stud1);
 
-        Account acc1 = ad.getAccountData("user1", "Password");
-        teach1 = (Teacher) ad.getAccountData("user2", "Password");
-        stud2 = (Student) ad.getAccountData("User3", "Password");
+        Account acc1 = AccessData.getAccountData("user1", "Password");
+        teach1 = (Teacher) AccessData.getAccountData("user2", "Password");
+        stud2 = (Student) AccessData.getAccountData("User3", "Password");
         System.out.println("Recieved all accounts");
 
-        System.out.println("Course 1: " + ad.getAllCourseNames()[0]);
+        System.out.println("Course 1: " + AccessData.getAllCourseNames()[0]);
         System.out.println("Student accounts:");
-        String[] accs = ad.getAllUsernames();
+        String[] accs = AccessData.getAllUsernames();
         for (String i : accs)
             System.out.println(i);
 
-        cou1 = ad.getCourse("Course 1");
+        cou1 = AccessData.getCourse("Course 1");
         System.out.println("Retrieved course 1");
 
-        ad.modifyCourse(cou1.getName(), cou1);
+        AccessData.modifyCourse(cou1.getName(), cou1);
         System.out.println("Saved Course 1");
 
         System.out.println("Make sure to delete the accounts and courses manually because Intelij doesn't like to");
