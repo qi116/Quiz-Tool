@@ -41,19 +41,6 @@ public class AccessData {
         }
     }
     /**
-     * returns if a username already exists (true = yell at user, false = ok)
-     * @return if a username already exists (true = yell at user, false = ok)
-     * @param username the username to check
-     */
-    public static boolean usernameExists(String username) {
-        try {
-            new FileInputStream("data/accounts/" + username + ".obj");
-            return true;
-        } catch (FileNotFoundException e) {
-            return false;
-        }
-    }
-    /**
      * Creates a new account (throws FileAlreadyExistsException if username taken)
      * I will add a checkUsername(String username) class later
      * @param account an account to be added to the system
@@ -72,7 +59,7 @@ public class AccessData {
      * @return Returns a List of all student accounts
      * @throws NullPointerException (if there is no /data/accounts/)
      */
-    public static Account[] getAllAccounts() throws NullPointerException {
+    private static Account[] getAllAccounts() throws NullPointerException {
         Account[] accounts;
         try {
             File folder = new File("data/accounts");
@@ -135,7 +122,7 @@ public class AccessData {
      * If no courses are to be found, returns an empty list
      * @return a list of all courses
      */
-    public static Course[] getAllCourses() throws NullPointerException {
+    private static Course[] getAllCourses() throws NullPointerException {
         Course[] courses;
         try {
             File folder = new File("data/courses");
@@ -184,25 +171,11 @@ public class AccessData {
      */
     public static void modifyCourse(String courseName, Course course) throws NullPointerException {
         try {
-            new FileInputStream("data/course/" + courseName);
-            new File("data/courses/" + course.getName().replace(" ","-"));
-            writeObjectToFile("courses/" + course.getName().replace(" ","-"), course);
+            new FileInputStream("data/courses/" + courseName.replace(" ", "-") + ".obj");
+            new File("data/courses/" + course.getName().replace(" ", "-"));
+            writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File does not exists");
-        }
-    }
-
-    /**
-     * Removes a course with name courseName
-     * @param courseName the name of the course
-     */ 
-    public static void removeCourse(String courseName) throws NullPointerException {
-        try {
-            new FileInputStream("data/courses/" + courseName);
-            File f = new File("data/courses/" + courseName);
-            f.delete();
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("Course does not exist");
         }
     }
     
@@ -221,30 +194,7 @@ public class AccessData {
         }
     }
 
-    /**
-     * returns a string holding the contents of a file given the file name
-     * @return a string holding the contents of a file given the file name
-     */
-    private static String getStringFromFile(String fileName) throws NullPointerException {
-        String output = "";
-        try {
-            new FileInputStream(fileName);
-            BufferedReader bfr = new BufferedReader(new FileReader(fileName));
-            String line = "";
-            do {
-                line = bfr.readLine() + "\n";
-                output += line;
-            } while (!line.isEmpty());
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("File path doesn't exist");
-        } catch (IOException e) {
-            //
-        }
-        return output;
-    }
-
-
-    public static Object getObjectFromFile(String fileName) throws FileNotFoundException {
+    private static Object getObjectFromFile(String fileName) throws FileNotFoundException {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
@@ -264,6 +214,7 @@ public class AccessData {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File("data/" + fileName + ".obj")));
             oos.writeObject(o);
+            oos.flush();
             oos.close();
         } catch (IOException e) {
             //
