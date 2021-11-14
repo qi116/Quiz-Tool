@@ -76,6 +76,7 @@ public class Course implements Serializable {
         for (Quiz q : quizzes) {
             if (q.equals(quiz)) {
                 quizzes.remove(q);
+                return;
             }
         }
 
