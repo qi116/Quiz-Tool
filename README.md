@@ -1,13 +1,23 @@
 # Group 109 Project 4 CS 180
 Nathan Leakeas, Peter Olsen, Brian Qi, Hawkins Peterson
 
+We have moved the source files outside of the repository for convenience. 
+Our git repository has been cloned into Vocarem, however. It can be found in the folder `cs180project4`.
+
+
+
 ## Compile Instructions
-Our project can be compiled by using the cd command to navigate to the `src` directory.
-From there, run `javac *.java` to compile the java files to .class files.
+Our project can be compiled by running the command `javac QuizTool.java`.
 
 ## Run Instructions
 The main class of our project is QuizTool. To run the project, execute `java QuizTool`
 after compiling.
+
+We have different classes dedicated to testing parts of our project.
+* `AccountTest.java` tests Student, Teacher, and Account
+* `DataTest.java` test AccessData
+* `QuizToolTest.java` tests output of QuizTool and uses `test.java`
+* `RunTest.java` tests output of Quiz, Question, and Course
 
 
 ## Submission Responsibility
