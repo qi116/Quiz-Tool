@@ -58,15 +58,6 @@ public class DataTest {
         ad.modifyCourse(cou1.getName(), cou1);
         System.out.println("Saved Course 1");
 
-        File f = new File("data/accounts/user1.obj");
-        if (!f.delete())
-            System.out.println("failed to delete user1");
-        f = new File("data/accounts/user2.obj");
-        f.deleteOnExit();
-
-        f = new File("data/accounts/user3.obj");
-        f.delete();
-
-        System.out.println("Deleted all files so that it can be rerun");
+        System.out.println("Make sure to delete the accounts and courses manually because Intelij doesn't like to");
     }
 }
