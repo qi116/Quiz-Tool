@@ -258,7 +258,7 @@ public class AccessData {
             new File("/data/accounts").mkdir();
             new File("data/courses").mkdir();
         } catch (Exception e) {
-            //
+            e.printStackTrace();
         }
     }
 }
