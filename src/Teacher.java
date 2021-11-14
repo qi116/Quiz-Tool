@@ -42,11 +42,7 @@ public class Teacher extends Account implements Serializable {
      * @param courseName Name of course(s) to remove
      */
     public void removeCourse(String courseName) {
-        for (Course c : courses) {
-            if (c.getName().equals(courseName)) {
-                courses.remove(c);
-            }
-        }
+        courses.removeIf(c -> c.getName().equals(courseName));
     }
 
     /**
