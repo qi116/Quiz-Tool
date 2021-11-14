@@ -6,12 +6,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Olsen
  * @version 11/14/2021
  */
-import static org.junit.Assert.assertEquals;
 public class QuizToolTest {
     private final PrintStream originalOutput = System.out;
     private ByteArrayOutputStream testOut;
@@ -29,7 +29,8 @@ public class QuizToolTest {
                 "2. Add Course\n3. Remove Course\n4. Grade Student Submission\n5. Exit\nEnter the course name:\n" +
                 "1. Select Course\n2. Add Course\n3. Remove Course\n4. Grade Student Submission\n5. Exit\nMyCourse\n" +
                 "Enter the course name:\n1. Create New Quiz\n2. Remove Quiz\n3. Modify Quiz\n4. Close Quiz Menu\n" +
-                "Enter the quiz name:\nHow many questions will be in the quiz?:\nWill the order be randomized? [Y/N]:\n" +
+                "Enter the quiz name:\nHow many questions will be in the quiz?:" +
+                "\nWill the order be randomized? [Y/N]:\n" +
                 "Enter question 1:\nHow many answer choices will this question have?:\nWill the order be randomized? " +
                 "[Y/N]:\nEnter answer choice 1:\nEnter answer choice 2:\nQuiz created!\n1. Create New Quiz\n" +
                 "2. Remove Quiz\n3. Modify Quiz\n4. Close Quiz Menu\n1. Select Course\n" +
