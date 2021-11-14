@@ -59,7 +59,7 @@ public class Teacher extends Account implements Serializable {
         courses.add(c);
         return c;
     }
-    
+
 
     /**
      * Adds quiz to course in teacher's courses with name

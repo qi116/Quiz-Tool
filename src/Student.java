@@ -34,7 +34,7 @@ public class Student extends Account implements Serializable {
      * @param quizName name of Quiz
      * @return List of quiz submissions
      */
-    public ArrayList<Quiz> getQuizSubmissionByName(String quizName) {
+    public ArrayList<Quiz> getQuizSubmissionsByName(String quizName) {
         ArrayList<Quiz> toReturn = new ArrayList<>();
 
         for (Quiz q : quizSubmissions) {
