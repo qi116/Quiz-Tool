@@ -6,7 +6,7 @@ public class Quiz implements Serializable {
     private int attempt;
     private static final long serialVersionUID = 1L;
     private Course course;
-    private boolean isRandomized;
+    private boolean isRandomized = false;
     private String timeStamp = "NA";
 
     /**
@@ -14,7 +14,7 @@ public class Quiz implements Serializable {
      *
      * <p>Purdue University -- CS18000 -- Fall 2021</p>
      *
-     * @author Brian Qi 
+     * @author Brian Qi
      * @version November 12, 2021
      */
     public Quiz(String name, Question[] quiz) {
@@ -154,6 +154,11 @@ public class Quiz implements Serializable {
     //Shuffles the order of the questions. Original question order is not maintained.
     public void randomize() {
         Collections.shuffle(quiz);
+        isRandomized = true;
+    }
+    //returns isRandomized
+    public boolean isRandomized() {
+        return isRandomized;
     }
 
 

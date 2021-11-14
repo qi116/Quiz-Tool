@@ -17,7 +17,7 @@ public class Question implements Serializable {
     private String question;
     private static final long serialVersionUID = 1L;
     private String answer; //not necessary
-
+    private boolean isRandomized = false;
 
 
     private String[] choices;
@@ -110,5 +110,10 @@ public class Question implements Serializable {
             choices[num] = choices[i];
             choices[i] = a;
         }
+        isRandomized = true;
+    }
+    //returns isRandomized
+    public boolean isRandomized() {
+        return isRandomized;
     }
 }
