@@ -185,7 +185,7 @@ public class AccessData {
     public static void modifyCourse(String courseName, Course course) throws NullPointerException {
         try {
             new FileInputStream("data/courses/" + courseName.replace(" ", "-") + ".obj");
-            new File("data/courses/" + course.getName().replace(" ", "-"));
+            new File("data/courses/" + course.getName().replace(" ", "-") + ".obj");
             writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File does not exists");
@@ -198,8 +198,8 @@ public class AccessData {
      */
     public static void removeCourse(String courseName) throws NullPointerException {
         try {
-            new FileInputStream("data/courses/" + courseName);
-            File f = new File("data/courses/" + courseName);
+            new FileInputStream("data/courses/" + courseName + ".obj");
+            File f = new File("data/courses/" + courseName + ".obj");
             f.delete();
         } catch (FileNotFoundException e) {
             throw new NullPointerException("Course does not exist");
