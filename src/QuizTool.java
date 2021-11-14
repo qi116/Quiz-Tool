@@ -175,6 +175,7 @@ public class QuizTool {
                                         break;
                                 }
                             }
+                            AccessData.writeAccountData(account);
                             menuActive = true;
                         }
                         break;
@@ -186,12 +187,14 @@ public class QuizTool {
                         } catch (FileAlreadyExistsException e) {
                             e.printStackTrace();
                         }
+                        AccessData.writeAccountData(account);
                         break;
                     case "3":
                         System.out.println("Enter the course name:");
                         currentCourse = scan.nextLine();
                         ((Teacher) account).removeCourse(currentCourse);
                         AccessData.removeCourse(currentCourse);
+                        AccessData.writeAccountData(account);
                         break;
                     case "4":
                         String[] allUsernames = AccessData.getAllUsernames();
@@ -235,6 +238,7 @@ public class QuizTool {
                                         gradeQuiz.getQuestion(i).setGrade(Integer.parseInt(scan.nextLine()));
                                     }
                                 }
+                                AccessData.writeAccountData(student);
                             } else {
                                 System.out.println("Account is not a student");
                             }
@@ -245,7 +249,6 @@ public class QuizTool {
                         break;
                     case "5":
                         System.out.println("Closing Quiz Tool");
-                        //take all currently stored data and write it back into files
                         return;
                     default:
                         System.out.println("Please choose a valid menu option");
@@ -258,7 +261,6 @@ public class QuizTool {
                 menuChoice = scan.nextLine();
                 switch (menuChoice) {
                     case "1":
-                        //implement take quiz system
                         String[] allCourses = AccessData.getAllCourseNames();
                         for (int i = 0; i < allCourses.length; i++) {
                             System.out.println(allCourses[i]);
@@ -276,11 +278,14 @@ public class QuizTool {
                                 char studentAnswer = scan.nextLine().charAt(0);
                                 currentQuestion.setStudentAnswer(studentAnswer - 65);
                             }
-                            String date = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
-                            date += "-" + calendar.get(Calendar.DATE) + " " + calendar.get(Calendar.HOUR_OF_DAY);
-                            date += ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
+                            String date = calendar.get(Calendar.YEAR) + "-" +
+                                    String.format("%2d", calendar.get(Calendar.MONTH)) + "-" +
+                                    String.format("%2d", calendar.get(Calendar.DATE)) + " " +
+                                    calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) +
+                                    ":" + calendar.get(Calendar.SECOND);
                             selectedQuiz.setTimeStamp(date);
                             ((Student) account).addQuizSubmission(selectedQuiz);
+                            AccessData.writeAccountData(account);
                             System.out.println("Quiz Submitted!");
 
                         } catch (NullPointerException e) {
@@ -289,7 +294,6 @@ public class QuizTool {
                         }
                         break;
                     case "2":
-                        //implement grade viewing system
                         ArrayList<Quiz> submissions = ((Student) account).getQuizSubmissions();
                         for (Quiz q : submissions) {
                             System.out.println(q.toStringPostTake());
@@ -297,7 +301,6 @@ public class QuizTool {
                         break;
                     case "3":
                         System.out.println("Closing Quiz Tool");
-                        //take all currently stored data and write it back into files
                         return;
                     default:
                         System.out.println("Please choose a valid menu option");
