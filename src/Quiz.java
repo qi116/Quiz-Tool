@@ -160,7 +160,10 @@ public class Quiz implements Serializable {
     public boolean isRandomized() {
         return isRandomized;
     }
-
+    //set isRandomized
+    public void setIsRandomized(boolean isRandomized) {
+        this.isRandomized = isRandomized;
+    }
 
 
 }
