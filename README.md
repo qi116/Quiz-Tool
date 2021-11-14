@@ -16,8 +16,12 @@ after compiling.
 We have different classes dedicated to testing parts of our project.
 * `AccountTest.java` tests Student, Teacher, and Account
 * `DataTest.java` test AccessData
-* `QuizToolTest.java` tests output of QuizTool and uses `test.java`
-* `RunTest.java` tests output of Quiz, Question, and Course
+* `QuizToolTest.java` tests output of QuizTool and uses `test.java` (uses JUnit)
+* `RunTest.java` tests output of Quiz, Question, and Course (Uses JUnit)
+
+`AccountTest.java` and `DataTest.java` can be run and executed by compiling them
+with `javac` and running them with `java`. For the tests the utilize JUnit,
+we are unsure how to run them on vocarem because JUnit is not installed.
 
 
 ## Submission Responsibility
