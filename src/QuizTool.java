@@ -219,7 +219,7 @@ public class QuizTool {
                                 }
                                 System.out.println("Select A Quiz:");
                                 String quizName = scan.nextLine();
-                                ArrayList<Quiz> submissionsForQuiz = student.getQuizSubmissionByName(quizName);
+                                ArrayList<Quiz> submissionsForQuiz = student.getQuizSubmissionsByName(quizName);
                                 for (Quiz q : submissionsForQuiz) {
                                     System.out.println(q.getTimeStamp());
                                 }
