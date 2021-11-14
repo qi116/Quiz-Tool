@@ -37,6 +37,7 @@ public class AccessData {
             Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
             return account;
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             throw new NullPointerException("No account with that username");
         }
     }
@@ -60,6 +61,7 @@ public class AccessData {
      */
     public static void addAccount(Account account) throws FileAlreadyExistsException {
         try {
+            createFolders();
             new FileInputStream("data/accounts/" + account.getUsername() + ".obj");
             throw new FileAlreadyExistsException("Account already exists");
         } catch (FileNotFoundException e) {
@@ -142,12 +144,13 @@ public class AccessData {
             File[] files = folder.listFiles();
             courses = new Course[files.length];
             for (int i = 0; i < files.length; i++) {
-                courses[i] = (Course) getObjectFromFile("/courses/" + files[i].getName());
+                courses[i] = (Course) getObjectFromFile("courses/" + files[i].getName());
             }
         } catch (NullPointerException e) {
-            //
+            e.printStackTrace();
             courses = new Course[0];
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             throw new NullPointerException("Folders not created! (data/accounts && data/courses required)");
         }
         return courses;
@@ -238,7 +241,6 @@ public class AccessData {
 
     private static void writeObjectToFile(String fileName, Object o) {
         try {
-            createFolders();
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File("data/" + fileName + ".obj")));
             oos.writeObject(o);
@@ -254,8 +256,8 @@ public class AccessData {
      */
     private static void createFolders() {
         try {
-            new File("/data").mkdir();
-            new File("/data/accounts").mkdir();
+            new File("data").mkdir();
+            new File("data/accounts").mkdir();
             new File("data/courses").mkdir();
         } catch (Exception e) {
             e.printStackTrace();
