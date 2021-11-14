@@ -278,7 +278,11 @@ public class QuizTool {
                             selectedCourse = AccessData.getCourse(currentCourse);
                             System.out.println("Select a quiz:");
                             currentQuiz = scan.nextLine();
-                            selectedQuiz = AccessData.getQuiz(currentCourse, currentQuiz);
+                            selectedQuiz = selectedCourse.getQuiz(currentQuiz);
+                            if (selectedQuiz == null) {
+                                System.out.println("Invalid quiz name");
+                                break;
+                            }
                             if (selectedQuiz.isRandomized()) {
                                 selectedQuiz.randomize();
                             }
@@ -288,14 +292,21 @@ public class QuizTool {
                                     currentQuestion.randomizeChoices();
                                 }
                                 System.out.println(currentQuestion);
-                                char studentAnswer = scan.nextLine().charAt(0);
-                                currentQuestion.setStudentAnswer(studentAnswer - 65);
+                                char studentAnswer = scan.nextLine().toUpperCase().charAt(0);
+                                int studentAns = studentAnswer - 65;
+                                if (studentAns >= 0 && studentAns < currentQuestion.getChoices().length) {
+                                    currentQuestion.setStudentAnswer(studentAns);
+                                } else {
+                                    System.out.println("Invalid answer");
+                                    i--;
+                                }
                             }
                             String date = calendar.get(Calendar.YEAR) + "-" +
                                     String.format("%2d", calendar.get(Calendar.MONTH)) + "-" +
                                     String.format("%2d", calendar.get(Calendar.DATE)) + " " +
-                                    calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) +
-                                    ":" + calendar.get(Calendar.SECOND);
+                                    String.format("%2d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
+                                    String.format("%2d", calendar.get(Calendar.MINUTE)) +
+                                    ":" + String.format("%2d", calendar.get(Calendar.SECOND));
                             selectedQuiz.setTimeStamp(date);
                             ((Student) account).addQuizSubmission(selectedQuiz);
                             AccessData.writeAccountData(account);

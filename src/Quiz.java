@@ -100,8 +100,7 @@ public class Quiz implements Serializable {
     //Prints Quiz name and every question and selected choices
     public String toStringPostTake() {
         String s = String.format("Quiz name: %s\n", name);
-        s += String.format("Time taken: %d\n", timeStamp);
-        s += String.format("Attempt: %d\n", attempt);
+        s += String.format("Time taken: %s\n", timeStamp);
         for (int i = 0; i < quiz.size(); i++) {
             s += String.format("%d. %s; Grade: %d\n", i + 1, quiz.get(i).getQuestion(), quiz.get(i).getGrade());
             s += String.format("Selected: %s\n", getSelected(i + 1));
