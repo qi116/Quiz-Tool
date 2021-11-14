@@ -21,19 +21,26 @@ after compiling.
     * Create Courses
     * Remove Courses
     * Add Quizzes to Courses
-    * Used by QuizTool main class
-    * Holds Instances of Quiz and Course
 * Student - Nathan Leakeas
     * Stores list of quiz submissions
     * Add quiz to list of submitted quizzes
     * Get list of quiz submissions by Name
-    * Used by QuizTool main class
-    * Holds instances of Quiz
 * Account - Nathan Leakeas
     * abstract parent class of Student and Teacher
     * Stores username and password
     * Can check if instance is student or teacher
     * Get username or password
-    * Used by QuizTool main class
 * Account Test
     * Tests Student and Teacher method implementations
+* Quiz - Brian Qi
+   * Stores list of questions
+   * Question order randomization functionality
+   * Stores attempt number
+* Question - Brian Qi
+   * Stores question string
+   * Stores list of choices
+   * Choice order randomization functionality 
+   * Stores grade
+* Course - Brian Qi
+   * Stores course name
+   * Allows quizzes to be put into course  
