@@ -1,4 +1,5 @@
 # Group 109 Project 4 CS 180
+Nathan Leakeas, Peter Olsen, Brian Qi, Hawkins Peterson
 
 ## Compile Instructions
 Our project can be compiled by using the cd command to navigate to the src directory.
@@ -36,6 +37,7 @@ after compiling.
    * Stores list of questions
    * Question order randomization functionality
    * Stores attempt number
+   * Holds instances of Question
 * Question - Brian Qi
    * Stores question string
    * Stores list of choices
@@ -43,13 +45,20 @@ after compiling.
    * Stores grade
 * Course - Brian Qi
    * Stores course name
-   * Allows quizzes to be put into course
+   * Holds instances of Quiz
 * QuizTool - Peter Olsen
   * User Interface for project
   * Login/Account Creation Menu
   * Teacher Course Modification, Quiz Modification, and Quiz Grading
   * Student Quiz Taking and Submission Viewing
-  * Uses classes Course, Quiz, Question, Student, Teacher, Account, and AccessData
+  * References following classes
+    * Course
+    * Quiz
+    * Question
+    * Student
+    * Teacher
+    * Account
+    * AccessData
 * QuizToolTest - Peter Olsen
   * Tests QuizTool class implementation
 * AccessData - Hawkins Peterson
@@ -57,3 +66,11 @@ after compiling.
   * Allows getting accounts and courses
   * Allows user to get list of students
   * Allows user to get list of courses
+  * Used by QuizTool main class
+  * References following classes
+      * Course
+      * Quiz
+      * Question
+      * Student
+      * Teacher
+      * Account
