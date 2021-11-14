@@ -1,5 +1,9 @@
 import java.io.Serializable;
 
+/**
+ * @author Nathan Leakeas
+ * @version 11.13.2021
+ */
 public abstract class Account implements Serializable {
     protected String username;
     protected String password;

@@ -1,6 +1,10 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * @author Nathan Leakeas
+ * @version 11.13.2021
+ */
 public class Teacher extends Account implements Serializable {
     public ArrayList<Course> courses;
 
@@ -56,14 +60,6 @@ public class Teacher extends Account implements Serializable {
         return c;
     }
 
-    /**
-     * Adds quiz to course object
-     * @param q Quiz to be added
-     * @param c Course to add quiz to
-     */
-    public void addQuizToCourse(Quiz q, Course c) {
-        c.addQuiz(q);
-    }
 
     /**
      * Adds quiz to course in teacher's courses with name

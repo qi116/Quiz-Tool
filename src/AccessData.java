@@ -213,7 +213,7 @@ public class AccessData {
      */
     public static Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
         try {
-            File f = new File("courses/" + courseName.replace(" ", "-"));
+            File f = new File("courses/" + courseName.replace(" ", "-") + ".obj");
             Course c = (Course) getObjectFromFile(courseName);
             return c.getQuiz(quizName);
         } catch (FileNotFoundException e) {
@@ -238,12 +238,26 @@ public class AccessData {
 
     private static void writeObjectToFile(String fileName, Object o) {
         try {
+            createFolders();
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File("data/" + fileName + ".obj")));
             oos.writeObject(o);
             oos.flush();
             oos.close();
         } catch (IOException e) {
+            //
+        }
+    }
+
+    /**
+     * ThIs HaS tO bE dOnE cLiEnT sIdE
+     */
+    private static void createFolders() {
+        try {
+            new File("/data").mkdir();
+            new File("/data/accounts").mkdir();
+            new File("data/courses").mkdir();
+        } catch (Exception e) {
             //
         }
     }
