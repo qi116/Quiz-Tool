@@ -30,7 +30,7 @@ after compiling.
     * Stores username and password
     * Can check if instance is student or teacher
     * Get username or password
-* Account Test
+* Account Test - Nathan Leakeas
     * Tests Student and Teacher method implementations
 * Quiz - Brian Qi
    * Stores list of questions
