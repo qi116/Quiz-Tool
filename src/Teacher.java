@@ -59,15 +59,7 @@ public class Teacher extends Account implements Serializable {
         courses.add(c);
         return c;
     }
-
-    /**
-     * Adds quiz to course object
-     * @param q Quiz to be added
-     * @param c Course to add quiz to
-     */
-    public void addQuizToCourse(Quiz q, Course c) {
-        c.addQuiz(q);
-    }
+    
 
     /**
      * Adds quiz to course in teacher's courses with name
