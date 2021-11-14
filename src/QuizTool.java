@@ -109,20 +109,26 @@ public class QuizTool {
                                         currentQuiz = scan.nextLine();
                                         System.out.println("How many questions will be in the quiz?:");
                                         int quizQuestions = Integer.parseInt(scan.nextLine());
+                                        System.out.println("Will the order be randomized? [Y/N]:");
+                                        boolean quizRandom = scan.nextLine().equalsIgnoreCase("Y");
                                         Question[] quiz = new Question[quizQuestions];
                                         for (int i = 0; i < quizQuestions; i++) {
-                                            System.out.println("Enter the question:");
+                                            System.out.println("Enter question " + (i + 1) + ":");
                                             String questionName = scan.nextLine();
                                             System.out.println("How many answer choices will this question have?:");
                                             int numChoices = Integer.parseInt(scan.nextLine());
+                                            System.out.println("Will the order be randomized? [Y/N]:");
+                                            boolean qRandom = scan.nextLine().equalsIgnoreCase("Y");
                                             String[] choices = new String[numChoices];
                                             for (int j = 0; j < numChoices; j++) {
                                                 System.out.println("Enter answer choice " + (j + 1) + ":");
                                                 choices[j] = scan.nextLine();
                                             }
                                             quiz[i] = new Question(questionName, choices);
+                                            quiz[i].setIsRandomized(qRandom);
                                         }
                                         selectedCourse.addQuiz(new Quiz(currentQuiz, quiz));
+                                        selectedCourse.getQuiz(currentQuiz).setIsRandomized(quizRandom);
                                         AccessData.modifyCourse(currentCourse, selectedCourse);
                                         System.out.println("Quiz created!");
                                         break;
@@ -272,8 +278,14 @@ public class QuizTool {
                             System.out.println("Select a quiz:");
                             currentQuiz = scan.nextLine();
                             selectedQuiz = AccessData.getQuiz(currentCourse, currentQuiz);
+                            if (selectedQuiz.isRandomized()) {
+                                selectedQuiz.randomize();
+                            }
                             for (int i = 1; i <= selectedQuiz.getLength(); i++) {
                                 Question currentQuestion = selectedQuiz.getQuestion(i);
+                                if (currentQuestion.isRandomized()) {
+                                    currentQuestion.randomizeChoices();
+                                }
                                 System.out.println(currentQuestion);
                                 char studentAnswer = scan.nextLine().charAt(0);
                                 currentQuestion.setStudentAnswer(studentAnswer - 65);
