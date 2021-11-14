@@ -55,7 +55,7 @@ public class RunTest {
 
         @Test(timeout = 1000)
         public void testQuiz() {
-            test.main(new String[0]);
+            Test.main(new String[0]);
 
             String stuOut = getOutput();
             String expectedFull = "Quiz name: Quiz 1\n"

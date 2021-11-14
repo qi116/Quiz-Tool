@@ -50,9 +50,9 @@ public class Course implements Serializable {
     }
 
     //Gets quiz by name from course. If quiz doesn't exist, return null;
-    public Quiz getQuiz(String name) {
+    public Quiz getQuiz(String courseName) {
         for (Quiz q : quizzes) {
-            if (q.getName().equals(name)) {
+            if (q.getName().equals(courseName)) {
                 return q;
             }
         }

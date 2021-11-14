@@ -13,7 +13,12 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 import static org.junit.Assert.*;
 //Class to test Quiz, Question, and Course.
-public class test {
+
+/**
+ * @author Peter Olsen
+ * @version 11/14/21
+ */
+public class Test {
     public static void main(String[] args) {
         Question q1 = new Question("What is your name?");
         String[] choices1 = {"Bill", "John"};

@@ -7,6 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+/**
+ * @author Peter Olsen
+ * @version 11/14/2021
+ */
 import static org.junit.Assert.assertEquals;
 public class QuizToolTest {
     private final PrintStream originalOutput = System.out;

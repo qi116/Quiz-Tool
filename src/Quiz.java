@@ -1,5 +1,14 @@
 import java.io.Serializable;
 import java.util.*;
+
+/**
+ * A class that manages Quizzes.
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Brian Qi
+ * @version November 12, 2021
+ */
 public class Quiz implements Serializable {
     private ArrayList<Question> quiz;
     private String name;
@@ -9,14 +18,7 @@ public class Quiz implements Serializable {
     private boolean isRandomized = false;
     private String timeStamp = "NA";
 
-    /**
-     * A class that manages Quizzes.
-     *
-     * <p>Purdue University -- CS18000 -- Fall 2021</p>
-     *
-     * @author Brian Qi
-     * @version November 12, 2021
-     */
+
     public Quiz(String name, Question[] quiz) {
         this.name = name;
         this.quiz = new ArrayList<Question>();
@@ -79,8 +81,8 @@ public class Quiz implements Serializable {
     //Be sure to remove quiz from course if changing courses
     //Also note. Just this method working does not mean that Quiz doesn't already exist in course
     //This condition is checked in addQuiz() in Course
-    public boolean setCourse(String name) {
-        Course a = Course.getCourse(name);
+    public boolean setCourse(String courseName) {
+        Course a = Course.getCourse(courseName);
         if (course == null) {
             return false;
         }
@@ -110,7 +112,7 @@ public class Quiz implements Serializable {
     }
     //returns string of selected answer for given question number
     public String getSelected(int num) {
-        if (getQuestion(num).getStudentAnswer() == - 1) {
+        if (getQuestion(num).getStudentAnswer() == -1) {
             return "Not Answered";
         }
         Question q =  getQuestion(num);

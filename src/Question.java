@@ -88,7 +88,7 @@ public class Question implements Serializable {
     public String toString() { //make 1 and 2 into a and b (-65)
         String s = question + "\n";
         for (int i = 0; i < choices.length; i++) {
-            s += String.format("   %c. %s\n", (char) (i+65), choices[i]);
+            s += String.format("   %c. %s\n", (char) (i + 65), choices[i]);
         }
         return s;
     }

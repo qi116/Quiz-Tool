@@ -160,7 +160,8 @@ public class QuizTool {
                                                 System.out.println("Current Question:\n" + modifyQuestion);
                                                 System.out.println("Enter the new question:");
                                                 String questionName = scan.nextLine();
-                                                System.out.println("How many answer choices will this question have?:");
+                                                System.out.println("How many answer choices"
+                                                        + " will this question have?:");
                                                 int numChoices = Integer.parseInt(scan.nextLine());
                                                 String[] choices = new String[numChoices];
                                                 for (int j = 0; j < numChoices; j++) {

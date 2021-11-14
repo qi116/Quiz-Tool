@@ -79,7 +79,7 @@ public class AccessData {
         try {
             File folder = new File("data/accounts");
             File[] files = folder.listFiles();
-            ArrayList<Account> accountsArrayList= new ArrayList<Account>();
+            ArrayList<Account> accountsArrayList = new ArrayList<Account>();
             for (int i = 0; i < files.length; i++) {
                 Account a = (Account) getObjectFromFile("/accounts/" + files[i].getName());
                 if (a instanceof Student)
@@ -126,7 +126,7 @@ public class AccessData {
     public static Course getCourse(String courseName) throws NullPointerException {
         try {
             return (Course) getObjectFromFile("courses/" +
-                    courseName.replace(" ","-") + ".obj");
+                    courseName.replace(" ", "-") + ".obj");
         } catch (FileNotFoundException e) {
             throw new NullPointerException("A quiz with that name does not exist");
         }
