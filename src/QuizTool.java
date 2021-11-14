@@ -124,6 +124,7 @@ public class QuizTool {
                                         }
                                         selectedCourse.addQuiz(new Quiz(currentQuiz, quiz));
                                         AccessData.modifyCourse(currentCourse, selectedCourse);
+                                        System.out.println("Quiz created!");
                                         break;
                                     case "2":
                                         System.out.println("Enter the quiz name:");
