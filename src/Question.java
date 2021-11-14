@@ -19,7 +19,6 @@ public class Question implements Serializable {
     private String answer; //not necessary
     private boolean isRandomized = false;
 
-
     private String[] choices;
     private int grade;
     private int studentAnswer;
