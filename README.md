@@ -2,7 +2,7 @@
 Nathan Leakeas, Peter Olsen, Brian Qi, Hawkins Peterson
 
 ## Compile Instructions
-Our project can be compiled by using the cd command to navigate to the src directory.
+Our project can be compiled by using the cd command to navigate to the `src` directory.
 From there, run `javac *.java` to compile the java files to .class files.
 
 ## Run Instructions
