@@ -37,3 +37,11 @@ after compiling.
     * Used by QuizTool main class
 * Account Test
     * Tests Student and Teacher method implementations
+* QuizTool - Peter Olsen
+  * User Interface for project
+  * Login/Account Creation Menu
+  * Teacher Course Modification, Quiz Modification, and Quiz Grading
+  * Student Quiz Taking and Submission Viewing
+  * Uses classes Course, Quiz, Question, Student, Teacher, Account, and AccessData
+* QuizToolTest
+  * Tests QuizTool class implementation

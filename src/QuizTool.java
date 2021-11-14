@@ -89,6 +89,7 @@ public class QuizTool {
                         for (int i = 0; i < allCourses.length; i++) {
                             System.out.println(allCourses[i]);
                         }
+                        selectedCourse = null;
                         System.out.println("Enter the course name:");
                         currentCourse = scan.nextLine();
                         for (Course c : courseList) {
