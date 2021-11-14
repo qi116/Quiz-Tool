@@ -81,4 +81,9 @@ public class Course implements Serializable {
         }
 
     }
+
+    //returns entire arrayList of quizzes
+    public ArrayList<Quiz> getQuizzes() {
+        return this.quizzes;
+    }
 }
