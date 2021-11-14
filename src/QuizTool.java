@@ -20,6 +20,7 @@ public class QuizTool {
         Course selectedCourse = null;
         Quiz selectedQuiz = null;
         ArrayList<Course> courseList;
+        Calendar calendar = Calendar.getInstance();
         //system then initiates login process
         while (menuActive) {
             System.out.println("1. Login\n2. Create Account\n3. Exit");
@@ -60,6 +61,11 @@ public class QuizTool {
                     } else {
                         account = new Student(username, password);
                     }
+                    try {
+                        AccessData.addAccount(account);
+                    } catch (FileAlreadyExistsException e) {
+                        e.printStackTrace();
+                    }
                     menuActive = false;
                     break;
                 case "3":
@@ -94,7 +100,7 @@ public class QuizTool {
                             System.out.println("Invalid Course Name");
                         } else {
                             while (menuActive) {
-                                System.out.println("1. Create New Quiz\n2. Remove Quiz\n3. Modify Quiz" +
+                                System.out.println("1. Create New Quiz\n2. Remove Quiz\n3. Modify Quiz\n" +
                                         "4. Close Quiz Menu");
                                 menuChoice = scan.nextLine();
                                 switch (menuChoice) {
@@ -117,6 +123,7 @@ public class QuizTool {
                                             quiz[i] = new Question(questionName, choices);
                                         }
                                         selectedCourse.addQuiz(new Quiz(currentQuiz, quiz));
+                                        AccessData.modifyCourse(currentCourse, selectedCourse);
                                         break;
                                     case "2":
                                         System.out.println("Enter the quiz name:");
@@ -127,6 +134,7 @@ public class QuizTool {
                                         } else {
                                             selectedCourse.removeQuiz(selectedQuiz);
                                         }
+                                        AccessData.modifyCourse(currentCourse, selectedCourse);
                                         break;
                                     case "3":
                                         System.out.println("Enter the quiz name:");
@@ -156,6 +164,7 @@ public class QuizTool {
 
                                             }
                                         }
+                                        AccessData.modifyCourse(currentCourse, selectedCourse);
                                         break;
                                     case "4":
                                         menuActive = false;
@@ -171,15 +180,23 @@ public class QuizTool {
                     case "2":
                         System.out.println("Enter the course name:");
                         currentCourse = scan.nextLine();
-                        ((Teacher) account).createCourse(currentCourse);
+                        try {
+                            AccessData.addCourse(((Teacher) account).createCourse(currentCourse));
+                        } catch (FileAlreadyExistsException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case "3":
                         System.out.println("Enter the course name:");
                         currentCourse = scan.nextLine();
                         ((Teacher) account).removeCourse(currentCourse);
+                        AccessData.removeCourse(currentCourse);
                         break;
                     case "4":
-                        //lists out all student usernames
+                        String[] allUsernames = AccessData.getAllUsernames();
+                        for (int i = 0; i < allUsernames.length; i++) {
+                            System.out.println(allUsernames[i]);
+                        }
                         System.out.println("Select a Student:");
                         String studentName = scan.nextLine();
                         if (AccessData.usernameExists(studentName)) {
@@ -192,15 +209,15 @@ public class QuizTool {
                                 }
                                 System.out.println("Select A Quiz:");
                                 String quizName = scan.nextLine();
-                                ArrayList<Quiz> submissionsForQuiz = student.getQuizSubmissionByName();
+                                ArrayList<Quiz> submissionsForQuiz = student.getQuizSubmissionByName(quizName);
                                 for (Quiz q : submissionsForQuiz) {
-                                    System.out.println(q.getTimestamp());
+                                    System.out.println(q.getTimeStamp());
                                 }
                                 System.out.println("Select a Timestamp");
                                 String timestamp = scan.nextLine();
                                 Quiz gradeQuiz = null;
                                 for (Quiz q : submissionsForQuiz) {
-                                    if (q.getTimestamp().equals(timestamp)) {
+                                    if (q.getTimeStamp().equals(timestamp)) {
                                         gradeQuiz = q;
                                         break;
                                     }
@@ -236,7 +253,7 @@ public class QuizTool {
             }
         } else if (account instanceof Student) { //assumes the account is a student
             while (menuActive) {
-                System.out.prntln("1. Take Quiz\n2. View Grades\n3. Exit");
+                System.out.println("1. Take Quiz\n2. View Grades\n3. Exit");
                 menuChoice = scan.nextLine();
                 switch (menuChoice) {
                     case "1":
@@ -258,7 +275,12 @@ public class QuizTool {
                                 char studentAnswer = scan.nextLine().charAt(0);
                                 currentQuestion.setStudentAnswer(studentAnswer - 65);
                             }
+                            String date = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH);
+                            date += "-" + calendar.get(Calendar.DATE) + " " + calendar.get(Calendar.HOUR_OF_DAY);
+                            date += ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
+                            selectedQuiz.setTimeStamp(date);
                             ((Student) account).addQuizSubmission(selectedQuiz);
+                            System.out.println("Quiz Submitted!");
 
                         } catch (NullPointerException e) {
                             System.out.println(e.getMessage());
