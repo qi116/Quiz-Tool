@@ -281,6 +281,10 @@ public class QuizTool {
                                 System.out.println("Invalid course name");
                                 break;
                             }
+                            ArrayList<Quiz> quizzes = selectedCourse.getQuizzes();
+                            for (int i = 0; i < quizzes.size(); i++) {
+                                System.out.println(quizzes.get(i).getName());
+                            }
                             System.out.println("Select a quiz:");
                             currentQuiz = scan.nextLine();
                             selectedQuiz = selectedCourse.getQuiz(currentQuiz);
