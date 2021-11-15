@@ -16,7 +16,7 @@ after compiling.
 We have different classes dedicated to testing parts of our project.
 * `AccountTest.java` tests Student, Teacher, and Account
 * `DataTest.java` test AccessData
-* `QuizToolTest.java` tests output of QuizTool and uses `test.java` (uses JUnit)
+* `QuizToolTest.java` tests output of QuizTool and uses `TestUtil.java` (uses JUnit)
 * `RunTest.java` tests output of Quiz, Question, and Course (Uses JUnit)
 
 `AccountTest.java` and `DataTest.java` can be run and executed by compiling them
