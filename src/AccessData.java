@@ -15,7 +15,7 @@ public class AccessData {
      * @param password the password of the user
      * @return an account object corosponding to the username and password given 
      */
-    public synchronized static Account getAccountData(String username, String password) throws NullPointerException {
+    public static Account getAccountData(String username, String password) throws NullPointerException {
         checkFileExists("accounts/" + username);
 
         Account account = (Account) getObjectFromFile("accounts/" + username);
@@ -30,7 +30,7 @@ public class AccessData {
      * @return an account of a student that a teacher is fetching
      * @throws NullPointerException
      */
-    public synchronized static Student getAccountData(String username) throws NullPointerException {
+    public static Student getAccountData(String username) throws NullPointerException {
         checkFileExists("accounts/" + username);
 
         Account account = (Account) getObjectFromFile("accounts/" + username);
@@ -41,7 +41,7 @@ public class AccessData {
      * @return if a username already exists (true = yell at user, false = ok)
      * @param username the username to check
      */
-    public synchronized static boolean usernameExists(String username) {
+    public static boolean usernameExists(String username) {
         try {
             checkFileExists("account/" + username);
             return true;
@@ -55,7 +55,7 @@ public class AccessData {
      * I will add a checkUsername(String username) class later
      * @param account an account to be added to the system
      */
-    public synchronized static void addAccount(Account account) throws FileAlreadyExistsException {
+    public static void addAccount(Account account) throws FileAlreadyExistsException {
         createFolders();
         checkFileDoesNotExist("accounts/" + account.getUsername());
         writeObjectToFile("accounts/" + account.getUsername(), account);
@@ -94,7 +94,7 @@ public class AccessData {
      * gets all usernames
      * @return all usernames
      */
-    public synchronized static String[] getAllUsernames() {
+    public static String[] getAllUsernames() {
         Account[] accounts = getAllAccounts();
         String[] usernames = new String[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
@@ -107,7 +107,7 @@ public class AccessData {
      * saves a user object using the account name
      * @param account the account to be added
      */
-    public synchronized static void writeAccountData(Account account) {
+    public static void writeAccountData(Account account) {
         writeObjectToFile("accounts/" + account.getUsername(), account);
     }
 
@@ -116,7 +116,7 @@ public class AccessData {
      * @param courseName the name of the course to be fetched
      * @return an already existing course
      */
-    public synchronized static Course getCourse(String courseName) throws NullPointerException {
+    public static Course getCourse(String courseName) throws NullPointerException {
         checkFileExists("courses/" + courseName.replace(" ", "-"));
         return (Course) getObjectFromFile("courses/" + courseName.replace(" ", "-"));
     }
@@ -145,7 +145,7 @@ public class AccessData {
      * Returns a string of all course names
      * @return a string of all course names
      */
-    public synchronized static String[] getAllCourseNames() {
+    public static String[] getAllCourseNames() {
         Course[] courses = getAllCourses();
         String[] courseNames = new String[courses.length];
         for (int i = 0; i < courses.length; i++) {
@@ -157,7 +157,7 @@ public class AccessData {
      * allows a teacher to create a course
      * @param course the course object
      */
-    public synchronized static void addCourse(Course course) throws FileAlreadyExistsException {
+    public static void addCourse(Course course) throws FileAlreadyExistsException {
         checkFileDoesNotExist("courses/" + course.getName().replace(" ", "-"));
         writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
     }
@@ -167,7 +167,7 @@ public class AccessData {
      * @param courseName the name of the course
      * @param course the course object
      */
-    public synchronized static void modifyCourse(Course course) throws NullPointerException {
+    public static void modifyCourse(Course course) throws NullPointerException {
         checkFileExists("courses/" + course.getName().replace(" ","-"));
         writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
     }
