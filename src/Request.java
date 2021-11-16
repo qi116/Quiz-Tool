@@ -10,7 +10,7 @@ public class Request {
         this.course = null;
         this.fileName = "data/accounts/" + account.getUsername() + ".obj";
         this.requestType = requestType;
-        this.dataType = null;
+        this.dataType = DataType.ACCOUNT;
     }
 
     public Request(Course course, RequestType requestType) {
@@ -18,7 +18,7 @@ public class Request {
         this.course = course;
         this.fileName = "data/courses/" + course.getName().replace(" ", "-") + ".obj";
         this.requestType = requestType;
-        this.dataType = null;
+        this.dataType = DataType.Course;
     }
 
     public Request(String fileName, DataType dataType) {
@@ -26,11 +26,11 @@ public class Request {
         this.course = null;
         this.fileName = "data/" + dataType.getFolderName() + "/" +
             fileName + ".obj";
-        this.requestType = null;
+        this.requestType = RequestType.GET;
         this.dataType = dataType;
     }
 
-    public enum RequestType {ADD, MODIFY, REMOVE}
+    public enum RequestType {GET, ADD, MODIFY, REMOVE}
     public enum DataType {
         ACCOUNT("accounts"), STUDENT("accounts"), COURSE("courses");
 
@@ -45,4 +45,14 @@ public class Request {
         }
     }
 
+    public Object[] getData() {
+        Object[] toReturn = {null, dataType, requestType, fileName};
+        if (account != null)
+            toReturn[0] = account;
+        else if (course != null)
+            toReturn[0] = course;
+        else
+            toReturn[0] = null;
+        return toReturn;
+    }
 }
