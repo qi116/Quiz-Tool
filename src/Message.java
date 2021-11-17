@@ -5,10 +5,14 @@ import java.io.Serializable;
  * @version 11.17.21
  */
 public class Message implements Serializable {
-    public String protocol;
-    public Object o;
+    public enum Protocol { //TODO - add more protocols
+        LOGOUT, LOGIN, DELETE, LIST, COURSE, QUIZ, ACCOUNT
+    }
 
-    public Message(String protocol, Object o) {
+    public Protocol protocol;
+    public Object[] o;
+
+    public Message(Protocol protocol, Object[] o) {
         this.protocol = protocol;
         this.o = o;
     }
