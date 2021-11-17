@@ -16,14 +16,12 @@ public class AccessData {
      * @return an account object corosponding to the username and password given 
      */
     public static Account getAccountData(String username, String password) throws NullPointerException {
-        try {
-            Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
-            if (account.getPassword().equals(password))
-                return account;
-            throw new NullPointerException("No account with that username / password combination");
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("No account with that username / password combination");
-        }
+        checkFileExists("accounts/" + username);
+
+        Account account = (Account) getObjectFromFile("accounts/" + username);
+        if (account.getPassword().equals(password))
+            return account;
+        throw new NullPointerException("No account with that username / password combination");
     }
 
     /**
@@ -32,14 +30,11 @@ public class AccessData {
      * @return an account of a student that a teacher is fetching
      * @throws NullPointerException
      */
-    public static Account getAccountData(String username) throws NullPointerException {
-        try {
-            Account account = (Account) getObjectFromFile("accounts/" + username + ".obj");
-            return account;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new NullPointerException("No account with that username");
-        }
+    public static Student getAccountData(String username) throws NullPointerException {
+        checkFileExists("accounts/" + username);
+
+        Account account = (Account) getObjectFromFile("accounts/" + username);
+        return (Student) account;        
     }
     /**
      * returns if a username already exists (true = yell at user, false = ok)
@@ -48,25 +43,22 @@ public class AccessData {
      */
     public static boolean usernameExists(String username) {
         try {
-            new FileInputStream("data/accounts/" + username + ".obj");
+            checkFileExists("account/" + username);
             return true;
-        } catch (FileNotFoundException e) {
+        } catch (NullPointerException e) {
             return false;
         }
     }
+
     /**
      * Creates a new account (throws FileAlreadyExistsException if username taken)
      * I will add a checkUsername(String username) class later
      * @param account an account to be added to the system
      */
     public static void addAccount(Account account) throws FileAlreadyExistsException {
-        try {
-            createFolders();
-            new FileInputStream("data/accounts/" + account.getUsername() + ".obj");
-            throw new FileAlreadyExistsException("Account already exists");
-        } catch (FileNotFoundException e) {
-            writeObjectToFile("accounts/" + account.getUsername(), account);
-        }
+        createFolders();
+        checkFileDoesNotExist("accounts/" + account.getUsername());
+        writeObjectToFile("accounts/" + account.getUsername(), account);
     }
 
     /**
@@ -74,7 +66,7 @@ public class AccessData {
      * @return Returns a List of all student accounts
      * @throws NullPointerException (if there is no /data/accounts/)
      */
-    private static Account[] getAllAccounts() throws NullPointerException {
+    private synchronized static Account[] getAllAccounts() throws NullPointerException {
         Account[] accounts;
         try {
             File folder = new File("data/accounts");
@@ -87,13 +79,14 @@ public class AccessData {
             }
             accounts = new Account[accountsArrayList.size()];
             for (int i = 0; i < accountsArrayList.size(); i++) {
+            }
+            accounts = new Account[accountsArrayList.size()];
+            for (int i = 0; i < accountsArrayList.size(); i++) {
                 accounts[i] = accountsArrayList.get(i);
             }
         } catch (NullPointerException e) {
             accounts = new Account[0];
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("Folders not created! (data/accounts && data/courses required)");
-        }
+        } 
         return accounts;
     }
 
@@ -124,12 +117,8 @@ public class AccessData {
      * @return an already existing course
      */
     public static Course getCourse(String courseName) throws NullPointerException {
-        try {
-            return (Course) getObjectFromFile("courses/" +
-                    courseName.replace(" ", "-") + ".obj");
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("A quiz with that name does not exist");
-        }
+        checkFileExists("courses/" + courseName.replace(" ", "-"));
+        return (Course) getObjectFromFile("courses/" + courseName.replace(" ", "-"));
     }
 
     /**
@@ -137,7 +126,7 @@ public class AccessData {
      * If no courses are to be found, returns an empty list
      * @return a list of all courses
      */
-    private static Course[] getAllCourses() throws NullPointerException {
+    private synchronized static Course[] getAllCourses() throws NullPointerException {
         Course[] courses;
         try {
             File folder = new File("data/courses");
@@ -149,9 +138,6 @@ public class AccessData {
         } catch (NullPointerException e) {
             e.printStackTrace();
             courses = new Course[0];
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new NullPointerException("Folders not created! (data/accounts && data/courses required)");
         }
         return courses;
     }
@@ -172,12 +158,8 @@ public class AccessData {
      * @param course the course object
      */
     public static void addCourse(Course course) throws FileAlreadyExistsException {
-        try {
-            new FileInputStream("data/courses/" + course.getName().replace(" ", "-") + ".obj");
-            throw new FileAlreadyExistsException("File already exists");
-        } catch (Exception e) {
-            writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
-        }
+        checkFileDoesNotExist("courses/" + course.getName().replace(" ", "-"));
+        writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
     }
 
     /**
@@ -185,47 +167,38 @@ public class AccessData {
      * @param courseName the name of the course
      * @param course the course object
      */
-    public static void modifyCourse(String courseName, Course course) throws NullPointerException {
-        try {
-            new FileInputStream("data/courses/" + courseName.replace(" ", "-") + ".obj");
-            new File("data/courses/" + course.getName().replace(" ", "-") + ".obj");
-            writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("File does not exists");
-        }
+    public static void modifyCourse(Course course) throws NullPointerException {
+        checkFileExists("courses/" + course.getName().replace(" ","-"));
+        writeObjectToFile("courses/" + course.getName().replace(" ", "-"), course);
     }
 
      /**
      * Removes a course with name courseName
      * @param courseName the name of the course
      */
-    public static void removeCourse(String courseName) throws NullPointerException {
-        try {
-            new FileInputStream("data/courses/" + courseName + ".obj");
-            File f = new File("data/courses/" + courseName + ".obj");
-            f.delete();
-        } catch (FileNotFoundException e) {
-            throw new NullPointerException("Course does not exist");
-        }
+    public synchronized static void removeCourse(String courseName) throws NullPointerException {
+        checkFileExists("courses/" + courseName);
+        File f = new File("data/courses/" + courseName + ".obj");
+        f.delete();
     }
 
 
-    private static Object getObjectFromFile(String fileName) throws FileNotFoundException {
+    private synchronized static Object getObjectFromFile(String fileName) throws NullPointerException {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
-                    new FileInputStream(new File("data/" + fileName)));
+                    new FileInputStream(new File("data/" + fileName + ".obj")));
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
             //
         } catch (ClassNotFoundException e) {
-            throw new FileNotFoundException("Error, object empty");
-        }
+            throw new NullPointerException("Error, object empty");
+        } 
         return toReturn;
     }
 
-    private static void writeObjectToFile(String fileName, Object o) {
+    private synchronized static void writeObjectToFile(String fileName, Object o) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File("data/" + fileName + ".obj")));
@@ -240,13 +213,30 @@ public class AccessData {
     /**
      * ThIs HaS tO bE dOnE cLiEnT sIdE
      */
-    private static void createFolders() {
+    private synchronized static void createFolders() {
         try {
             new File("data").mkdir();
             new File("data/accounts").mkdir();
             new File("data/courses").mkdir();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private synchronized static void checkFileExists(String fileName) throws NullPointerException {
+        try {
+            new FileInputStream("data/" + fileName + ".obj");
+        } catch (FileNotFoundException e) {
+            throw new NullPointerException("File Doesn't exist");
+        }
+    }
+
+    private synchronized static void checkFileDoesNotExist(String fileName) throws FileAlreadyExistsException {
+        try {
+            new FileInputStream("data/" + fileName + ".obj");
+            throw new FileAlreadyExistsException("File already exists");
+        } catch (FileNotFoundException e) {
+            //if the file doesn't exist, Yay!
         }
     }
 }
