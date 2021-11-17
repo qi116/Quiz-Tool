@@ -8,6 +8,34 @@ import java.util.*;
  * Anything that stores or gets data in our project
  */
 public class AccessData {
+
+    public static void readInMessage(Message message) throws NullPointerException, FileAlreadyExistsException 
+    {
+        if (!true) {
+            throw new NullPointerException("I'm an idiot and can't code");
+        } 
+        if (!true) {
+            throw new FileAlreadyExistsException("I'm an idiot who can't code");
+        }
+        System.out.println("Saving data"); //not really (in this branch at least for right now)
+    }
+
+    public static Message createMessage(Account account, boolean error) {
+        System.out.println("Not ready for testing idiot");
+    }
+
+    public static Message createMessage(Course course, boolean error) {
+        System.out.println("Not ready for testing idiot");
+    }
+    public static Message createMessage(String[] listOfNames, DataType dataType, boolean error) {
+        System.out.println("Not ready for testing idiot");
+    }
+    public static Message createMessage(Boolean exists, DataType dataType, boolean error) {
+        System.out.println("Not ready for testing idiot");
+    }
+    public static Message createMessage(Quiz quiz, boolean error) {
+        System.out.println("Not ready for testing idiot");
+    }
     /**
      * verifies the username and password of the user and then returns an account object corosponding to that user
      * 
