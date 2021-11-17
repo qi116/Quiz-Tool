@@ -1,4 +1,4 @@
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -13,7 +13,25 @@ public class ServerThread implements Runnable {
     }
 
     public void run() {
-        
+        try {
+            OutputStream sOut = sock.getOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(sOut);
+            InputStream sIn = sock.getInputStream();
+            ObjectInputStream in = new ObjectInputStream(sIn);
+
+            boolean cont = true;
+
+            while (cont) {
+                Message rec = (Message) in.readObject();
+                //logic here
+            }
+
+        } catch (IOException e) {
+
+        } catch (ClassNotFoundException e) {
+
+        }
+
     }
 
 }
