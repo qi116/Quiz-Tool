@@ -6,7 +6,8 @@ import java.net.Socket;
  * @version 11.17.21
  */
 public class ServerThread implements Runnable {
-    private Socket sock;
+    private final Socket sock;
+    private Account acct;
 
     public ServerThread(Socket sock) {
         this.sock = sock;
@@ -22,8 +23,9 @@ public class ServerThread implements Runnable {
             boolean cont = true;
 
             while (cont) {
-                Message rec = (Message) in.readObject();
+                Object rec = in.readObject();
                 //logic here
+                
             }
 
         } catch (IOException e) {
