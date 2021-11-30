@@ -5,22 +5,23 @@ import java.util.*;
  * @author Hawkins Peterson
  * @version 11.03.21
  * 
- * Anything that stores or gets data in our project
+ * Base class for anything that stores or gets data in our project
  */
 public class ServerDataAccessor {
-    private final String folder; 
-    private final String fileType;
+    private final String folderPrefix; //the prefix for the file you want to access (ie data/accounts/)
+    private final String fileType; //the filetype of the file you want to access
 
-
-    public ServerDataAccessor(String folder, String fileType) {
-        this.folder = folder;
+    /**
+     * Constructs a new data accessor
+     *
+     * @param folderPrefix the prefix of the file you want to access 
+     * @param fileType the fileType of the file you want to access
+     */
+    public ServerDataAccessor(String folderPrefix, String fileType) {
+        this.folderPrefix = folderPrefix;
         this.fileType = fileType;
     }
 
-    public ServerDataAccessor() {
-        folder = "/data";
-        fileType = ".obj";
-    }
     /**
      * verifies the username and password of the user and then returns an account object corosponding to that user
      * 
@@ -49,7 +50,7 @@ public class ServerDataAccessor {
 
     /**
      * Creates a new account (throws FileAlreadyExistsException if username taken)
-     * I will add a checkUsername(String username) class later
+     *
      * @param account an account to be added to the system
      */
     protected void addData(Object o, String filename) throws FileAlreadyExistsException {
@@ -60,13 +61,14 @@ public class ServerDataAccessor {
 
     /**
      * Gets all accounts in /data/accounts/
+     *
      * @return Returns a List of all student accounts
      * @throws NullPointerException (if there is no /data/accounts/)
      */
     protected synchronized Object[] getListVerbose() throws NullPointerException {
         Object[] objects;
         try {
-            File folder = new File(this.folder);
+            File folder = new File(this.folderPrefix);
             File[] files = folder.listFiles();
             ArrayList<Object> objectsArrayList = new ArrayList<Object>();
             for (int i = 0; i < files.length; i++) {
@@ -101,7 +103,7 @@ public class ServerDataAccessor {
      */
     protected synchronized void removeData(String fileName) throws NullPointerException {
         checkFileExists(fileName);
-        File f = new File(folder + fileName + fileType);
+        File f = new File(folderPrefix + fileName + fileType);
         f.delete();
     }
 
@@ -110,7 +112,7 @@ public class ServerDataAccessor {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
-                    new FileInputStream(new File(folder + fileName + fileType)));
+                    new FileInputStream(new File(folderPrefix + fileName + fileType)));
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
@@ -125,7 +127,7 @@ public class ServerDataAccessor {
         
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
-                    new FileOutputStream(new File(folder + fileName + fileType)));
+                    new FileOutputStream(new File(folderPrefix + fileName + fileType)));
             oos.writeObject(o);
             oos.flush();
             oos.close();
@@ -149,7 +151,7 @@ public class ServerDataAccessor {
 
     private synchronized void checkFileExists(String fileName) throws NullPointerException {
         try {
-            new FileInputStream(folder + fileName + fileType);
+            new FileInputStream(folderPrefix + fileName + fileType);
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File Doesn't exist");
         }
@@ -157,7 +159,7 @@ public class ServerDataAccessor {
 
     private synchronized void checkFileDoesNotExist(String fileName) throws FileAlreadyExistsException {
         try {
-            new FileInputStream(folder + fileName + fileType);
+            new FileInputStream(folderPrefix + fileName + fileType);
             throw new FileAlreadyExistsException("File already exists");
         } catch (FileNotFoundException e) {
             //if the file doesn't exist, Yay!

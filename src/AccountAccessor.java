@@ -1,13 +1,24 @@
-import java.util.*;
-
+/**
+ * an accessor for accounts
+ *
+ * @author Hawkins Peterson
+ * @version 11.30.21
+ */
 public class AccountAccessor extends ServerDataAccessor {
-    private static final String folder = "data/accounts";
+    private static final String folderPrefix = "data/accounts";
     private static final String fileType = ".obj";
     private ServerDataAccessor dataAccessor;
     public AccountAccessor() {
-        super(folder, fileType);
+        super(folderPrefix, fileType);
     }
 
+    /**
+     * gets a new AccountAccessor
+     *
+     * @param username the username of the account you want to access
+     * @param password the password of the account you want to access
+     * @return the account you want to access (null if an error was thrown)
+     */
     public Account get(String username, String password) throws NullPointerException {
         try {
             Account account = (Account) super.get(username);
@@ -20,39 +31,20 @@ public class AccountAccessor extends ServerDataAccessor {
         }
     }
 
-    public Student get(String username) throws NullPointerException {
-        try {
-            Account student = (Account) super.get(username);
-            if (student instanceof Student)
-                return (Student) student;
-            else 
-                throw new NullPointerException("a student account with that username was not found");
-        } catch (Exception e) {
-            throw new NullPointerException("a student account with that username was not found");
-        }
-    }
-
-    public boolean checkExists(String username) {
-        return super.checkExists(username);
-    }
-
-    public String[] getStudentList() {
-        Object[] ol = super.getListVerbose();
-        ArrayList<Account> aal = new ArrayList<Account>();
-        for (int i = 0; i < ol.length; i++)
-            if (aal.get(i) instanceof Student)
-                aal.add((Account) ol[i]);
-        String[] usernameList = new String[aal.size()];
-        for (int i = 0; i < aal.size(); i++)
-            usernameList[i] = aal.get(i).getUsername();
-
-        return usernameList;
-    }
-
+    /**
+     * given an Account object adds it to the data
+     * 
+     * @param account the account to be added to data
+     */
     public void add(Account account) throws FileAlreadyExistsException {
         super.addData(account, account.getUsername());
     }
 
+    /**
+     * given an Account object, saves it so long as it doesn't exist
+     * 
+     * @param account the account to be saved
+     */
     public void modify(Account account) throws NullPointerException {
         super.modifyData(account, account.getUsername());
     }
