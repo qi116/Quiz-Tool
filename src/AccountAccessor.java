@@ -2,8 +2,8 @@ import java.util.*;
 
 public class AccountAccessor extends ServerDataAccessor {
     private static final String folder = "data/accounts";
-    public static final String fileType = ".obj";
-    public ServerDataAccessor dataAccessor;
+    private static final String fileType = ".obj";
+    private ServerDataAccessor dataAccessor;
     public AccountAccessor() {
         super(folder, fileType);
     }
