@@ -20,10 +20,8 @@ public class Response extends Message {
      * @param clientMessedUp if the client messed up
      * @param iMessedUp if I messed up my programming
      */
-    public Response(Object object, DataType dataType, boolean clientMessedUp, boolean iMessedUp) {
+    public Response(Object object, DataType dataType) {
         super(object, dataType);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
     }
     
     /**
@@ -34,11 +32,9 @@ public class Response extends Message {
      * @param clientMessedUp if the client messed up
      * @param iMessedUp if I messed my programming
      */
-    public Response(String[] stringL, boolean clientMessedUp, boolean iMessedUp) {
+    public Response(String[] stringL) {
         super(stringL, DataType.STRINGL);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
-    }
+        }
     
     /**
      * Creates a new resposnse object given a boolean and errors.
@@ -48,12 +44,19 @@ public class Response extends Message {
      * @param clientMessedUp if the client messed up
      * @param iMessedUp if I messed up my programming
      */
-    public Response(boolean bool, boolean clientMessedUp, boolean iMessedUp) {
+    public Response(boolean bool) {
         super(bool, DataType.BOOLEAN);
+    }
+    
+    /**
+     *
+     *
+     */
+    public Response(boolean clientMessedUp, boolean iMessedUp) {
+        super(null, null);
         this.clientMessedUp = clientMessedUp;
         this.iMessedUp = iMessedUp;
     }
-    
     /**
      * if there was an error (use wasExpected error generally)
      * @Returns if there was an error

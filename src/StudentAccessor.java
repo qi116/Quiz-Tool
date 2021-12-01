@@ -36,7 +36,7 @@ public class StudentAccessor extends ServerDataAccessor {
      * Returns a list of all student usernames
      * @return a list of all student usernames
      */
-    public String[] getStudentList() {
+    public String[] getList() {
         Object[] ol = super.getListVerbose();
         ArrayList<Account> aal = new ArrayList<Account>();
         for (int i = 0; i < ol.length; i++) 

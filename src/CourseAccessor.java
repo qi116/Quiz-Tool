@@ -31,7 +31,7 @@ public class CourseAccessor extends ServerDataAccessor {
      * @param course the name of the course
      * @return a boolean if the course exists
      */
-    public boolean checkCourseExists(String courseName) {
+    public boolean checkExists(String courseName) {
         return super.checkExists(courseName.replace(" ", "-"));
     }
 
@@ -39,7 +39,7 @@ public class CourseAccessor extends ServerDataAccessor {
      * Returns a list of course names
      * @return a list of course names
      */
-    public String[] getCourseList() {
+    public String[] getList() {
         Object[] ol = super.getListVerbose();
         String[] courseNameList = new String[ol.length];
         for (int i = 0; i < ol.length; i++)

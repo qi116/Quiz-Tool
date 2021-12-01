@@ -166,17 +166,3 @@ public class ServerDataAccessor {
         }
     }
 }
-
-enum DataType {
-    ACCOUNT("accounts/"),
-    STUDENT("accounts/"),
-    COURSE("courses/"),
-    STRING(""),
-    STRINGL("");
-
-
-    String folder;
-    DataType(String folder) {
-        this.folder = folder;
-    }
-}
