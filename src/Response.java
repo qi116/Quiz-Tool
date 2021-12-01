@@ -14,6 +14,8 @@ public class Response extends Message {
     /**
      * constructs an error message to send back to the user
      *
+     * @param clientError if the client messed up (nullPointer or fileAlreadyExists)
+     * @param devError any other error
      */
     public Response(boolean clientError, boolean devError) {
         super(null);
@@ -21,6 +23,14 @@ public class Response extends Message {
         this.devError = devError;
     }
 
+    /**
+     * constructs a message without any errors
+     *
+     * @param content the object to be sent back to the user
+     */
+    public Response(Object content) {
+        super(content);
+    }
     /**
      * if there was an error and I expected it
      * @return if there was an error and I expected it
