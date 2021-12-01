@@ -19,7 +19,7 @@ public class Request extends Message {
     public Request(String contentPath, Object content, RequestType requestType, boolean isTeacher) {
         super(content);
         this.requestType = requestType;
-        this.isTeacher = isTeacher
+        this.isTeacher = isTeacher;
     }
 
     /**
