@@ -8,75 +8,31 @@
  * @version 11.30.21
  */
 public class Response extends Message {
-    private boolean clientMessedUp = false; // null pointer exception
-    private boolean iMessedUp = false; // I messed up my coding
+    private boolean clientError = false; // nullPointeriException or fileAlreadyExistsException
+    private boolean devError = false; // I messed up my coding
 
     /**
-     * Creates a new Response object given an object dataType and errors
-     * used to respond to a GET request
-     *
-     * @param object the object to be sent to the client
-     * @param dataType the data type of the object to be sent to the client
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed up my programming
-     */
-    public Response(Object object, DataType dataType) {
-        super(object, dataType);
-    }
-    
-    /**
-     * Creates a new response object given a string list, and errors
-     * used to respond to a GET_STRING_LIST request
-     *
-     * @param stringL the string list to be returned to the user
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed my programming
-     */
-    public Response(String[] stringL) {
-        super(stringL, DataType.STRINGL);
-        }
-    
-    /**
-     * Creates a new resposnse object given a boolean and errors.
-     * used to respond to an ADD, MODIFY, CHECK_EXISTS, and REMOVE request
-     *
-     * @param bool if the request succeded (for any push to the server) or if the requested object exists
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed up my programming
-     */
-    public Response(boolean bool) {
-        super(bool, DataType.BOOLEAN);
-    }
-    
-    /**
-     *
+     * constructs an error message to send back to the user
      *
      */
-    public Response(boolean clientMessedUp, boolean iMessedUp) {
-        super(null, null);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
-    }
-    /**
-     * if there was an error (use wasExpected error generally)
-     * @Returns if there was an error
-     */
-    public boolean wasError() {
-        return clientMessedUp || iMessedUp;
+    public Response(boolean clientError, boolean devError) {
+        super(null);
+        this.clientError = clientError;
+        this.devError = devError;
     }
 
     /**
      * if there was an error and I expected it
      * @return if there was an error and I expected it
      */
-    public boolean wasExpectedError() {
-        return clientMessedUp;
+    public boolean expectedErrorOccured() {
+        return clientError;
     }
     /**
      * if there was an error and I didn't expected it
      * @return if there was an error and I didn't expected it
      */
-    public boolean wasUnexpectedError() {
-        return iMessedUp;
+    public boolean unexpectedErrorOccured() {
+        return devError;
     }
 }
