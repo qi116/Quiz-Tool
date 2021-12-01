@@ -1,7 +1,10 @@
+import java.util.*;
+
 public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
 
     public ServerDataHandler() {
+        super(".obj");
         isTeacher = false;
     }
 
@@ -24,7 +27,7 @@ public class ServerDataHandler extends ServerDataAccessor {
 
     private boolean accountExists(String accountName) {
         try {
-            super.setFolderPrefix("data/accounts/")
+            super.setFolderPrefix("data/accounts/");
             super.checkFileExists(accountName);
             return true;
         } catch (NullPointerException e) {
@@ -44,13 +47,13 @@ public class ServerDataHandler extends ServerDataAccessor {
     private String[] listStudents() throws NullPointerException {
         super.setFolderPrefix("data/accounts/");
         Object[] ol = super.getListVerbose();
-        ArrayList<Student> asl = new ArrayList<Student>();
+        ArrayList<Student> sal = new ArrayList<Student>();
         for (int i = 0; i < ol.length; i++)
             if (ol[i] instanceof Student)
-                aal.add((Student) ol[i]);
-        String[] usernameList = new String[aal.size()];
-        for (int i = 0; i < aal.size(); i++)
-            usernameList[i] = aal.get(i).getUsername();
+                sal.add((Student) ol[i]);
+        String[] usernameList = new String[sal.size()];
+        for (int i = 0; i < sal.size(); i++)
+            usernameList[i] = sal.get(i).getUsername();
 
         return usernameList;
     }
