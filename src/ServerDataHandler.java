@@ -1,4 +1,23 @@
 public class ServerDataHandler {
+    private boolean isTeacher;
+
+    public ServerDataHandler() {
+        isTeacher = false;
+    }
+    
+    public Response processRequest(Request request) {
+        return new Response(false, false);
+    }
+}
+    
+    
+    
+    
+    
+    
+    
+    
+/*
     public static Response getResponse(Request request) {
         RequestType requestType = request.getRequestType();
         DataType dataType = request.getDataType();
@@ -81,4 +100,4 @@ public class ServerDataHandler {
         }
         return new Response(true, false);
     }
-}
+}*/

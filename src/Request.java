@@ -17,7 +17,6 @@ public class Request extends Message {
     public Request(String contentPath, Object content, RequestType requestType) {
         super(content);
         this.requestType = requestType;
-        this.isTeacher = isTeacher;
     }
 
     /**
@@ -26,13 +25,5 @@ public class Request extends Message {
      */
     public RequestType getRequestType() {
         return requestType;
-    }
-
-    /**
-     * Returns if the requesting user is a teacher
-     * @return if the requesting user is a teacher
-     */
-    public boolean getTeacherStatus() {
-        return isTeacher;
     }
 }
