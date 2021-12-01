@@ -1,103 +1,92 @@
-public class ServerDataHandler {
+public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
 
     public ServerDataHandler() {
         isTeacher = false;
     }
-    
+
     public Response processRequest(Request request) {
         return new Response(false, false);
     }
-}
-    
-    
-    
-    
-    
-    
-    
-    
-/*
-    public static Response getResponse(Request request) {
-        RequestType requestType = request.getRequestType();
-        DataType dataType = request.getDataType();
-        Object object = request.getObject();
+
+    private Account getAccount(String username, String password) throws NullPointerException {
         try {
-            switch (dataType) {
-                case ACCOUNT:
-                    return account(requestType, object, new AccountAccessor());
-                case STUDENT:
-                    return student(requestType, object, new StudentAccessor());
-                case COURSE:
-                    return course(requestType, object, new CourseAccessor());
-            }
-            return new Response(false, true);
+            super.setFolderPrefix("data/accounts/");
+            Account account = (Account) super.get(username);
+            if (password.equals(account.getPassword()))
+                return account;
+            else
+                throw new NullPointerException("an account with that username / password combination was not found");
+        } catch (NullPointerException npe) {
+            throw new NullPointerException("an account with that username / password combination was not found");
+        }
+    }
+
+    private boolean accountExists(String accountName) {
+        try {
+            super.setFolderPrefix("data/accounts/")
+            super.checkFileExists(accountName);
+            return true;
         } catch (NullPointerException e) {
-            return new Response(true, false);
-        } catch (FileAlreadyExistsException e) {
-            return new Response(true, false);
-        } catch (Exception e) {
-            return new Response(false, true);
+            return false;
         }
     }
 
-    private static Response account(RequestType requestType, Object object, AccountAccessor accessor) 
-                        throws NullPointerException, FileAlreadyExistsException {
-        switch (requestType) {
-            case GET:
-                String[] sLData = (String[]) object;
-                return new Response(accessor.get(sLData[0], sLData[1]), DataType.ACCOUNT);
-            case CHECK_EXISTS:
-                String sData = (String) object;
-                return new Response(accessor.checkExists(sData));
-            case ADD:
-                Account aData = (Account) object;
-                accessor.add(aData);
-                return new Response(true);
-            case MODIFY:
-                Account aData2 = (Account) object;
-                accessor.modify(aData2);
-                return new Response(true);
-            }
-        return new Response(true, false);
+    private Account getStudentAccount(String username) throws NullPointerException {
+        super.setFolderPrefix("data/accounts/");
+        Account account = (Account) super.get(username);
+        if (account instanceof Student)
+            return (Student) account;
+        else
+            throw new NullPointerException("a student account with that username doesn't exist");
     }
 
-    private static Response student(RequestType requestType, Object object, StudentAccessor accessor) 
-                                throws NullPointerException, FileAlreadyExistsException {
-        switch (requestType) {
-            case GET:
-                String sData = (String) object;
-                return new Response(accessor.get(sData), DataType.ACCOUNT);
-            case GET_LIST:
-                return new Response(accessor.getList());
-        }
-        return new Response(false, true);
+    private String[] listStudents() throws NullPointerException {
+        super.setFolderPrefix("data/accounts/");
+        Object[] ol = super.getListVerbose();
+        ArrayList<Student> asl = new ArrayList<Student>();
+        for (int i = 0; i < ol.length; i++)
+            if (ol[i] instanceof Student)
+                aal.add((Student) ol[i]);
+        String[] usernameList = new String[aal.size()];
+        for (int i = 0; i < aal.size(); i++)
+            usernameList[i] = aal.get(i).getUsername();
+
+        return usernameList;
     }
-    
-    private static Response course(RequestType requestType, Object object, CourseAccessor accessor) 
-                                throws NullPointerException, FileAlreadyExistsException {
-        switch (requestType) {
-            case GET:
-                String sData = (String) object;
-                return new Response(accessor.get(sData), DataType.COURSE);
-            case CHECK_EXISTS:
-                String sData2 = (String) object;
-                return new Response(accessor.checkExists(sData2));
-            case GET_LIST:
-                return new Response(accessor.getList());
-            case ADD:
-                Course cData = (Course) object;
-                accessor.add(cData);
-                return new Response(true);
-            case MODIFY:
-                Course cData2 = (Course) object;
-                accessor.modify(cData2);
-                return new Response(true);
-            case REMOVE:
-                String sData3 = (String) object;
-                accessor.remove(sData3);
-                return new Response(true);
-        }
-        return new Response(true, false);
+
+    private Course getCourse(String courseName) throws NullPointerException {
+        super.setFolderPrefix("data/courses/");
+        return (Course) super.get(courseName.replace(" ", "-"));
     }
-}*/
+
+    private boolean courseExists(String courseName) throws NullPointerException {
+        super.setFolderPrefix("data/courses/");
+        try {
+            super.checkFileExists(courseName);
+            return true;
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private String[] listCourses() {
+        super.setFolderPrefix("data/courses/");
+        Object[] ol = super.getListVerbose();
+        String[] courseNameList = new String[ol.length];
+        for (int i = 0; i < ol.length; i++)
+            courseNameList[i] = ((Course) ol[i]).getName();
+        return courseNameList;
+    }
+
+    private boolean removeCourse(String courseName) {
+        super.setFolderPrefix("data/courses/");
+        try {
+            super.removeData(courseName);
+            return true;
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+}

@@ -4,30 +4,39 @@ import java.util.*;
 /**
  * @author Hawkins Peterson
  * @version 11.03.21
- * 
+ *
  * Base class for anything that stores or gets data in our project
  */
 public class ServerDataAccessor {
-    private final String folderPrefix; //the prefix for the file you want to access (ie data/accounts/)
+    private String folderPrefix = "data/"; //the prefix for the file you want to access (ie data/accounts/)
     private final String fileType; //the filetype of the file you want to access
 
     /**
      * Constructs a new data accessor
      *
-     * @param folderPrefix the prefix of the file you want to access 
+     * @param folderPrefix the prefix of the file you want to access
      * @param fileType the fileType of the file you want to access
      */
-    public ServerDataAccessor(String folderPrefix, String fileType) {
+    public ServerDataAccessor(String fileType) {
         this.folderPrefix = folderPrefix;
         this.fileType = fileType;
     }
 
     /**
+     * Sets a new folder prefix
+     *
+     * @param folderPrefix the new folder prefix
+     */
+    public void setFolderPrefix(String folderPrefix) {
+        this.folderPrefix = folderPrefix;
+    }
+
+    /**
      * verifies the username and password of the user and then returns an account object corosponding to that user
-     * 
+     *
      * @param username the username of the user
      * @param password the password of the user
-     * @return an account object corosponding to the username and password given 
+     * @return an account object corosponding to the username and password given
      */
     protected Object get(String fileName) throws NullPointerException {
         checkFileExists(fileName);
@@ -84,7 +93,7 @@ public class ServerDataAccessor {
             }
         } catch (NullPointerException e) {
             objects = new Account[0];
-        } 
+        }
         return objects;
     }
 
@@ -119,12 +128,11 @@ public class ServerDataAccessor {
             //
         } catch (ClassNotFoundException e) {
             throw new NullPointerException("Error, object empty");
-        } 
+        }
         return toReturn;
     }
 
     private synchronized void writeObjectToFile(String fileName, Object o) {
-        
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File(folderPrefix + fileName + fileType)));
@@ -149,7 +157,7 @@ public class ServerDataAccessor {
         }
     }
 
-    private synchronized void checkFileExists(String fileName) throws NullPointerException {
+    protected synchronized void checkFileExists(String fileName) throws NullPointerException {
         try {
             new FileInputStream(folderPrefix + fileName + fileType);
         } catch (FileNotFoundException e) {
@@ -157,7 +165,7 @@ public class ServerDataAccessor {
         }
     }
 
-    private synchronized void checkFileDoesNotExist(String fileName) throws FileAlreadyExistsException {
+    protected synchronized void checkFileDoesNotExist(String fileName) throws FileAlreadyExistsException {
         try {
             new FileInputStream(folderPrefix + fileName + fileType);
             throw new FileAlreadyExistsException("File already exists");
