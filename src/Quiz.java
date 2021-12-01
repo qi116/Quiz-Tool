@@ -8,7 +8,6 @@ public class Quiz implements Serializable {
     private Course course;
     private boolean isRandomized = false;
     private String timeStamp = "NA";
-
     /**
      * A class that manages Quizzes.
      *
@@ -116,6 +115,8 @@ public class Quiz implements Serializable {
         Question q =  getQuestion(num);
         return q.getOriginalChoices()[q.getStudentAnswer()];
     }
+
+
     //increments attempts.
     public void addAttempt() {
         attempt++;
