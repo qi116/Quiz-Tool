@@ -134,6 +134,10 @@ public class QuizTool {
                                         System.out.println("Quiz created!");
                                         break;
                                     case "2":
+                                        ArrayList<Quiz> quizzes = selectedCourse.getQuizzes();
+                                        for (int i = 0; i < quizzes.size(); i++) {
+                                            System.out.println(quizzes.get(i).getName());
+                                        }
                                         System.out.println("Enter the quiz name:");
                                         currentQuiz = scan.nextLine();
                                         selectedQuiz = selectedCourse.getQuiz(currentQuiz);
@@ -145,6 +149,10 @@ public class QuizTool {
                                         AccessData.modifyCourse(currentCourse, selectedCourse);
                                         break;
                                     case "3":
+                                        ArrayList<Quiz> quizzez = selectedCourse.getQuizzes();
+                                        for (int i = 0; i < quizzez.size(); i++) {
+                                            System.out.println(quizzez.get(i).getName());
+                                        }
                                         System.out.println("Enter the quiz name:");
                                         currentQuiz = scan.nextLine();
                                         selectedQuiz = selectedCourse.getQuiz(currentQuiz);
@@ -160,7 +168,8 @@ public class QuizTool {
                                                 System.out.println("Current Question:\n" + modifyQuestion);
                                                 System.out.println("Enter the new question:");
                                                 String questionName = scan.nextLine();
-                                                System.out.println("How many answer choices will this question have?:");
+                                                System.out.println("How many answer choices"
+                                                        + " will this question have?:");
                                                 int numChoices = Integer.parseInt(scan.nextLine());
                                                 String[] choices = new String[numChoices];
                                                 for (int j = 0; j < numChoices; j++) {
@@ -279,6 +288,10 @@ public class QuizTool {
                             if (selectedCourse == null) {
                                 System.out.println("Invalid course name");
                                 break;
+                            }
+                            ArrayList<Quiz> quizzes = selectedCourse.getQuizzes();
+                            for (int i = 0; i < quizzes.size(); i++) {
+                                System.out.println(quizzes.get(i).getName());
                             }
                             System.out.println("Select a quiz:");
                             currentQuiz = scan.nextLine();

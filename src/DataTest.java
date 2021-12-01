@@ -1,5 +1,10 @@
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
+
+/**
+ * @author Hawkins Peterson
+ * @version 11/14/2021
+ */
 public class DataTest {
     public static void main(String[] args) throws Exception {
         Student stud1 = new Student("user1", "Password");
