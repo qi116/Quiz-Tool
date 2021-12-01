@@ -5,7 +5,6 @@
 public class Request extends Message {
     private String contentPath; //the course / account holding the content
     private RequestType requestType; //the type of request you are making
-    private boolean isTeacher; //if the user is a teacher
 
     /**
      * constructs a new request given an object, dataType and requestType
@@ -13,10 +12,9 @@ public class Request extends Message {
      *
      * @param contentPath the course / account holding the content
      * @param content the object to be sent to the server
-     * @param isTeacher if the requesting user is a teacher
      * @param requestType the type of request you are making of the server
      */
-    public Request(String contentPath, Object content, RequestType requestType, boolean isTeacher) {
+    public Request(String contentPath, Object content, RequestType requestType) {
         super(content);
         this.requestType = requestType;
         this.isTeacher = isTeacher;
