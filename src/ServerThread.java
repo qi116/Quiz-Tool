@@ -24,7 +24,22 @@ public class ServerThread implements Runnable {
 
             while (cont) {
                 Object rec = in.readObject();
-                //logic here
+                Message msg = (Message) rec;
+                switch (msg.request) {
+                    case LOGIN:
+                        break;
+                    case LOGOUT:
+                        break;
+                    case ADD:
+                        break;
+                    case GET:
+                        break;
+                    case MODIFY:
+                        break;
+                    case REMOVE:
+                        break;
+                }
+
                 
             }
 
