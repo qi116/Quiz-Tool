@@ -1,4 +1,4 @@
-ipublic class AccessData {
+public class ServerDataHandler {
     public static Response getResponse(Request request) {
         RequestType requestType = request.getRequestType();
         DataType dataType = request.getDataType();
