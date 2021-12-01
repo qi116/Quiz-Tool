@@ -1,11 +1,12 @@
 public class Message {
+
     public enum requestType {
-        LOGIN,
-        LOGOUT,
-        ADD,
-        GET,
-        MODIFY,
-        REMOVE
+        LOGIN, //response: LOGIN, ACCOUNT, boolean[]: {success, isTeacher}
+        LOGOUT, //response: none
+        ADD, //response: ADD, dataType, boolean: success
+        GET, //response: GET, dataType, Quiz if Quiz, String if any other data type
+        MODIFY, //response: MODIFY, dataType, success
+        REMOVE //response: REMOVE, dataType, 
     };
 
     public enum dataType {
