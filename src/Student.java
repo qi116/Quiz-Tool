@@ -21,12 +21,47 @@ public class Student extends Account implements Serializable {
     public void addQuizSubmission(Quiz q) {
         quizSubmissions.add(q);
     }
+    
+    public void addNewQuizSubmission(Quiz q) {
+        if (getQuiz(q) == null)
+            addQuizSubmission(q);
+    }
+    
+    public void overwriteQuizSubmission(Quiz q) {
+        if (getQuiz(q) != null)
+            addQuizSubmission(q);
+    }
 
     /**
      * @return ArrayList of all quiz submissions
      */
     public ArrayList<Quiz> getQuizSubmissions() {
         return quizSubmissions;
+    }
+    
+    /**
+     * returns a string of all quiz names + attempt numbers
+     *  in the form Name #AttemptNumber
+     */
+    public String[] getQuizNames() {
+        String[] quizNames = new String[quizSubmissions.size()];
+        for (int i = 0; i < quizNames.length; i++)
+            quizNames[i] = quizSubmissions.get(i).getName() + " #" + quizSubmissions.get(i).getAttempt();
+        return quizNames;
+    }
+
+    public Quiz getQuiz(String quizName, int attemptNumber) {
+        for (Quiz q: quizSubmissions)
+            if (q.getName().equals(quizName) && q.getAttempt() == attemptNumber)
+                return q;
+        return null;
+    }
+
+    public Quiz getQuiz(Quiz q) {
+        for (Quiz quizAttempt : quizSubmissions)
+            if (q.getName().equals(quizAttempt.getName()) && q.getAttempt() == quizAttempt.getAttempt())
+                return q;
+        return null;
     }
 
     /**

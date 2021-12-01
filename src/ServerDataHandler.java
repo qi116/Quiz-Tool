@@ -12,6 +12,82 @@ public class ServerDataHandler extends ServerDataAccessor {
         return new Response(false, false);
     }
 
+    private boolean logIn(String username, String password) {
+        try {
+            Account account = getAccount(username, password);
+            isTeacher = account instanceof Teacher;
+            return true;
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private boolean signUp(Account account) {
+        try {
+            super.setFolderPrefix("data/accounts/");
+            super.addData(account, account.getUsername());
+            isTeacher = account instanceof Teacher;
+            return true;
+        } catch (FileAlreadyExistsException e) {
+            return false;
+        }
+    }
+
+    private Quiz getQuizAttempt(String username, String quizName) throws NullPointerException {
+        Student student = getStudentAccount(username);
+        int attemptNumber = Integer.parseInt(quizName.substring(
+                    quizName.indexOf("#") + 1, quizName.length()
+                    ));
+        quizName = quizName.substring(0, quizName.indexOf("#"));
+        
+        Quiz quiz = student.getQuiz(quizName, attemptNumber);
+        if (quiz != null)
+            return quiz;
+        else
+            throw new NullPointerException("an account with that username / password combination was not found");
+    }
+
+    private boolean saveQuizAttempt(String username, Quiz quiz) {
+        try {
+            Student student = getStudentAccount(username);
+            if (isTeacher) {
+                student.overwriteQuizSubmission(quiz);
+            } else
+                student.addNewQuizSubmission(quiz);
+            return true;
+        } catch (Exception e) {
+            return false;
+        } 
+    }
+    
+    private Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
+        Course course = getCourse(courseName);
+        Quiz quiz = course.getQuiz(quizName);
+        if (quiz != null)
+            return quiz;
+        else
+            throw new NullPointerException("a course and or quiz with that name was not found");
+    }
+    
+    private boolean saveQuiz(String courseName, Quiz quiz) {
+        try {
+            Course course = getCourse(courseName);
+            course.addQuiz(quiz);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean removeQuiz(String courseName, Quiz quiz) {
+        try {
+            Course course = getCourse(courseName);
+            return course.removeQuiz(quiz);
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+    
     private Account getAccount(String username, String password) throws NullPointerException {
         try {
             super.setFolderPrefix("data/accounts/");
@@ -35,7 +111,7 @@ public class ServerDataHandler extends ServerDataAccessor {
         }
     }
 
-    private Account getStudentAccount(String username) throws NullPointerException {
+    private Student getStudentAccount(String username) throws NullPointerException {
         super.setFolderPrefix("data/accounts/");
         Account account = (Account) super.get(username);
         if (account instanceof Student)

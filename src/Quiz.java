@@ -32,6 +32,7 @@ public class Quiz implements Serializable {
         this(name, quiz);
         this.attempt = attempt;
     }
+
     public Quiz(String name, Question[] quiz, int attempt, Course course) {
         this(name, quiz, attempt);
         this.course = course;
