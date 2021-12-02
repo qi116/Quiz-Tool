@@ -2,7 +2,10 @@ import java.util.*;
 
 public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
-
+    private Request lastRequest;
+    private static Response update;
+    private static String pathToUpdate;
+    
     public ServerDataHandler() {
         super(".obj");
         isTeacher = false;
@@ -31,6 +34,28 @@ public class ServerDataHandler extends ServerDataAccessor {
         } catch (FileAlreadyExistsException e) {
             return false;
         }
+    }
+
+    public static boolean requiresUpdate() {
+        return update != null; 
+    }
+
+    public static Response getUpdateResponse() {
+        Response tempUpdate = update;
+        update = null;
+        return tempUpdate;
+    } 
+
+    private static void createUpdate(Response update, String pathToUpdate) {
+        ServerDataHandler.update = update;
+        ServerDataHandler.pathToUpdate = pathToUpdate;
+    }
+    
+    public boolean requiresUpdate(String pathToUpdate) {
+        return (lastRequest.getRequestType() == RequestType.LIST_COURSES ||
+                lastRequest.getRequestType() == RequestType.LIST_STUDENTS ||
+                lastRequest.getRequestType() == RequestType.LIST_QUIZZES) &&
+                pathToUpdate.equals(lastRequest.getContentPath());
     }
 
     private Quiz getQuizAttempt(String username, String quizName) throws NullPointerException {
@@ -167,5 +192,4 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         }
     }
-
 }

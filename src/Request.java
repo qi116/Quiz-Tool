@@ -26,4 +26,12 @@ public class Request extends Message {
     public RequestType getRequestType() {
         return requestType;
     }
+
+    /**
+     * Returns the content path to the requested object
+     * @return the content path to the requested object
+     */
+    public String getContentPath() {
+        return contentPath;
+    }
 }
