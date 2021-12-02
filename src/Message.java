@@ -11,6 +11,7 @@ public class Message {
     public enum dataType {
         ACCOUNT,
         QUIZ,
+        QUIZLIST,
         SUBMISSION,
         COURSE,
         COURSELIST
