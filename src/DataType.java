@@ -1,3 +1,0 @@
-public enum DataType {
-    ACCOUNT, STUDENT, COURSE, QUIZ, STRING, STRINGL, BOOLEAN;
-}

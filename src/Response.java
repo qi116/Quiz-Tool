@@ -5,75 +5,46 @@
  *
  *
  * @author Hawkins Peterson
- * @version 11.30.21
+ * @version 12.02.21
  */
 public class Response extends Message {
-    private boolean clientMessedUp = false; // null pointer exception
-    private boolean iMessedUp = false; // I messed up my coding
-
+    private boolean clientError = false; // nullPointeriException or fileAlreadyExistsException
+    private boolean devError = false; // I messed up my coding
+    
     /**
-     * Creates a new Response object given an object dataType and errors
-     * used to respond to a GET request
+     * constructs an error message to send back to the user
      *
-     * @param object the object to be sent to the client
-     * @param dataType the data type of the object to be sent to the client
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed up my programming
+     * @param clientError if the client messed up (nullPointer or fileAlreadyExists)
+     * @param devError any other error
      */
-    public Response(Object object, DataType dataType, boolean clientMessedUp, boolean iMessedUp) {
-        super(object, dataType);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
+    public Response(boolean clientError, boolean devError) {
+        super(null);
+        this.clientError = clientError;
+        this.devError = devError;
     }
     
     /**
-     * Creates a new response object given a string list, and errors
-     * used to respond to a GET_STRING_LIST request
-     *
-     * @param stringL the string list to be returned to the user
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed my programming
+     * creates a response in well... response to a client request
+     * 
+     * @param content the content to be sent back to the client
      */
-    public Response(String[] stringL, boolean clientMessedUp, boolean iMessedUp) {
-        super(stringL, DataType.STRINGL);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
+    public Response(Object content) {
+        super(content);
     }
     
-    /**
-     * Creates a new resposnse object given a boolean and errors.
-     * used to respond to an ADD, MODIFY, CHECK_EXISTS, and REMOVE request
-     *
-     * @param bool if the request succeded (for any push to the server) or if the requested object exists
-     * @param clientMessedUp if the client messed up
-     * @param iMessedUp if I messed up my programming
-     */
-    public Response(boolean bool, boolean clientMessedUp, boolean iMessedUp) {
-        super(bool, DataType.BOOLEAN);
-        this.clientMessedUp = clientMessedUp;
-        this.iMessedUp = iMessedUp;
-    }
-    
-    /**
-     * if there was an error (use wasExpected error generally)
-     * @Returns if there was an error
-     */
-    public boolean wasError() {
-        return clientMessedUp || iMessedUp;
-    }
-
     /**
      * if there was an error and I expected it
      * @return if there was an error and I expected it
      */
-    public boolean wasExpectedError() {
-        return clientMessedUp;
+    public boolean expectedErrorOccured() {
+        return clientError;
     }
+
     /**
      * if there was an error and I didn't expected it
      * @return if there was an error and I didn't expected it
      */
-    public boolean wasUnexpectedError() {
-        return iMessedUp;
+    public boolean unexpectedErrorOccured() {
+        return devError;
     }
 }
