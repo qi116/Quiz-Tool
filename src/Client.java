@@ -10,8 +10,8 @@ import java.net.*;
  * @version December 2, 2021
  */
 public class Client {
-    private static String host;
-    private static int port;
+    private static final String host;
+    private static final int port;
     private static Socket socket;
     private static ObjectInputStream reader;
     private static ObjectOutputStream writer;
@@ -68,7 +68,7 @@ public class Client {
      * @param user username
      * @param pass password
      * @param isTeacher boolean indicating whether user is teacher or student
-     * @return
+     * @return boolean indicating whether account was created
      */
     public boolean createAccount(String user, String pass, boolean isTeacher){
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT,
