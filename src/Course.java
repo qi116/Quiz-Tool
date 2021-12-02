@@ -70,9 +70,9 @@ public class Course implements Serializable {
             return false;
     }
     //removes quiz from list returns if the job was compleated
-    public boolean removeQuiz(Quiz quiz) {
+    public boolean removeQuiz(String identifier) {
         for (Quiz q : quizzes) {
-            if (q.equals(quiz)) {
+            if (q.getIdentifier().equals(identifier)) {
                 quizzes.remove(q);
                 return true;
             }
@@ -83,5 +83,14 @@ public class Course implements Serializable {
     //returns entire arrayList of quizzes
     public ArrayList<Quiz> getQuizzes() {
         return this.quizzes;
+    }
+
+    public String[] getQuizNames() {
+        ArrayList<Quiz> quizzes = getQuizzes();
+        String[] quizNames = new String[quizzes.size()];
+        for (int i = 0; i < quizNames.length; i++) {
+            quizNames[i] = quizzes.get(i).getName();
+        }
+        return quizNames;
     }
 }

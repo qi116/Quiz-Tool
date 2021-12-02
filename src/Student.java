@@ -43,10 +43,10 @@ public class Student extends Account implements Serializable {
      * returns a string of all quiz names + attempt numbers
      *  in the form Name #AttemptNumber
      */
-    public String[] getQuizNames() {
+    public String[] getQuizIdentifiers() {
         String[] quizNames = new String[quizSubmissions.size()];
         for (int i = 0; i < quizNames.length; i++)
-            quizNames[i] = quizSubmissions.get(i).getName() + " #" + quizSubmissions.get(i).getAttempt();
+            quizNames[i] = quizSubmissions.get(i).getIdentifier();
         return quizNames;
     }
 

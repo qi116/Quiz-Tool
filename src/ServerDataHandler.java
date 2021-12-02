@@ -1,17 +1,77 @@
 import java.util.*;
 
+/**
+ * Responsible for all of the server data handling
+ *
+ * @author Hawkins Peterson
+ * @version 12.02.21
+ */
 public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
     private Request lastRequest;
     private static Response update;
     private static String pathToUpdate;
     
+    /**
+     * creates an empty ServerDataHandler
+     */
     public ServerDataHandler() {
         super(".obj");
         isTeacher = false;
     }
 
+    /**
+     * proccesses a request, put in the request, out pops a response
+     * @param request a request from the client
+     * @return a response to be sent to the client
+     */
     public Response processRequest(Request request) {
+        Object content = request.getContent();
+        String contentPath = request.getContentPath();
+        lastRequest = request;
+
+        try {
+            switch (request.getRequestType()) {
+                case GET_QUIZ:
+                    return new Response(getQuiz(contentPath, (String) content));
+                case SAVE_QUIZ:
+                    createUpdate(new Response(listQuizzes(contentPath)), contentPath);
+                    return new Response(getQuiz(contentPath, (String) content));
+                case REMOVE_QUIZ:
+                    return new Response(removeQuiz(contentPath, (String) content));
+                case GET_QUIZ_ATTEMPT:
+                    return new Response(getQuizAttempt(contentPath, (String) content));
+                case SAVE_QUIZ_ATTEMPT:
+                    createUpdate(new Response(listQuizAttempts(contentPath)), contentPath);
+                    return new Response(saveQuizAttempt(contentPath, (Quiz) content));
+                case DELETE_COURSE:
+                    return new Response(removeCourse(contentPath));
+                case LOG_IN:
+                    return new Response(logIn(contentPath, (String) content));
+                case TEACHER_SIGN_UP:
+                    signUp((Account) content);
+                    this.isTeacher = true;
+                    return new Response(true);
+                case STUDENT_SIGN_UP:
+                    return new Response(signUp((Account) content));
+                case LIST_STUDENTS:
+                    return new Response(listStudents());
+                case LIST_COURSES:
+                    return new Response(listCourses());
+                case LIST_QUIZ_ATTEMPTS:
+                    return new Response(listQuizAttempts(contentPath));
+                case LIST_QUIZZES:
+                    return new Response(listQuizzes(contentPath));
+                case CHECK_ACCOUNT_EXISTS:
+                    return new Response(accountExists(contentPath));
+            }
+        } catch (NullPointerException e) {
+            return new Response(true, false);
+        } catch (UnauthorizedException e) {
+            return new Response(false, true);
+        } catch (Exception e) {
+            return new Response(false, true);
+        }
         return new Response(false, false);
     }
 
@@ -35,11 +95,19 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         }
     }
-
+    
+    /**
+     * Returns if you have to send an update to the client
+     * @return if you have to send an update to the client
+     */
     public static boolean requiresUpdate() {
         return update != null; 
     }
-
+    
+    /**
+     * gets the update to send to the client
+     * @return the update to send to the client
+     */
     public static Response getUpdateResponse() {
         Response tempUpdate = update;
         update = null;
@@ -51,6 +119,10 @@ public class ServerDataHandler extends ServerDataAccessor {
         ServerDataHandler.pathToUpdate = pathToUpdate;
     }
     
+    /**
+     * if the client requires an update
+     * @return if the client requires an update
+     */
     public boolean requiresUpdate(String pathToUpdate) {
         return (lastRequest.getRequestType() == RequestType.LIST_COURSES ||
                 lastRequest.getRequestType() == RequestType.LIST_STUDENTS ||
@@ -84,6 +156,11 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         } 
     }
+
+    private String[] listQuizAttempts(String userName) throws NullPointerException{
+        Student student = getStudentAccount(userName);
+        return student.getQuizIdentifiers();
+    }
     
     private Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
         Course course = getCourse(courseName);
@@ -95,6 +172,8 @@ public class ServerDataHandler extends ServerDataAccessor {
     }
     
     private boolean saveQuiz(String courseName, Quiz quiz) {
+        if (!isTeacher)
+            return false;
         try {
             Course course = getCourse(courseName);
             course.addQuiz(quiz);
@@ -104,13 +183,20 @@ public class ServerDataHandler extends ServerDataAccessor {
         }
     }
 
-    private boolean removeQuiz(String courseName, Quiz quiz) {
+    private boolean removeQuiz(String courseName, String identifier) {
+        if (!isTeacher)
+            return false;
         try {
             Course course = getCourse(courseName);
-            return course.removeQuiz(quiz);
+            return course.removeQuiz(identifier);
         } catch (NullPointerException e) {
             return false;
         }
+    }
+
+    private String[] listQuizzes(String courseName) {
+        Course course = getCourse(courseName);
+        return course.getQuizNames();
     }
     
     private Account getAccount(String username, String password) throws NullPointerException {
@@ -145,7 +231,10 @@ public class ServerDataHandler extends ServerDataAccessor {
             throw new NullPointerException("a student account with that username doesn't exist");
     }
 
-    private String[] listStudents() throws NullPointerException {
+    private String[] listStudents() throws NullPointerException, UnauthorizedException {
+        if (!isTeacher) {
+            throw new UnauthorizedException("Error, only teachers are allowed to access this command");
+        }
         super.setFolderPrefix("data/accounts/");
         Object[] ol = super.getListVerbose();
         ArrayList<Student> sal = new ArrayList<Student>();
@@ -184,6 +273,9 @@ public class ServerDataHandler extends ServerDataAccessor {
     }
 
     private boolean removeCourse(String courseName) {
+        if (!isTeacher) {
+            return false;
+        }
         super.setFolderPrefix("data/courses/");
         try {
             super.removeData(courseName);

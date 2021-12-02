@@ -76,6 +76,11 @@ public class Quiz implements Serializable {
     public Course getCourse() {
         return course;
     }
+    
+    //returns an identifying string
+    public String getIdentifier() {
+        return name + " #" + attempt;
+    }
 
     //Sets course for Quiz. Returns false if course doesn't exist.
     //Does not add quiz to course (must do manually)
