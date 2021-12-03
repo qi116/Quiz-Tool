@@ -6,7 +6,7 @@ public class Message {
         ADD, //response: ADD, dataType, boolean: success
         GET, //response: GET, dataType, Quiz if Quiz, String if any other data type
         MODIFY, //response: MODIFY, dataType, success
-        REMOVE //response: REMOVE, dataType, 
+        REMOVE //response: REMOVE, dataType, success
     };
 
     public enum dataType {
