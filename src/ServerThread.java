@@ -29,7 +29,7 @@ public class ServerThread implements Runnable {
                     case LOGIN:
                         break;
                     case LOGOUT:
-                        break;
+                        return;
                     case ADD:
                         break;
                     case GET:
