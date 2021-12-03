@@ -19,6 +19,7 @@ public class Message {
     };
 
     public Object content;
+    public String contentPath;
     public requestType request;
     public dataType data;
 
