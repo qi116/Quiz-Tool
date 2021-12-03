@@ -8,9 +8,12 @@ import java.net.Socket;
 public class ServerThread implements Runnable {
     private final Socket sock;
     private Account acct;
+    private ServerDataHandler handler;
+
 
     public ServerThread(Socket sock) {
         this.sock = sock;
+        handler = new ServerDataHandler();
     }
 
     public void run() {
@@ -20,14 +23,17 @@ public class ServerThread implements Runnable {
             InputStream sIn = sock.getInputStream();
             ObjectInputStream in = new ObjectInputStream(sIn);
 
+
             boolean cont = true;
 
             while (cont) {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
-                //SeverDataHandler here
+                handler.processRequest(msg);
 
-                
+
+
+
             }
 
         } catch (IOException e) {
