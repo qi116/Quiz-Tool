@@ -18,7 +18,6 @@ public class Quiz implements Serializable {
     private boolean isRandomized = false;
     private String timeStamp = "NA";
 
-
     public Quiz(String name, Question[] quiz) {
         this.name = name;
         this.quiz = new ArrayList<Question>();
@@ -32,6 +31,7 @@ public class Quiz implements Serializable {
         this(name, quiz);
         this.attempt = attempt;
     }
+
     public Quiz(String name, Question[] quiz, int attempt, Course course) {
         this(name, quiz, attempt);
         this.course = course;
@@ -74,6 +74,11 @@ public class Quiz implements Serializable {
     //returns course
     public Course getCourse() {
         return course;
+    }
+    
+    //returns an identifying string
+    public String getIdentifier() {
+        return name + " #" + attempt;
     }
 
     //Sets course for Quiz. Returns false if course doesn't exist.
@@ -118,6 +123,8 @@ public class Quiz implements Serializable {
         Question q =  getQuestion(num);
         return q.getOriginalChoices()[q.getStudentAnswer()];
     }
+
+
     //increments attempts.
     public void addAttempt() {
         attempt++;

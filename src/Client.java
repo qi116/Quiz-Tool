@@ -15,11 +15,13 @@ public class Client {
     private static Socket socket;
     private static ObjectInputStream reader;
     private static ObjectOutputStream writer;
+
     static {
         host = "localhost";
         port = 8080;
         socket = new Socket();
     }
+
     public static void main(String[] args) throws IOException {
 
         boolean fail = false;
@@ -56,21 +58,22 @@ public class Client {
         } catch (Exception e) {
             return null;
         }
-         //This will sit there till something is received.
+        //This will sit there till something is received.
         Message msg = (Message) o;
         boolean[] information = (boolean[]) msg.content;
         return information; //handle msg and cast object inside to what is given.
     }
 
     /**
-     *  Accepts parameters to create account and sends to Server to make account.
-     *  Waits for response.
-     * @param user username
-     * @param pass password
+     * Accepts parameters to create account and sends to Server to make account.
+     * Waits for response.
+     *
+     * @param user      username
+     * @param pass      password
      * @param isTeacher boolean indicating whether user is teacher or student
      * @return boolean indicating whether account was created
      */
-    public boolean createAccount(String user, String pass, boolean isTeacher){
+    public boolean createAccount(String user, String pass, boolean isTeacher) {
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT,
                 new String[]{user, pass, String.valueOf(isTeacher)});
         Object o;
@@ -88,6 +91,7 @@ public class Client {
 
     /**
      * Asks server for list of course names
+     *
      * @return String[] of course names
      */
     public String[] getCourses() {
@@ -108,6 +112,7 @@ public class Client {
 
     /**
      * Sends course name to Server to be added
+     *
      * @param name name of course to be added
      * @return boolean indicating if operation was successful
      */
@@ -125,8 +130,10 @@ public class Client {
         Boolean b = (Boolean) msg.content;
         return b; //make sure to change this to when message is received
     }
+
     /**
      * Sends course name to Server to be removed
+     *
      * @param name name of course to be removed
      * @return boolean indicating if operation was successful
      */
@@ -144,8 +151,10 @@ public class Client {
         Boolean b = (Boolean) msg.content;
         return b;
     }
+
     /**
      * Sends course name to Server to receive list of Quiz names
+     *
      * @param course name of course
      * @return list of Quiz names in given course
      */
@@ -167,6 +176,7 @@ public class Client {
     /**
      * Requests Quiz from server using Quiz name.
      * Waits for response
+     *
      * @param name Quiz name
      * @return Quiz
      */
@@ -187,6 +197,7 @@ public class Client {
 
     /**
      * Submits quiz to server
+     *
      * @param quiz Quiz to be submitted
      * @return boolean indicating whether or not submission worked
      */
@@ -207,6 +218,7 @@ public class Client {
 
     /**
      * Sends quiz to replace previous quiz with same name to Server
+     *
      * @param quiz New Quiz
      * @return boolean indicating whether operation was successful.
      */
@@ -227,8 +239,9 @@ public class Client {
 
     /**
      * Sends course name and quiz to server to add
+     *
      * @param course course name
-     * @param quiz quiz to add
+     * @param quiz   quiz to add
      * @return boolean indicating whether quiz was added
      */
     public boolean addQuiz(String course, Quiz quiz) {
@@ -246,10 +259,12 @@ public class Client {
         Boolean b = (Boolean) msg.content;
         return b;
     }
+
     /**
      * Sends course name and quiz name to server to add
      * Sends only quiz name and indicates wanting to add a new empty quiz
-     * @param course course name
+     *
+     * @param course   course name
      * @param quizName quizName of new quiz
      * @return boolean indicating whether quiz was added
      */
@@ -268,6 +283,4 @@ public class Client {
         Boolean b = (Boolean) msg.content;
         return b;
     }
-
-
 }
