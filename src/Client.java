@@ -46,7 +46,7 @@ public class Client {
      * @param pass password
      * @return String[] showing whether login was success and what type of user
      */
-    public String[] login(String user, String pass) {
+    public boolean[] login(String user, String pass) {
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, new String[]{user, pass});
         Object o;
         try {
@@ -58,7 +58,7 @@ public class Client {
         }
          //This will sit there till something is received.
         Message msg = (Message) o;
-        String[] information = (String[]) msg.content;
+        boolean[] information = (boolean[]) msg.content;
         return information; //handle msg and cast object inside to what is given.
     }
 
