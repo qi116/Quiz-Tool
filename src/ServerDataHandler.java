@@ -8,8 +8,8 @@ import java.util.*;
  */
 public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
-    private Request lastRequest;
-    private static Response update;
+    private Message lastMessage;
+    private static Message update;
     private static String pathToUpdate;
     
     /**
@@ -25,14 +25,14 @@ public class ServerDataHandler extends ServerDataAccessor {
      * @param request a request from the client
      * @return a response to be sent to the client
      */
-    public Response processRequest(Request request) {
-        Object content = request.getContent();
-        String contentPath = request.getContentPath();
-        lastRequest = request;
+    public Message processRequest(Message request) {
+        Object content = request.content;
+        String contentPath = request.contentPath;
+        lastMessage = request;
 
         try {
-            switch (request.getRequestType()) {
-                case GET_QUIZ:
+            switch (request.data) {
+                case :
                     return new Response(getQuiz(contentPath, (String) content));
                 case SAVE_QUIZ:
                     createUpdate(new Response(listQuizzes(contentPath)), contentPath);
