@@ -46,7 +46,7 @@ public class Client {
      *
      * @param user username
      * @param pass password
-     * @return String[] showing whether login was success and what type of user
+     * @return boolean[] gives success and isTeacher
      */
     public boolean[] login(String user, String pass) {
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, new String[]{user, pass});
