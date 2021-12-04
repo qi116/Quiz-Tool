@@ -23,9 +23,9 @@ public class Message {
     public dataType data;
 
     public Message(requestType request, dataType data, Object content) {
-        content = content;
-        request = request;
-        data = data;
+        this.content = content;
+        this.request = request;
+        this.data = data;
     }
 
     public Message(requestType request, dataType data, String contentPath, Object content) {
