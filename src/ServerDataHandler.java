@@ -95,6 +95,7 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Account account = getAccount(username, password);
             isTeacher = account instanceof Teacher;
+            this.account = account;
             return true;
         } catch (NullPointerException e) {
             return false;
@@ -105,6 +106,7 @@ public class ServerDataHandler extends ServerDataAccessor {
         super.setFolderPrefix("data/accounts/");
         super.addData(account, account.getUsername());
         isTeacher = account instanceof Teacher;
+        this.account = account;
         return true;
     }
     
@@ -134,13 +136,11 @@ public class ServerDataHandler extends ServerDataAccessor {
     /**
      * if the client requires an update
      * @return if the client requires an update
-     *
+     */
     public boolean requiresUpdate(String pathToUpdate) {
-        return (lastRequest.getRequestType() == RequestType.LIST_COURSES ||
-                lastRequest.getRequestType() == RequestType.LIST_STUDENTS ||
-                lastRequest.getRequestType() == RequestType.LIST_QUIZZES) &&
-                pathToUpdate.equals(lastRequest.getContentPath());
-    }*/
+        return (pathToUpdate.equals(lastMessage.contentPath) &&
+                lastMessage.request == Message.requestType.LIST);
+    }
 
     private Quiz getQuizAttempt(String username, String quizName) throws NullPointerException {
         Student student = getStudentAccount(username);
@@ -196,7 +196,7 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         }
     }
-
+    
     private boolean removeQuiz(String courseName, String identifier) {
         if (!isTeacher)
             return false;
