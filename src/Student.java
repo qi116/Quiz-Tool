@@ -10,7 +10,7 @@ public class Student extends Account implements Serializable {
     private ArrayList<Quiz> quizSubmissions;
 
     public Student(String username, String password) {
-        super(username, password);
+        super(username, password, false);
         this.quizSubmissions = new ArrayList<Quiz>();
     }
 

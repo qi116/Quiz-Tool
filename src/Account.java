@@ -7,10 +7,12 @@ import java.io.Serializable;
 public abstract class Account implements Serializable {
     protected String username;
     protected String password;
+    protected boolean isTeacher;
 
-    public Account(String username, String password) {
+    public Account(String username, String password, boolean isTeacher) {
         this.username = username;
         this.password = password;
+        this.isTeacher = isTeacher;
     }
 
     public String getUsername() {
@@ -22,11 +24,11 @@ public abstract class Account implements Serializable {
     }
 
     public boolean isTeacher() {
-        return (this instanceof Teacher);
+        return isTeacher;
     }
 
     public boolean isStudent() {
-        return (this instanceof Student);
+        return !isTeacher;
     }
 
 }
