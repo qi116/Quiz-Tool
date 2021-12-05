@@ -30,5 +30,4 @@ public abstract class Account implements Serializable {
     public boolean isStudent() {
         return !isTeacher;
     }
-
 }

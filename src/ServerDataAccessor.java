@@ -49,11 +49,9 @@ public class ServerDataAccessor {
      * @return if it worked
      * @param o an object to be added to the system
      */
-    protected boolean addData(Object o, String filename) {
+    protected void addData(Object o, String filename) {
         createFolders();
-        if (!fileExists(filename))
-            return writeObjectToFile(filename, o);
-        return false;
+        writeObjectToFile(filename, o);
     }
 
     /**
@@ -68,19 +66,21 @@ public class ServerDataAccessor {
             File folder = new File(this.folderPrefix);
             File[] files = folder.listFiles();
             ArrayList<Object> objectsArrayList = new ArrayList<Object>();
+            
             for (int i = 0; i < files.length; i++) {
-                Object o = getObjectFromFile(files[i].getName());
+                Object o = getObjectFromFile(files[i].getName()
+                        .substring(0,files[i].getName().length() - 4));
                 objectsArrayList.add(o);
             }
-            objects = new Objects[objectsArrayList.size()];
-            for (int i = 0; i < objectsArrayList.size(); i++) {
-            }
-            objects = new Objects[objectsArrayList.size()];
+            objects = new Object[objectsArrayList.size()];
             for (int i = 0; i < objectsArrayList.size(); i++) {
                 objects[i] = objectsArrayList.get(i);
             }
+
+            return objects;
         } catch (NullPointerException e) {
             objects = new Account[0];
+            e.printStackTrace();
         }
         return objects;
     }
@@ -104,6 +104,7 @@ public class ServerDataAccessor {
             new File(folderPrefix + fileName + fileType).delete();
             return true;
         }
+        System.out.println(folderPrefix + fileName + fileType);
         return false;
     }
 
@@ -112,11 +113,11 @@ public class ServerDataAccessor {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
-                    new FileInputStream(new File(folderPrefix + fileName + fileType)));
+                    new FileInputStream(folderPrefix + fileName + fileType));
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
-            //
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new NullPointerException("Error, object empty");
         }
