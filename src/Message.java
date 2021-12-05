@@ -6,27 +6,37 @@ public class Message {
         ADD, //response: ADD, dataType, boolean: success
         GET, //response: GET, dataType, Quiz if Quiz, String if any other data type
         MODIFY, //response: MODIFY, dataType, success
-        REMOVE //response: REMOVE, dataType, 
+        REMOVE, //response: REMOVE, dataType,
+        LIST //response: String[] list of names
     };
 
     public enum dataType {
         ACCOUNT,
         QUIZ,
-        QUIZLIST,
         SUBMISSION,
         COURSE,
-        COURSELIST
     };
 
     public Object content;
+    public String contentPath;
     public requestType request;
     public dataType data;
 
     public Message(requestType request, dataType data, Object content) {
-        content = content;
-        request = request;
-        data = data;
+        this.content = content;
+        this.request = request;
+        this.data = data;
     }
 
-}
+    public Message(requestType request, dataType data, String contentPath, Object content) {
+        this.request = request;
+        this.data = data;
+        this.content = content;
+        this.contentPath = contentPath;
+    }
 
+
+    public Message(Object content) {
+        this.content = content;
+    }
+}
