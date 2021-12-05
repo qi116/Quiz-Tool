@@ -93,7 +93,7 @@ public class DataTest {
     
         request = new Message(Message.requestType.ADD, Message.dataType.QUIZ, "course1", quiz);
         response = th.processRequest(request);
-        System.out.println((boolean) response.content ? "added quiz to course1" : "failed to add quiz to course1");
+        System.out.println((boolean) response.content ? "added quiz to course 1" : "failed to add quiz to course 1");
         
         //adding 2nd quiz
         Quiz quiz2 = new Quiz("second quiz", questions);
@@ -126,9 +126,18 @@ public class DataTest {
         String[] quizzes = (String[]) response.content;
         for(String i : quizzes)
             System.out.println(i);
-
+        System.out.print("\n");
+        
         q1.setStudentAnswer(0);
         q2.setStudentAnswer(0);
+
+        quiz.setAttempt(1);
+        request = new Message(Message.requestType.ADD, Message.dataType.SUBMISSION, "student1", quiz);
+        response = th.processRequest(request);
+        System.out.println((boolean) response.content ? 
+                "failed to prevent a teacher from adding a new quiz attempt to a student's acccount" :
+                "succesfully prevented a teacher from adding a new quiz to a student's account");
+
 
         request = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, "student1", "Password");
         response = th.processRequest(request);
