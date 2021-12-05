@@ -194,9 +194,10 @@ public class Client {
     }
 
     /**
-     * Requests Quiz from server using Quiz name.
+     * Requests Quiz from server using Quiz name and associated course name.
      * Waits for response
      *
+     * @param course course name
      * @param name Quiz name
      * @return Quiz
      */
@@ -216,9 +217,10 @@ public class Client {
         return quiz;
     }
     /**
-     * Tells Server to remove quiz
+     * Tells Server to remove quiz from given course
      * Waits for response
      *
+     * @param course Course name
      * @param name Quiz name
      * @return Quiz
      */
@@ -326,6 +328,12 @@ public class Client {
         Boolean b = (Boolean) msg.content;
         return b;
     }
+
+    /**
+     * Requests list of student names
+     * @return String list of students
+     */
+
     public String[] getStudents() {
         Message message = new Message(Message.requestType.LIST, Message.dataType.ACCOUNT,
                 null);
@@ -342,6 +350,11 @@ public class Client {
         return students;
     }
 
+    /**
+     * Requests list of submissions by student
+     * @param name Student username
+     * @return list of submissions by student
+     */
     public Quiz[] getSubmissions(String name) {
         Message message = new Message(Message.requestType.LIST, Message.dataType.SUBMISSION,
                 name);
