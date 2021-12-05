@@ -10,7 +10,7 @@ public class Student extends Account implements Serializable {
     private ArrayList<Quiz> quizSubmissions;
 
     public Student(String username, String password) {
-        super(username, password);
+        super(username, password, false);
         this.quizSubmissions = new ArrayList<Quiz>();
     }
 
@@ -22,14 +22,22 @@ public class Student extends Account implements Serializable {
         quizSubmissions.add(q);
     }
     
-    public void addNewQuizSubmission(Quiz q) {
-        if (getQuiz(q) == null)
+    public boolean addNewQuizSubmission(Quiz q) {
+        if (getQuiz(q) == null) {
             addQuizSubmission(q);
+            return true;
+        }
+        return false;
     }
     
-    public void overwriteQuizSubmission(Quiz q) {
-        if (getQuiz(q) != null)
+    public boolean overwriteQuizSubmission(Quiz q) {
+        Quiz qToRemove = getQuiz(q);
+        if (qToRemove != null) {
+            quizSubmissions.remove(qToRemove);
             addQuizSubmission(q);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -45,35 +53,39 @@ public class Student extends Account implements Serializable {
      */
     public String[] getQuizIdentifiers() {
         String[] quizNames = new String[quizSubmissions.size()];
-        for (int i = 0; i < quizNames.length; i++)
+        for (int i = 0; i < quizNames.length; i++) {
             quizNames[i] = quizSubmissions.get(i).getIdentifier();
+        }
         return quizNames;
     }
 
-    public Quiz getQuiz(String quizName, int attemptNumber) {
-        for (Quiz q: quizSubmissions)
-            if (q.getName().equals(quizName) && q.getAttempt() == attemptNumber)
-                return q;
-        return null;
-    }
-
     public Quiz getQuiz(Quiz q) {
-        for (Quiz quizAttempt : quizSubmissions)
-            if (q.getName().equals(quizAttempt.getName()) && q.getAttempt() == quizAttempt.getAttempt())
-                return q;
+        for (Quiz qA : quizSubmissions) {
+            if (q.getIdentifier().equals(qA.getIdentifier()))
+                return qA;
+        }
         return null;
     }
 
+    public Quiz getQuiz(String quizIdentifier) {
+        for (Quiz qA : quizSubmissions) {
+            if (quizIdentifier.equals(qA.getIdentifier()))
+                return qA;
+        }
+        return null;
+    }
+    
     /**
      * Gets all quiz submissions with name
      * @param quizName name of Quiz
      * @return List of quiz submissions
      */
-    public ArrayList<Quiz> getQuizSubmissionsByName(String quizName) {
+    public ArrayList<Quiz> getQuizSubmissionsByName(String quizIdentifier) {
         ArrayList<Quiz> toReturn = new ArrayList<>();
 
         for (Quiz q : quizSubmissions) {
-            if (q.getName().equals(quizName)) {
+            if (q.getIdentifier().equals(quizIdentifier)) {
+                System.out.println("quiz identifier" + q.getIdentifier());
                 toReturn.add(q);
             }
         }
