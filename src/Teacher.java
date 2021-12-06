@@ -9,7 +9,7 @@ public class Teacher extends Account implements Serializable {
     public ArrayList<Course> courses;
 
     public Teacher(String username, String password) {
-        super(username, password);
+        super(username, password, true);
         this.courses = new ArrayList<Course>();
 
     }

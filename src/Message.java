@@ -36,7 +36,5 @@ public class Message {
     }
 
 
-    public Message(Object content) {
-        this.content = content;
-    }
+
 }

@@ -60,24 +60,27 @@ public class Course implements Serializable {
     }
     //Adds quiz to course. Returns false if fails. Fails when quiz is null or already exists
     public boolean addQuiz(Quiz quiz) {
-        if (quiz == null) {
+        if (quiz == null)
             return false;
-        }
-        if (getQuiz(quiz.getName()) != null) {
-            quizzes.add(quiz);
-            return true;
-        } else 
-            return false;
+        removeQuiz(quiz.getName());
+        quizzes.add(quiz);
+        return true;
     }
     //removes quiz from list returns if the job was compleated
-    public boolean removeQuiz(String identifier) {
-        for (Quiz q : quizzes) {
-            if (q.getIdentifier().equals(identifier)) {
-                quizzes.remove(q);
-                return true;
-            }
+    public boolean removeQuiz(String quizName) {
+        if (contains(quizName) >= 0) {
+            quizzes.remove(contains(quizName));
+            return true;
         }
         return false;
+    }
+
+    public int contains(String quizName) {
+        for (int i = 0; i < quizzes.size(); i++) {
+            if (quizzes.get(i).getName().equals(quizName))
+                return i;
+        }
+        return -1;
     }
 
     //returns entire arrayList of quizzes
@@ -86,11 +89,11 @@ public class Course implements Serializable {
     }
 
     public String[] getQuizNames() {
-        ArrayList<Quiz> quizzes = getQuizzes();
         String[] quizNames = new String[quizzes.size()];
-        for (int i = 0; i < quizNames.length; i++) {
+
+        for (int i = 0; i < quizNames.length; i++)
             quizNames[i] = quizzes.get(i).getName();
-        }
+
         return quizNames;
     }
 }

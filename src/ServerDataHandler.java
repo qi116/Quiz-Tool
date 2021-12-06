@@ -11,7 +11,7 @@ public class ServerDataHandler extends ServerDataAccessor {
     private Message lastMessage;
     private static Message update;
     private static String pathToUpdate;
-    
+    private Account account;
     /**
      * creates an empty ServerDataHandler
      */
@@ -32,53 +32,81 @@ public class ServerDataHandler extends ServerDataAccessor {
 
         try {
             switch (request.data) {
-                case :
-                    return new Response(getQuiz(contentPath, (String) content));
-                case SAVE_QUIZ:
-                    createUpdate(new Response(listQuizzes(contentPath)), contentPath);
-                    return new Response(getQuiz(contentPath, (String) content));
-                case REMOVE_QUIZ:
-                    return new Response(removeQuiz(contentPath, (String) content));
-                case GET_QUIZ_ATTEMPT:
-                    return new Response(getQuizAttempt(contentPath, (String) content));
-                case SAVE_QUIZ_ATTEMPT:
-                    createUpdate(new Response(listQuizAttempts(contentPath)), contentPath);
-                    return new Response(saveQuizAttempt(contentPath, (Quiz) content));
-                case DELETE_COURSE:
-                    return new Response(removeCourse(contentPath));
-                case LOG_IN:
-                    return new Response(logIn(contentPath, (String) content));
-                case TEACHER_SIGN_UP:
-                    signUp((Account) content);
-                    this.isTeacher = true;
-                    return new Response(true);
-                case STUDENT_SIGN_UP:
-                    return new Response(signUp((Account) content));
-                case LIST_STUDENTS:
-                    return new Response(listStudents());
-                case LIST_COURSES:
-                    return new Response(listCourses());
-                case LIST_QUIZ_ATTEMPTS:
-                    return new Response(listQuizAttempts(contentPath));
-                case LIST_QUIZZES:
-                    return new Response(listQuizzes(contentPath));
-                case CHECK_ACCOUNT_EXISTS:
-                    return new Response(accountExists(contentPath));
+                case ACCOUNT:
+                    switch (request.request) {
+                        case LOGIN:
+                            return new Message(logIn(contentPath, (String) content));
+                        case ADD:
+                        case MODIFY:
+                            isTeacher = content instanceof Teacher;
+                            if (!isTeacher)
+                                createUpdate(new Message(listStudents()), contentPath);
+                            return new Message(signUp((Account) content));
+                        case LIST:
+                            if (!isTeacher) {
+                                return new Message(null);
+
+                            }
+                            return new Message(listStudents());
+                    }
+                    return new Message(null);
+                case QUIZ:
+                    switch (request.request) {
+                        case ADD:
+                        case MODIFY:
+                            createUpdate(new Message(listQuizzes(contentPath)), contentPath);
+                            return new Message(saveQuiz(contentPath, (Quiz) content));
+                        case GET:
+                            return new Message(getQuiz(contentPath, (String) content));
+                        case REMOVE:
+                            if (!isTeacher)
+                                return new Message(null);
+                            return new Message(removeQuiz(contentPath, (String) content));
+                        case LIST:
+                            return new Message(listQuizzes((String) content));
+                    }
+                    return new Message(null);
+                case SUBMISSION:
+                    switch (request.request) {
+                        case ADD:
+                        case MODIFY:
+                            if (!isTeacher)
+                                createUpdate(new Message(listQuizAttempts(contentPath)), contentPath);
+                            return new Message(saveQuizAttempt(contentPath, (Quiz) content));
+                        case GET:
+                            return new Message(getQuizAttempt(contentPath, (String) content));
+                        case LIST:
+                            return new Message(listQuizAttempts((String) content));
+                    }
+                    return new Message(null);
+                case COURSE:
+                    switch (request.request) {
+                        case ADD:
+                        case MODIFY:
+                            Course course = new Course((String) content);
+                            saveCourse(course);
+                            return new Message(true);
+                        case REMOVE:
+                            if (!isTeacher)
+                                return new Message(null);
+                            return new Message(removeCourse((String) content));
+                        case LIST:
+                            return new Message(listCourses());
+                    }
+                    return new Message(null);
             }
-        } catch (NullPointerException e) {
-            return new Response(true, false);
-        } catch (UnauthorizedException e) {
-            return new Response(false, true);
         } catch (Exception e) {
-            return new Response(false, true);
+            e.printStackTrace();
+            return new Message(null);
         }
-        return new Response(false, false);
+        return new Message(null);
     }
 
     private boolean logIn(String username, String password) {
         try {
             Account account = getAccount(username, password);
             isTeacher = account instanceof Teacher;
+            this.account = account;
             return true;
         } catch (NullPointerException e) {
             return false;
@@ -86,21 +114,20 @@ public class ServerDataHandler extends ServerDataAccessor {
     }
 
     private boolean signUp(Account account) {
-        try {
-            super.setFolderPrefix("data/accounts/");
-            super.addData(account, account.getUsername());
-            isTeacher = account instanceof Teacher;
-            return true;
-        } catch (FileAlreadyExistsException e) {
+        super.setFolderPrefix("data/accounts/");
+        if (accountExists(account.getUsername()))
             return false;
-        }
+        super.addData(account, account.getUsername());
+        isTeacher = account instanceof Teacher;
+        this.account = account;
+        return true;
     }
     
     /**
      * Returns if you have to send an update to the client
      * @return if you have to send an update to the client
      */
-    public static boolean requiresUpdate() {
+    public synchronized static boolean requiresUpdate() {
         return update != null; 
     }
     
@@ -108,13 +135,13 @@ public class ServerDataHandler extends ServerDataAccessor {
      * gets the update to send to the client
      * @return the update to send to the client
      */
-    public static Response getUpdateResponse() {
-        Response tempUpdate = update;
+    public synchronized static Message getUpdateResponse() {
+        Message tempUpdate = update;
         update = null;
         return tempUpdate;
     } 
 
-    private static void createUpdate(Response update, String pathToUpdate) {
+    private synchronized static void createUpdate(Message update, String pathToUpdate) {
         ServerDataHandler.update = update;
         ServerDataHandler.pathToUpdate = pathToUpdate;
     }
@@ -124,20 +151,13 @@ public class ServerDataHandler extends ServerDataAccessor {
      * @return if the client requires an update
      */
     public boolean requiresUpdate(String pathToUpdate) {
-        return (lastRequest.getRequestType() == RequestType.LIST_COURSES ||
-                lastRequest.getRequestType() == RequestType.LIST_STUDENTS ||
-                lastRequest.getRequestType() == RequestType.LIST_QUIZZES) &&
-                pathToUpdate.equals(lastRequest.getContentPath());
+        return (pathToUpdate.equals(lastMessage.contentPath) &&
+                lastMessage.request == Message.requestType.LIST);
     }
 
-    private Quiz getQuizAttempt(String username, String quizName) throws NullPointerException {
+    private Quiz getQuizAttempt(String username, String quizIdentifier) throws NullPointerException {
         Student student = getStudentAccount(username);
-        int attemptNumber = Integer.parseInt(quizName.substring(
-                    quizName.indexOf("#") + 1, quizName.length()
-                    ));
-        quizName = quizName.substring(0, quizName.indexOf("#"));
-        
-        Quiz quiz = student.getQuiz(quizName, attemptNumber);
+        Quiz quiz = student.getQuiz(quizIdentifier);
         if (quiz != null)
             return quiz;
         else
@@ -148,47 +168,65 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Student student = getStudentAccount(username);
             if (isTeacher) {
-                student.overwriteQuizSubmission(quiz);
-            } else
-                student.addNewQuizSubmission(quiz);
-            return true;
+                boolean toReturn = student.overwriteQuizSubmission(quiz);
+                saveAccount(student);
+                return toReturn;
+            } else {
+                boolean toReturn = student.addNewQuizSubmission(quiz);
+                saveAccount(student);
+                return toReturn;
+            }
         } catch (Exception e) {
             return false;
         } 
     }
 
-    private String[] listQuizAttempts(String userName) throws NullPointerException{
+    private String[] listQuizAttempts(String userName) throws NullPointerException {
         Student student = getStudentAccount(userName);
-        return student.getQuizIdentifiers();
+        return (student.getQuizIdentifiers());
     }
     
-    private Quiz getQuiz(String courseName, String quizName) throws NullPointerException {
-        Course course = getCourse(courseName);
-        Quiz quiz = course.getQuiz(quizName);
-        if (quiz != null)
-            return quiz;
-        else
-            throw new NullPointerException("a course and or quiz with that name was not found");
+    private Quiz getQuiz(String courseName, String quizName) {
+        try {
+            Course course = getCourse(courseName);
+            Quiz quiz = course.getQuiz(quizName);
+            if (quiz != null)
+                return quiz;
+        } catch (NullPointerException e) {
+            //
+        }
+        return null;
     }
     
     private boolean saveQuiz(String courseName, Quiz quiz) {
-        if (!isTeacher)
-            return false;
+        if (!isTeacher) {
+        return false;
+        }
+        Course course;
         try {
-            Course course = getCourse(courseName);
-            course.addQuiz(quiz);
-            return true;
-        } catch (Exception e) {
+            course = getCourse(courseName);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
+        if (course != null) {
+            boolean toReturn = course.addQuiz(quiz);
+            saveCourse(course);
+            return toReturn;
+        } else
+           //stuff n things
+        return false;
     }
-
+    
     private boolean removeQuiz(String courseName, String identifier) {
         if (!isTeacher)
             return false;
+        boolean toReturn;
         try {
             Course course = getCourse(courseName);
-            return course.removeQuiz(identifier);
+            toReturn = course.removeQuiz(identifier);
+            saveCourse(course);
+            return toReturn;
         } catch (NullPointerException e) {
             return false;
         }
@@ -196,9 +234,18 @@ public class ServerDataHandler extends ServerDataAccessor {
 
     private String[] listQuizzes(String courseName) {
         Course course = getCourse(courseName);
-        return course.getQuizNames();
+        if (course == null) {
+            return null;
+        } else {
+            return course.getQuizNames();
+        }
     }
-    
+   
+    private void saveAccount(Account account) {
+        super.setFolderPrefix("data/accounts/");
+        super.addData(account, account.getUsername());
+    }
+
     private Account getAccount(String username, String password) throws NullPointerException {
         try {
             super.setFolderPrefix("data/accounts/");
@@ -213,13 +260,8 @@ public class ServerDataHandler extends ServerDataAccessor {
     }
 
     private boolean accountExists(String accountName) {
-        try {
-            super.setFolderPrefix("data/accounts/");
-            super.checkFileExists(accountName);
-            return true;
-        } catch (NullPointerException e) {
-            return false;
-        }
+        super.setFolderPrefix("data/accounts/");
+        return super.fileExists(accountName);
     }
 
     private Student getStudentAccount(String username) throws NullPointerException {
@@ -231,21 +273,29 @@ public class ServerDataHandler extends ServerDataAccessor {
             throw new NullPointerException("a student account with that username doesn't exist");
     }
 
-    private String[] listStudents() throws NullPointerException, UnauthorizedException {
-        if (!isTeacher) {
-            throw new UnauthorizedException("Error, only teachers are allowed to access this command");
-        }
+    private String[] listStudents() {
         super.setFolderPrefix("data/accounts/");
+        if (!isTeacher) {
+            return null;
+        }
         Object[] ol = super.getListVerbose();
         ArrayList<Student> sal = new ArrayList<Student>();
-        for (int i = 0; i < ol.length; i++)
+        
+        for (int i = 0; i < ol.length; i++) {
             if (ol[i] instanceof Student)
                 sal.add((Student) ol[i]);
+        }
+        
         String[] usernameList = new String[sal.size()];
-        for (int i = 0; i < sal.size(); i++)
+        for (int i = 0; i < sal.size(); i++) {
             usernameList[i] = sal.get(i).getUsername();
-
+        }
         return usernameList;
+    }
+    
+    private void saveCourse(Course course) {
+        super.setFolderPrefix("data/courses/");
+        super.addData(course, course.getName().replace(" ", "-"));
     }
 
     private Course getCourse(String courseName) throws NullPointerException {
@@ -255,20 +305,16 @@ public class ServerDataHandler extends ServerDataAccessor {
 
     private boolean courseExists(String courseName) throws NullPointerException {
         super.setFolderPrefix("data/courses/");
-        try {
-            super.checkFileExists(courseName);
-            return true;
-        } catch (NullPointerException e) {
-            return false;
-        }
+        return super.fileExists(courseName);
     }
 
     private String[] listCourses() {
         super.setFolderPrefix("data/courses/");
         Object[] ol = super.getListVerbose();
         String[] courseNameList = new String[ol.length];
-        for (int i = 0; i < ol.length; i++)
+        for (int i = 0; i < ol.length; i++) {
             courseNameList[i] = ((Course) ol[i]).getName();
+        }
         return courseNameList;
     }
 
@@ -277,11 +323,6 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         }
         super.setFolderPrefix("data/courses/");
-        try {
-            super.removeData(courseName);
-            return true;
-        } catch (NullPointerException e) {
-            return false;
-        }
+        return super.removeData(courseName);
     }
 }

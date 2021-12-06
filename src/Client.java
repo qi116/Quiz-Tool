@@ -88,11 +88,11 @@ public class Client {
         Message message;
         if (isTeacher) {
             Teacher acc = new Teacher(user, pass);
-            message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT,
+            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
                     acc);
         } else {
             Student acc = new Student(user, pass);
-            message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT,
+            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
                     acc);
         }
 

@@ -36,43 +36,29 @@ public class ServerDataAccessor {
      *
      * @param username the username of the user
      * @param password the password of the user
-     * @return an account object corosponding to the username and password given
+     * @return an account object corosponding to the username and password given (or null if it doesn't exist)
      */
-    protected Object get(String fileName) throws NullPointerException {
-        checkFileExists(fileName);
-        return getObjectFromFile(fileName);
-    }
+    protected Object get(String fileName) {
+        if (fileExists(fileName))
+            return getObjectFromFile(fileName);
+        return null;
+    } 
 
     /**
-     * returns if a username already exists (true = yell at user, false = ok)
-     * @return if a username already exists (true = yell at user, false = ok)
-     * @param username the username to check
+     * Writes a new object into data
+     * @return if it worked
+     * @param o an object to be added to the system
      */
-    protected boolean checkExists(String fileName) {
-        try {
-            checkFileExists(fileName);
-            return true;
-        } catch (NullPointerException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Creates a new account (throws FileAlreadyExistsException if username taken)
-     *
-     * @param account an account to be added to the system
-     */
-    protected void addData(Object o, String filename) throws FileAlreadyExistsException {
+    protected void addData(Object o, String filename) {
         createFolders();
-        checkFileDoesNotExist(filename);
         writeObjectToFile(filename, o);
     }
 
     /**
-     * Gets all accounts in /data/accounts/
+     * Gets all objects in the currently selected folder
      *
-     * @return Returns a List of all student accounts
-     * @throws NullPointerException (if there is no /data/accounts/)
+     * @return Returns a List of all objects in the folder
+     * @throws NullPointerException if there is no folder you're trying to access
      */
     protected synchronized Object[] getListVerbose() throws NullPointerException {
         Object[] objects;
@@ -80,40 +66,46 @@ public class ServerDataAccessor {
             File folder = new File(this.folderPrefix);
             File[] files = folder.listFiles();
             ArrayList<Object> objectsArrayList = new ArrayList<Object>();
+            
             for (int i = 0; i < files.length; i++) {
-                Object o = getObjectFromFile(files[i].getName());
+                Object o = getObjectFromFile(files[i].getName()
+                        .substring(0,files[i].getName().length() - 4));
                 objectsArrayList.add(o);
             }
-            objects = new Objects[objectsArrayList.size()];
-            for (int i = 0; i < objectsArrayList.size(); i++) {
-            }
-            objects = new Objects[objectsArrayList.size()];
+            objects = new Object[objectsArrayList.size()];
             for (int i = 0; i < objectsArrayList.size(); i++) {
                 objects[i] = objectsArrayList.get(i);
             }
+
+            return objects;
         } catch (NullPointerException e) {
             objects = new Account[0];
+            e.printStackTrace();
         }
         return objects;
     }
 
     /**
-     * saves a user object using the account name
-     * @param account the account to be added
+     * saves an object using the file name
+     * @return if it worked
+     * @param account the object to be added
      */
-    protected void modifyData(Object o, String filename) throws NullPointerException {
-        checkFileExists(filename);
-        writeObjectToFile(filename, o);
+    protected boolean modifyData(Object o, String filename) {
+        return writeObjectToFile(filename, o);
     }
 
          /**
-     * Removes a course with name courseName
-     * @param courseName the name of the course
+     * Removes an object with name fileName
+     * @return if it worked
+     * @param courseName the name of the file to be removed
      */
-    protected synchronized void removeData(String fileName) throws NullPointerException {
-        checkFileExists(fileName);
-        File f = new File(folderPrefix + fileName + fileType);
-        f.delete();
+    protected synchronized boolean removeData(String fileName){
+        if (fileExists(fileName)) {
+            new File(folderPrefix + fileName + fileType).delete();
+            return true;
+        }
+        System.out.println(folderPrefix + fileName + fileType);
+        return false;
     }
 
 
@@ -121,32 +113,30 @@ public class ServerDataAccessor {
         Object toReturn = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
-                    new FileInputStream(new File(folderPrefix + fileName + fileType)));
+                    new FileInputStream(folderPrefix + fileName + fileType));
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
-            //
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new NullPointerException("Error, object empty");
         }
         return toReturn;
     }
-
-    private synchronized void writeObjectToFile(String fileName, Object o) {
+    //returns if it worked
+    private synchronized boolean writeObjectToFile(String fileName, Object o) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(new File(folderPrefix + fileName + fileType)));
             oos.writeObject(o);
             oos.flush();
             oos.close();
+            return true;
         } catch (IOException e) {
-            //
+            return false;
         }
     }
 
-    /**
-     * ThIs HaS tO bE dOnE cLiEnT sIdE
-     */
     private synchronized void createFolders() {
         try {
             new File("data").mkdir();
@@ -156,21 +146,16 @@ public class ServerDataAccessor {
             e.printStackTrace();
         }
     }
-
-    protected synchronized void checkFileExists(String fileName) throws NullPointerException {
+    /**
+     * Returns if a file already exists
+     * @return if a file already exists
+     */
+    protected synchronized boolean fileExists(String fileName) throws NullPointerException {
         try {
             new FileInputStream(folderPrefix + fileName + fileType);
+            return true;
         } catch (FileNotFoundException e) {
-            throw new NullPointerException("File Doesn't exist");
-        }
-    }
-
-    protected synchronized void checkFileDoesNotExist(String fileName) throws FileAlreadyExistsException {
-        try {
-            new FileInputStream(folderPrefix + fileName + fileType);
-            throw new FileAlreadyExistsException("File already exists");
-        } catch (FileNotFoundException e) {
-            //if the file doesn't exist, Yay!
+            return false;
         }
     }
 }
