@@ -2,7 +2,7 @@ import java.io.*;
 
 public class DataTest {
     public static void main(String[] args) {
-        TestingHandler th = new TestingHandler();
+        ServerDataHandler th = new ServerDataHandler();
         Message request;
         Message response;
 

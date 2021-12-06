@@ -122,6 +122,14 @@ public class ServerDataHandler extends ServerDataAccessor {
         this.account = account;
         return true;
     }
+
+    /**
+     * Returns account used to log in or sign up
+     * @return account used to log in or sign up
+     */
+    public Account getAccount() {
+        return account;
+    }
     
     /**
      * Returns if you have to send an update to the client
