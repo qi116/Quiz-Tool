@@ -6,7 +6,7 @@ public class Message {
         ADD, //response: ADD, dataType, boolean: success
         GET, //response: GET, dataType, Quiz if Quiz, String if any other data type
         MODIFY, //response: MODIFY, dataType, success
-        REMOVE, //response: REMOVE, dataType, 
+        REMOVE, //response: REMOVE, dataType,
         LIST //response: String[] list of names
     };
 
@@ -36,8 +36,5 @@ public class Message {
     }
 
 
-    public Message(Object content) {
-        this.content = content;
-    }
-}
 
+}

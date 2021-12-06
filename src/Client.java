@@ -21,35 +21,46 @@ public class Client {
         port = 8080;
         socket = new Socket();
     }
-
-    public static void main(String[] args) throws IOException {
-
-        boolean fail = false;
-
+    public Client() throws IOException {
         try {
             socket = new Socket(host, port);
-            if (!socket.isConnected()) fail = true;
+            if (!socket.isConnected()) throw new IOException();
 
         } catch (UnknownHostException e) {
-            fail = true;
+            e.printStackTrace();
         } catch (ConnectException e) {
-            fail = true;
+            e.printStackTrace();
         }
         reader = new ObjectInputStream(socket.getInputStream());
         writer = new ObjectOutputStream(socket.getOutputStream());
     }
+//    public static void main(String[] args) throws IOException {
+//
+//        boolean fail = false;
+//
+//        try {
+//            socket = new Socket(host, port);
+//            if (!socket.isConnected()) fail = true;
+//
+//        } catch (UnknownHostException e) {
+//            fail = true;
+//        } catch (ConnectException e) {
+//            fail = true;
+//        }
+//        reader = new ObjectInputStream(socket.getInputStream());
+//        writer = new ObjectOutputStream(socket.getOutputStream());
+//    }
     // Wait for Response object that will give array that gives whether it worked and what type of user.
-
     /**
      * Takes in user name and password and sends to Server to log in
      * Waits for String[] response
      *
      * @param user username
      * @param pass password
-     * @return String[] showing whether login was success and what type of user
+     * @return boolean[] gives success and isTeacher
      */
     public boolean[] login(String user, String pass) {
-        Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, new String[]{user, pass});
+        Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, user, pass);
         Object o;
         try {
             writer.writeObject(message);
@@ -65,7 +76,7 @@ public class Client {
     }
 
     /**
-     * Accepts parameters to create account and sends to Server to make account.
+     * Accepts parameters to create account and sends an empty account to Server.
      * Waits for response.
      *
      * @param user      username
@@ -73,9 +84,18 @@ public class Client {
      * @param isTeacher boolean indicating whether user is teacher or student
      * @return boolean indicating whether account was created
      */
-    public boolean createAccount(String user, String pass, boolean isTeacher) {
-        Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT,
-                new String[]{user, pass, String.valueOf(isTeacher)});
+    public boolean createAccount(String user, String pass, boolean isTeacher) { //change this
+        Message message;
+        if (isTeacher) {
+            Teacher acc = new Teacher(user, pass);
+            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
+                    acc);
+        } else {
+            Student acc = new Student(user, pass);
+            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
+                    acc);
+        }
+
         Object o;
         try {
             writer.writeObject(message);
@@ -95,7 +115,7 @@ public class Client {
      * @return String[] of course names
      */
     public String[] getCourses() {
-        Message message = new Message(Message.requestType.GET, Message.dataType.COURSELIST,
+        Message message = new Message(Message.requestType.LIST, Message.dataType.COURSE,
                 null);
         Object o;
         try {
@@ -159,7 +179,7 @@ public class Client {
      * @return list of Quiz names in given course
      */
     public String[] getQuizzes(String course) {
-        Message message = new Message(Message.requestType.GET, Message.dataType.QUIZLIST, course);
+        Message message = new Message(Message.requestType.LIST, Message.dataType.QUIZ, course);
         Object o;
         try {
             writer.writeObject(message);
@@ -174,14 +194,16 @@ public class Client {
     }
 
     /**
-     * Requests Quiz from server using Quiz name.
+     * Requests Quiz from server using Quiz name and associated course name.
      * Waits for response
      *
+     * @param course course name
      * @param name Quiz name
      * @return Quiz
      */
-    public Quiz getQuiz(String name) {
-        Message message = new Message(Message.requestType.GET, Message.dataType.QUIZ, name);
+    public Quiz getQuiz(String course, String name) {
+        Message message = new Message(Message.requestType.GET,
+                Message.dataType.QUIZ, course, name);
         Object o;
         try {
             writer.writeObject(message);
@@ -194,15 +216,38 @@ public class Client {
         Quiz quiz = (Quiz) msg.content;
         return quiz;
     }
+    /**
+     * Tells Server to remove quiz from given course
+     * Waits for response
+     *
+     * @param course Course name
+     * @param name Quiz name
+     * @return Quiz
+     */
+    public boolean removeQuiz(String course, String name) {
+        Message message = new Message(Message.requestType.REMOVE,
+                Message.dataType.QUIZ, course, name);
+        Object o;
+        try {
+            writer.writeObject(message);
+            writer.flush();
+            o = reader.readObject();
+        } catch (Exception e) {
+            return false;
+        }
+        Message msg = (Message) o;
+        Boolean response = (Boolean) msg.content;
+        return response;
+    }
 
     /**
      * Submits quiz to server
-     *
+     * @param account Account to submit quiz
      * @param quiz Quiz to be submitted
      * @return boolean indicating whether or not submission worked
      */
-    public boolean submitQuiz(Quiz quiz) {
-        Message message = new Message(Message.requestType.ADD, Message.dataType.SUBMISSION, quiz);
+    public boolean submitQuiz(String account, Quiz quiz) {
+        Message message = new Message(Message.requestType.ADD, Message.dataType.SUBMISSION, account, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -218,12 +263,12 @@ public class Client {
 
     /**
      * Sends quiz to replace previous quiz with same name to Server
-     *
+     * @param course course name
      * @param quiz New Quiz
      * @return boolean indicating whether operation was successful.
      */
-    public boolean modifyQuiz(Quiz quiz) {
-        Message message = new Message(Message.requestType.MODIFY, Message.dataType.QUIZ, quiz);
+    public boolean modifyQuiz(String course, Quiz quiz) {
+        Message message = new Message(Message.requestType.MODIFY, Message.dataType.QUIZ, course, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -246,7 +291,7 @@ public class Client {
      */
     public boolean addQuiz(String course, Quiz quiz) {
         Message message = new Message(Message.requestType.ADD,
-                Message.dataType.QUIZ, new Object[]{course, quiz});
+                Message.dataType.QUIZ, course, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -270,7 +315,7 @@ public class Client {
      */
     public boolean addQuiz(String course, String quizName) {
         Message message = new Message(Message.requestType.ADD,
-                Message.dataType.QUIZ, new String[]{course, quizName});
+                Message.dataType.QUIZ, course, quizName);
         Object o;
         try {
             writer.writeObject(message);
@@ -282,5 +327,47 @@ public class Client {
         Message msg = (Message) o;
         Boolean b = (Boolean) msg.content;
         return b;
+    }
+
+    /**
+     * Requests list of student names
+     * @return String list of students
+     */
+
+    public String[] getStudents() {
+        Message message = new Message(Message.requestType.LIST, Message.dataType.ACCOUNT,
+                null);
+        Object o;
+        try {
+            writer.writeObject(message);
+            writer.flush();
+            o = reader.readObject();
+        } catch (Exception e) {
+            return null;
+        }
+        Message msg = (Message) o;
+        String[] students = (String[]) msg.content;
+        return students;
+    }
+
+    /**
+     * Requests list of submissions by student
+     * @param name Student username
+     * @return list of submissions by student
+     */
+    public Quiz[] getSubmissions(String name) {
+        Message message = new Message(Message.requestType.LIST, Message.dataType.SUBMISSION,
+                name);
+        Object o;
+        try {
+            writer.writeObject(message);
+            writer.flush();
+            o = reader.readObject();
+        } catch (Exception e) {
+            return null;
+        }
+        Message msg = (Message) o;
+        Quiz[] submissions = (Quiz[]) msg.content;
+        return submissions;
     }
 }
