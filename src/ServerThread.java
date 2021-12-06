@@ -29,7 +29,18 @@ public class ServerThread implements Runnable {
             while (cont) {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
-                handler.processRequest(msg);
+                Message response = null;
+                if (acct == null && msg.request == Message.requestType.LOGIN) {
+                    String[] contents = (String[]) msg.content;
+                    //load account with method
+                    //response set here
+                } else {
+                    response = handler.processRequest(msg);
+                }
+                if (response != null) {
+                    out.writeObject(response);
+                    out.flush();
+                }
 
 
 
