@@ -11,7 +11,10 @@ public class ServerRefreshThread implements Runnable{
 
     public void run() {
         for (Socket s : this.connections) {
-            //send message to refresh here
+            synchronized (s) {
+                //send message to refresh here
+            }
+
         }
     }
 }

@@ -44,8 +44,11 @@ public class ServerThread implements Runnable {
                     response = handler.processRequest(msg);
                 }
                 if (response != null) {
-                    out.writeObject(response);
-                    out.flush();
+                    synchronized (sock) {
+                        out.writeObject(response);
+                        out.flush();
+                    }
+
                 }
 
 
