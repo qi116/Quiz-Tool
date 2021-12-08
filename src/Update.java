@@ -5,6 +5,15 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Client-side update thread
+ *
+ * <p>Purdue University -- CS18000 -- Fall 2021</p>
+ *
+ * @author Brian Qi
+ * @version December 8, 2021
+ */
+
 public class Update implements Runnable{
     private static final String host;
     private static final int port;
@@ -28,6 +37,10 @@ public class Update implements Runnable{
         }
 
     }
+
+    /**
+     * Run method for Update thread
+     */
     public void run () {
         try {
 
