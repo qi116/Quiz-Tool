@@ -5,7 +5,7 @@ public class ClientServerTest {
         Client c = new Client();
         System.out.println(c.login("user", "pass"));
 
-        System.out.println(c.createAccount("user", "pass", true));
+        System.out.println(c.createAccount("user", "pass", false));
         System.out.println(c.login("user", "pass"));
 
     }

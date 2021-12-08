@@ -12,7 +12,7 @@ public class ServerRefreshThread implements Runnable{
     }
 
     public void run() {
-        Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
+        /*Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
         for (Socket s : this.connections) {
             synchronized (s) {
                 //send message to refresh here
@@ -22,6 +22,7 @@ public class ServerRefreshThread implements Runnable{
 
                     out.writeObject(updateMessage);
                     out.flush();
+                    out.close();
 
                     //send update message from out here
                 } catch (Exception e) {
@@ -29,6 +30,6 @@ public class ServerRefreshThread implements Runnable{
                 }
             }
 
-        }
+        }*/
     }
 }
