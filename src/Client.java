@@ -33,6 +33,28 @@ public class Client {
         }
         reader = new ObjectInputStream(socket.getInputStream());
         writer = new ObjectOutputStream(socket.getOutputStream());
+
+        Socket updateSocket = new Socket();
+        try {
+            updateSocket = new Socket(host, port);
+            if (!socket.isConnected()) throw new IOException();
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        }
+        ObjectInputStream updateReader = new ObjectInputStream(updateSocket.getInputStream());
+        ObjectOutputStream updateWriter = new ObjectOutputStream(updateSocket.getOutputStream());
+
+
+        Thread updateThread = new Thread() {
+            public void run() {
+                updateWriter.write();
+            }
+        };
+        updateThread.start();
+
     }
 //    public static void main(String[] args) throws IOException {
 //
