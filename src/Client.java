@@ -50,7 +50,21 @@ public class Client {
 
         Thread updateThread = new Thread() {
             public void run() {
-                updateWriter.write();
+                try {
+                    updateWriter.writeObject(new Message(Message.requestType.UPDATE, null, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                while (true) {
+                    try {
+                        Object o = updateReader.readObject();
+                        //call Peter's update method;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
         updateThread.start();
