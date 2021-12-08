@@ -5,24 +5,20 @@ import java.util.ArrayList;
 
 public class ServerRefreshThread implements Runnable{
 
-    ArrayList<Socket> connections;
+    ArrayList<ObjectOutputStream> connections;
 
-    public ServerRefreshThread(ArrayList<Socket> connections) {
+    public ServerRefreshThread(ArrayList<ObjectOutputStream> connections) {
         this.connections = connections;
     }
 
     public void run() {
-        /*Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
-        for (Socket s : this.connections) {
-            synchronized (s) {
+        Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
+        for (ObjectOutputStream out : this.connections) {
+            synchronized (out) {
                 //send message to refresh here
                 try {
-                    OutputStream sOut = s.getOutputStream();
-                    ObjectOutputStream out = new ObjectOutputStream(sOut);
-
                     out.writeObject(updateMessage);
                     out.flush();
-                    out.close();
 
                     //send update message from out here
                 } catch (Exception e) {
@@ -30,6 +26,6 @@ public class ServerRefreshThread implements Runnable{
                 }
             }
 
-        }*/
+        }
     }
 }

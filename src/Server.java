@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Server {
 
     public static void main(String[] args) {
         ArrayList<Quiz> lockedQuizzes;
-        ArrayList<Socket> updateConnections = new ArrayList<>();
+        ArrayList<ObjectOutputStream> updateConnections = new ArrayList<>();
         ServerRefreshThread refreshThread = new ServerRefreshThread(updateConnections);
         try (ServerSocket server = new ServerSocket(8080)) {
             while (true) {
