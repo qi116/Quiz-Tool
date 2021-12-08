@@ -80,7 +80,6 @@ public class ServerDataAccessor {
             return objects;
         } catch (NullPointerException e) {
             objects = new Account[0];
-            e.printStackTrace();
         }
         return objects;
     }
@@ -117,7 +116,7 @@ public class ServerDataAccessor {
             toReturn = ois.readObject();
             ois.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //asdf
         } catch (ClassNotFoundException e) {
             throw new NullPointerException("Error, object empty");
         }
@@ -143,7 +142,7 @@ public class ServerDataAccessor {
             new File("data/accounts").mkdir();
             new File("data/courses").mkdir();
         } catch (Exception e) {
-            e.printStackTrace();
+            //
         }
     }
     /**

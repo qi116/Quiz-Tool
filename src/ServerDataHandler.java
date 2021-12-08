@@ -54,8 +54,9 @@ public class ServerDataHandler extends ServerDataAccessor {
                     switch (request.request) {
                         case ADD:
                         case MODIFY:
+                            boolean toReturn = saveQuiz(contentPath, (Quiz) content);
                             createUpdate(new Message(listQuizzes(contentPath)), contentPath);
-                            return new Message(saveQuiz(contentPath, (Quiz) content));
+                            return new Message(toReturn);
                         case GET:
                             return new Message(getQuiz(contentPath, (String) content));
                         case REMOVE:
@@ -70,9 +71,11 @@ public class ServerDataHandler extends ServerDataAccessor {
                     switch (request.request) {
                         case ADD:
                         case MODIFY:
+                            boolean toReturn = false;
+                            toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
                                 createUpdate(new Message(listQuizAttempts(contentPath)), contentPath);
-                            return new Message(saveQuizAttempt(contentPath, (Quiz) content));
+                            return new Message(toReturn);
                         case GET:
                             return new Message(getQuizAttempt(contentPath, (String) content));
                         case LIST:
@@ -85,6 +88,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                         case MODIFY:
                             Course course = new Course((String) content);
                             saveCourse(course);
+                            createUpdate(new Message(listCourses()), null);
                             return new Message(true);
                         case REMOVE:
                             if (!isTeacher)
@@ -143,7 +147,7 @@ public class ServerDataHandler extends ServerDataAccessor {
      * gets the update to send to the client
      * @return the update to send to the client
      */
-    public synchronized static Message getUpdateResponse() {
+    public synchronized static Message getUpdate() {
         Message tempUpdate = update;
         update = null;
         return tempUpdate;
@@ -214,7 +218,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             course = getCourse(courseName);
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return false;
         }
         if (course != null) {
