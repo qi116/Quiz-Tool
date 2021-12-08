@@ -49,6 +49,9 @@ public class ServerThread implements Runnable {
                         out.flush();
                     }
                 }
+                if (this.handler.getUpdate() != null) {
+                    
+                }
             }
 
         } catch (IOException e) {

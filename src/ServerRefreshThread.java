@@ -12,7 +12,7 @@ public class ServerRefreshThread implements Runnable{
     }
 
     public void run() {
-        Message updateMessage;// = new Message();
+        Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
         for (Socket s : this.connections) {
             synchronized (s) {
                 //send message to refresh here
@@ -20,7 +20,7 @@ public class ServerRefreshThread implements Runnable{
                     OutputStream sOut = s.getOutputStream();
                     ObjectOutputStream out = new ObjectOutputStream(sOut);
 
-                    //out.writeObject(updateMessage);
+                    out.writeObject(updateMessage);
                     out.flush();
 
                     //send update message from out here
