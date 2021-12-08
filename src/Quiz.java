@@ -78,7 +78,7 @@ public class Quiz implements Serializable {
     
     //returns an identifying string
     public String getIdentifier() {
-        return name + " #" + attempt;
+        return name + " date:" + timeStamp;
     }
 
     //Sets course for Quiz. Returns false if course doesn't exist.
