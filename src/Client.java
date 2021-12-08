@@ -34,40 +34,9 @@ public class Client {
         reader = new ObjectInputStream(socket.getInputStream());
         writer = new ObjectOutputStream(socket.getOutputStream());
 
-        Socket updateSocket = new Socket();
-        try {
-            updateSocket = new Socket(host, port);
-            if (!socket.isConnected()) throw new IOException();
+        Thread t = new Thread(new Update());
+        t.start();
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (ConnectException e) {
-            e.printStackTrace();
-        }
-        ObjectInputStream updateReader = new ObjectInputStream(updateSocket.getInputStream());
-        ObjectOutputStream updateWriter = new ObjectOutputStream(updateSocket.getOutputStream());
-
-
-        Thread updateThread = new Thread() {
-            public void run() {
-                try {
-                    updateWriter.writeObject(new Message(Message.requestType.UPDATE, null, null));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                while (true) {
-                    try {
-                        Object o = updateReader.readObject();
-                        //call Peter's update method;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        updateThread.start();
 
     }
 //    public static void main(String[] args) throws IOException {
@@ -95,7 +64,7 @@ public class Client {
      * @param pass password
      * @return boolean[] gives success and isTeacher
      */
-    public boolean[] login(String user, String pass) {
+    public boolean login(String user, String pass) {
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, user, pass);
         Object o;
         try {
@@ -103,11 +72,11 @@ public class Client {
             writer.flush();
             o = reader.readObject();
         } catch (Exception e) {
-            return null;
+            return false;
         }
         //This will sit there till something is received.
         Message msg = (Message) o;
-        boolean[] information = (boolean[]) msg.content;
+        Boolean information = (Boolean) msg.content;
         return information; //handle msg and cast object inside to what is given.
     }
 
