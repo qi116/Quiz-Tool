@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class MainGUI extends JComponent implements Runnable {
     JLabel usernameLabel;
@@ -94,8 +95,15 @@ public class MainGUI extends JComponent implements Runnable {
     int numAnswers;
     int questionTracker;
 
+    static Client c;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new MainGUI());
+        try {
+            c = new Client();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
@@ -412,21 +420,27 @@ public class MainGUI extends JComponent implements Runnable {
                 if (usernameText.getText().equals("") || new String(passwordText.getPassword()).equals("")) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                } else if(usernameText.getText().equals("t")) {
-                    frame.dispose();
-                    content.remove(centerLogin);
-                    content.setLayout(new BorderLayout());
-                    content.add(teacherMain, BorderLayout.EAST);
-                    content.add(courseList, BorderLayout.WEST);
-
-                    frame.setSize(new Dimension(300, 250));
-                    frame.setVisible(true);
                 } else {
-                    frame.dispose();
-                    content.remove(centerLogin);
-                    content.add(studentMain);
-                    frame.setSize(new Dimension(300, 275));
-                    frame.setVisible(true);
+                    boolean[] loginResult = c.login(usernameText.getText(), new String(passwordText.getPassword()));
+                    if (!loginResult[0]) {
+                        JOptionPane.showMessageDialog(null, "Invalid login",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (loginResult[1]) {
+                        frame.dispose();
+                        content.remove(centerLogin);
+                        content.setLayout(new BorderLayout());
+                        content.add(teacherMain, BorderLayout.EAST);
+                        content.add(courseList, BorderLayout.WEST);
+
+                        frame.setSize(new Dimension(300, 250));
+                        frame.setVisible(true);
+                    } else {
+                        frame.dispose();
+                        content.remove(centerLogin);
+                        content.add(studentMain);
+                        frame.setSize(new Dimension(300, 275));
+                        frame.setVisible(true);
+                    }
                 }
             }
         });
