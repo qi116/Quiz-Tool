@@ -39,4 +39,4 @@ public class Message {
     public Message(Object object) {
         this.content = object;
     }
-}
+} 
