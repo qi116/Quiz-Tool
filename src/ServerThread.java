@@ -9,14 +9,14 @@ import java.util.ArrayList;
 public class ServerThread implements Runnable {
     private final Socket sock;
     private final ServerDataHandler handler;
-    ArrayList<Socket> updateConnections;
+    ArrayList<ObjectOutputStream> updateConnections;
     ServerRefreshThread refreshThread;
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
 
-    public ServerThread(Socket sock, ArrayList<Socket> updateConnections, ServerRefreshThread refreshThread) {
+    public ServerThread(Socket sock, ArrayList<ObjectOutputStream> updateConnections, ServerRefreshThread refreshThread) {
         this.sock = sock;
         this.handler = new ServerDataHandler();
         this.updateConnections = updateConnections;
@@ -40,7 +40,7 @@ public class ServerThread implements Runnable {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
                 if (msg.request == Message.requestType.UPDATE) {
-                    updateConnections.add(sock);
+                    updateConnections.add(out);
                     return;
                 }
                 Message response = null;
