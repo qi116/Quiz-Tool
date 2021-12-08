@@ -35,6 +35,7 @@ public class Message {
         this.contentPath = contentPath;
     }
 
-
-
+    public Message(Object object) {
+        this.content = object;
+    }
 }
