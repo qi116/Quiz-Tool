@@ -7,8 +7,7 @@ import java.net.Socket;
  */
 public class ServerThread implements Runnable {
     private final Socket sock;
-    private Account acct;
-    private ServerDataHandler handler;
+    private final ServerDataHandler handler;
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -36,24 +35,13 @@ public class ServerThread implements Runnable {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
                 Message response = null;
-                if (acct == null && msg.request == Message.requestType.LOGIN) {
-                    String[] contents = (String[]) msg.content;
-
-                    //response set here
-                } else {
-                    response = handler.processRequest(msg);
-                }
+                response = handler.processRequest(msg);
                 if (response != null) {
                     synchronized (sock) {
                         out.writeObject(response);
                         out.flush();
                     }
-
                 }
-
-
-
-
             }
 
         } catch (IOException e) {
