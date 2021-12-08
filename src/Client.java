@@ -33,6 +33,42 @@ public class Client {
         }
         reader = new ObjectInputStream(socket.getInputStream());
         writer = new ObjectOutputStream(socket.getOutputStream());
+
+        Socket updateSocket = new Socket();
+        try {
+            updateSocket = new Socket(host, port);
+            if (!socket.isConnected()) throw new IOException();
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        }
+        ObjectInputStream updateReader = new ObjectInputStream(updateSocket.getInputStream());
+        ObjectOutputStream updateWriter = new ObjectOutputStream(updateSocket.getOutputStream());
+
+
+        Thread updateThread = new Thread() {
+            public void run() {
+                try {
+                    updateWriter.writeObject(new Message(Message.requestType.UPDATE, null, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                while (true) {
+                    try {
+                        Object o = updateReader.readObject();
+                        //call Peter's update method;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        updateThread.start();
+
     }
 //    public static void main(String[] args) throws IOException {
 //

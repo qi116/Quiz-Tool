@@ -116,9 +116,23 @@ public class DataTest {
         request = new Message(Message.requestType.ADD, Message.dataType.COURSE, "course1");
         response = sdh.processRequest(request);
         System.out.println((boolean) response.content ? 
-                "added new course" : "Failed to add new course");
+                "added new course" : "Failed to add new course"); 
         
-        //checking the updating listner I've set up
+        //adding a 2nd course via modify
+        request = new Message(Message.requestType.MODIFY, Message.dataType.COURSE, "course2");
+        response = sdh.processRequest(request);
+        System.out.println((boolean) response.content ?
+                "added new course using modify command" : "failed to add new course using modify command");
+
+        //listing update
+        System.out.println(sdh.updateCalled() ? "noticed the update" : "failed to notice the update");
+        
+        //remvoing 2nd course
+        request = new Message(Message.requestType.REMOVE, Message.dataType.COURSE, "course2");
+        response = sdh.processRequest(request);
+        System.out.println((boolean) response.content ?
+                "removed 2nd course" : "failed to remove second course ");
+
         request = new Message(Message.requestType.LIST, Message.dataType.COURSE, null);
         response = sdh2.processRequest(request);
         String[] content = (String[]) response.content;
@@ -126,28 +140,7 @@ public class DataTest {
         for (String i : content)
             System.out.println(i);
         System.out.print("\n");
-        
-        //adding a 2nd course via modify
-        request = new Message(Message.requestType.MODIFY, Message.dataType.COURSE, "course2");
-        response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ?
-                "added new course using modify command" : "failed to add new course using modify command");
-        //checking for update
-        System.out.println(sdh2.requiresUpdate() ? 
-                "sdh2 noticed it needs an update" : "sdh2 didn't know it requires an update");
-        
-        //listing update
-        response = sdh.getUpdate();
-        content = (String[]) response.content;
-        System.out.println("Listing updated courses");
-        for (String i : content)
-            System.out.println(i);
-        
-        //remvoing 2nd course
-        request = new Message(Message.requestType.REMOVE, Message.dataType.COURSE, "course2");
-        response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ?
-                "removed 2nd course" : "failed to remove second course ");
+
     }
 
     private static void runQuizTests(ServerDataHandler sdh, Quiz quiz1, Quiz quiz2) {
