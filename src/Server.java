@@ -15,7 +15,7 @@ public class Server {
         try (ServerSocket server = new ServerSocket(8080)) {
             while (true) {
                 Socket sock = server.accept();
-                ServerThread serverThread = new ServerThread(sock);
+                ServerThread serverThread = new ServerThread(sock, updateConnections);
                 Thread t = new Thread(serverThread);
                 t.start();
 
