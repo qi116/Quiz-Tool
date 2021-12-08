@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * @author Nathan Leakeas
@@ -8,15 +9,17 @@ import java.net.Socket;
 public class ServerThread implements Runnable {
     private final Socket sock;
     private final ServerDataHandler handler;
+    ArrayList<Socket> updateConnections;
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
 
-    public ServerThread(Socket sock) {
+    public ServerThread(Socket sock, ArrayList<Socket> updateConnections) {
         this.sock = sock;
-        handler = new ServerDataHandler();
-        
+        this.handler = new ServerDataHandler();
+        this.updateConnections = updateConnections;
+
         try {
             OutputStream sOut = sock.getOutputStream();
             this.out = new ObjectOutputStream(sOut);
@@ -34,6 +37,10 @@ public class ServerThread implements Runnable {
             while (cont) {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
+                if (msg.request == Message.requestType.UPDATE) {
+                    updateConnections.add(sock);
+                    return;
+                }
                 Message response = null;
                 response = handler.processRequest(msg);
                 if (response != null) {
