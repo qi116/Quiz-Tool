@@ -7,7 +7,8 @@ public class Message {
         GET, //response: GET, dataType, Quiz if Quiz, String if any other data type
         MODIFY, //response: MODIFY, dataType, success
         REMOVE, //response: REMOVE, dataType,
-        LIST //response: String[] list of names
+        LIST, //response: String[] list of names
+        UPDATE
     };
 
     public enum dataType {
@@ -38,4 +39,4 @@ public class Message {
     public Message(Object object) {
         this.content = object;
     }
-}
+} 

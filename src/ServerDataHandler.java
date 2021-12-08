@@ -9,8 +9,7 @@ import java.util.*;
 public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
     private Message lastMessage;
-    private static Message update;
-    private static String pathToUpdate;
+    private boolean update;
     private Account account;
     /**
      * creates an empty ServerDataHandler
@@ -40,7 +39,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                         case MODIFY:
                             isTeacher = content instanceof Teacher;
                             if (!isTeacher)
-                                createUpdate(new Message(listStudents()), contentPath);
+                                callNewUpdate();
                             return new Message(signUp((Account) content));
                         case LIST:
                             if (!isTeacher) {
@@ -55,13 +54,14 @@ public class ServerDataHandler extends ServerDataAccessor {
                         case ADD:
                         case MODIFY:
                             boolean toReturn = saveQuiz(contentPath, (Quiz) content);
-                            createUpdate(new Message(listQuizzes(contentPath)), contentPath);
+                            callNewUpdate();
                             return new Message(toReturn);
                         case GET:
                             return new Message(getQuiz(contentPath, (String) content));
                         case REMOVE:
                             if (!isTeacher)
                                 return new Message(null);
+                            callNewUpdate();
                             return new Message(removeQuiz(contentPath, (String) content));
                         case LIST:
                             return new Message(listQuizzes((String) content));
@@ -74,7 +74,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                             boolean toReturn = false;
                             toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
-                                createUpdate(new Message(listQuizAttempts(contentPath)), contentPath);
+                                callNewUpdate();
                             return new Message(toReturn);
                         case GET:
                             return new Message(getQuizAttempt(contentPath, (String) content));
@@ -88,11 +88,12 @@ public class ServerDataHandler extends ServerDataAccessor {
                         case MODIFY:
                             Course course = new Course((String) content);
                             saveCourse(course);
-                            createUpdate(new Message(listCourses()), null);
+                            callNewUpdate();
                             return new Message(true);
                         case REMOVE:
                             if (!isTeacher)
                                 return new Message(null);
+                            callNewUpdate();
                             return new Message(removeCourse((String) content));
                         case LIST:
                             return new Message(listCourses());
@@ -127,6 +128,16 @@ public class ServerDataHandler extends ServerDataAccessor {
         return true;
     }
 
+    private void callNewUpdate() {
+        update = true;
+    }
+
+    public boolean updateCalled() {
+        boolean tempUpdate = update;
+        update = false;
+        return tempUpdate;
+    }
+
     /**
      * Returns account used to log in or sign up
      * @return account used to log in or sign up
@@ -135,38 +146,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         return account;
     }
     
-    /**
-     * Returns if you have to send an update to the client
-     * @return if you have to send an update to the client
-     */
-    public synchronized static boolean requiresUpdate() {
-        return update != null; 
-    }
-    
-    /**
-     * gets the update to send to the client
-     * @return the update to send to the client
-     */
-    public synchronized static Message getUpdate() {
-        Message tempUpdate = update;
-        update = null;
-        return tempUpdate;
-    } 
-
-    private synchronized static void createUpdate(Message update, String pathToUpdate) {
-        ServerDataHandler.update = update;
-        ServerDataHandler.pathToUpdate = pathToUpdate;
-    }
-    
-    /**
-     * if the client requires an update
-     * @return if the client requires an update
-     */
-    public boolean requiresUpdate(String pathToUpdate) {
-        return (pathToUpdate.equals(lastMessage.contentPath) &&
-                lastMessage.request == Message.requestType.LIST);
-    }
-
     private Quiz getQuizAttempt(String username, String quizIdentifier) throws NullPointerException {
         Student student = getStudentAccount(username);
         Quiz quiz = student.getQuiz(quizIdentifier);
