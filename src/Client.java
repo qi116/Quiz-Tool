@@ -58,6 +58,7 @@ public class Client {
                 while (true) {
                     try {
                         Object o = updateReader.readObject();
+                        System.out.println("here");
                         //call Peter's update method;
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -95,7 +96,7 @@ public class Client {
      * @param pass password
      * @return boolean[] gives success and isTeacher
      */
-    public boolean[] login(String user, String pass) {
+    public boolean login(String user, String pass) {
         Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, user, pass);
         Object o;
         try {
@@ -103,11 +104,11 @@ public class Client {
             writer.flush();
             o = reader.readObject();
         } catch (Exception e) {
-            return null;
+            return false;
         }
         //This will sit there till something is received.
         Message msg = (Message) o;
-        boolean[] information = (boolean[]) msg.content;
+        Boolean information = (Boolean) msg.content;
         return information; //handle msg and cast object inside to what is given.
     }
 
