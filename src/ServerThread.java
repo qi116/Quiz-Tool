@@ -10,15 +10,17 @@ public class ServerThread implements Runnable {
     private final Socket sock;
     private final ServerDataHandler handler;
     ArrayList<Socket> updateConnections;
+    ServerRefreshThread refreshThread;
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
 
-    public ServerThread(Socket sock, ArrayList<Socket> updateConnections) {
+    public ServerThread(Socket sock, ArrayList<Socket> updateConnections, ServerRefreshThread refreshThread) {
         this.sock = sock;
         this.handler = new ServerDataHandler();
         this.updateConnections = updateConnections;
+        this.refreshThread = refreshThread;
 
         try {
             OutputStream sOut = sock.getOutputStream();
@@ -49,8 +51,9 @@ public class ServerThread implements Runnable {
                         out.flush();
                     }
                 }
-                if (this.handler.getUpdate() != null) {
-                    
+                if (this.handler.updateCalled()) {
+                    Thread t = new Thread(this.refreshThread);
+                    t.start();
                 }
             }
 
