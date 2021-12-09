@@ -38,4 +38,10 @@ Manual tests and outcomes are recored in `Tests.md`
   * Handles information sent back from server
 * Update - Brian Qi
   * Creates thread to wait for update message
-  * Indicates to GUI program that an update has been made  
+  * Indicates to GUI program that an update has been made 
+* ServerDataAccessor - Hawkins Peterson
+  * Accesses data from storage (ie pushing and pulling accounts / courses from storage)
+* ServerDataHandler - Hawkins Peterson
+  * Interpretes a message sent from the client using a switch statment 
+  * Holds methods using ServerDataAccessor to store, get, and list, accounts, courses, quizzes and quiz submissions (along with other functionality)
+
