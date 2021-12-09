@@ -15,6 +15,7 @@ run the server with `java Server`. Then, run `java MainGui`.
 
 ##Tests
 Manual tests and outcomes are recored in `Tests.md`
+`DataTest.java` tests the storage capabilities of the server 
 
 ## Submission Responsibility
 * Submission to Vocarem - Nathan Leakeas
