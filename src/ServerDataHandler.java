@@ -34,7 +34,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                 case ACCOUNT:
                     switch (request.request) {
                         case LOGIN:
-                            boolean[] toReturn = {new logIn(contentPath, (String) content), isTeacher};
+                            boolean[] toReturn = {logIn(contentPath, (String) content), isTeacher};
                             return new Message(toReturn);
                         case ADD:
                         case MODIFY:
