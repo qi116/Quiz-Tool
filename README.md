@@ -1,4 +1,4 @@
-# Group 109 Project 4 CS 180
+# Group 109 Project 5 CS 180
 Nathan Leakeas, Peter Olsen, Brian Qi, Hawkins Peterson
 
 We have moved the source files outside of the repository for convenience. 
@@ -32,3 +32,10 @@ Manual tests and outcomes are recored in `Tests.md`
 * ServerRefreshThread - Nathan Leakeas
   * sends update messages to all clients
   * can be started in any ServerThread
+* Client - Brian Qi
+  * Creates client-side connection with server
+  * Handles sending requests to server
+  * Handles information sent back from server
+* Update - Brian Qi
+  * Creates thread to wait for update message
+  * Indicates to GUI program that an update has been made  
