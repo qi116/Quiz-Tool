@@ -33,6 +33,12 @@ Manual tests and outcomes are recored in `Tests.md`
 * ServerRefreshThread - Nathan Leakeas
   * sends update messages to all clients
   * can be started in any ServerThread
+* Message - Nathan Leakeas and Hawkins Peterson
+  * Used to establish a protocol for communication between client and server
+  * requestType enum - told the server what do do with the data contained
+  * dataType enum - what kind of data stored inside the message
+  or to be returned
+    * content - any kind of object, with type specified in dataType enum
 * Client - Brian Qi
   * Creates client-side connection with server
   * Handles sending requests to server
