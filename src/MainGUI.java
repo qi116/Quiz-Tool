@@ -379,6 +379,7 @@ public class MainGUI extends JComponent implements Runnable {
         teacherStudentSelect.add(courseMenuTStS);
         listStudent.add(stuScrollTStS);
 
+        subScrollTSuS.setAlignmentX(0f);
         teacherSelectSubmission.add(Box.createRigidArea(new Dimension(0, 50)));
         teacherSelectSubmission.add(selectSubTSuS);
         teacherSelectSubmission.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -877,10 +878,11 @@ public class MainGUI extends JComponent implements Runnable {
                             "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                currentStudent = studentsTStS.getSelectedValue();
                 frame.dispose();
                 content.remove(listStudent);
                 content.remove(teacherStudentSelect);
-                currentSubmissions = c.getSubmissions(studentsTStS.getSelectedValue());
+                currentSubmissions = c.getSubmissions(currentStudent);
                 if (currentSubmissions == null) {
                     subsTSuS.setListData(new String[0]);
                 } else {
