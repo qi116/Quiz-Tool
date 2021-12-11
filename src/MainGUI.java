@@ -511,13 +511,7 @@ public class MainGUI extends JComponent implements Runnable {
                         frame.dispose();
                         content.remove(centerCreate);
                         currentStudent = usernameText.getText();
-                        currentSubmissions = c.getSubmissions(currentStudent);
-                        String[] subLabel = new String[currentSubmissions.length];
-                        for (int i = 0; i < currentSubmissions.length; i++) {
-                            subLabel[i] = currentSubmissions[i].getName();
-                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
-                        }
-                        submissionsSM.setListData(subLabel);
+                        submissionsSM.setListData(new String[0]);
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
@@ -604,6 +598,11 @@ public class MainGUI extends JComponent implements Runnable {
         openCourseTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (coursesTM.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a course",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 content.remove(teacherMain);
                 content.remove(courseList);
@@ -760,6 +759,11 @@ public class MainGUI extends JComponent implements Runnable {
         editQuizTCD.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (quizzesTCD.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a quiz",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 content.remove(teacherCourseDisplay);
                 content.remove(quizList);
@@ -768,7 +772,7 @@ public class MainGUI extends JComponent implements Runnable {
                 numQuestions = currentQuiz.getLength();
                 questionTracker = 0;
                 currentQuestions = new Question[numQuestions];
-                currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker);
+                currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker + 1);
                 currentAnswers = currentQuestions[questionTracker].getChoices();
                 numAnswers = currentAnswers.length;
                 teacherEditQuiz.removeAll();
@@ -818,7 +822,7 @@ public class MainGUI extends JComponent implements Runnable {
                     currentLocation = 3;
                     frame.setSize(new Dimension(300, 250));
                 } else {
-                    currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker);
+                    currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker + 1);
                     currentAnswers = currentQuestions[questionTracker].getChoices();
                     numAnswers = currentAnswers.length;
                     teacherEditQuiz.removeAll();
@@ -864,6 +868,11 @@ public class MainGUI extends JComponent implements Runnable {
         selectStuTStS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (studentsTStS.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a student",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 content.remove(listStudent);
                 content.remove(teacherStudentSelect);
@@ -926,15 +935,20 @@ public class MainGUI extends JComponent implements Runnable {
         selectSubTSuS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (subsTSuS.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a submission",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 //set number of questions in quiz
                 currentQuiz = currentSubmissions[subsTSuS.getSelectedIndex()];
                 numQuestions = currentQuiz.getLength();
                 questionTracker = 0;
                 //sets questions and answers
-                questionTG.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
-                answerTG.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
-                        [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
+                questionTG.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
+                answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                        [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                 content.remove(listSubmission);
                 content.remove(teacherSelectSubmission);
                 content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -950,7 +964,7 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 try {
-                    currentQuiz.getQuestion(questionTracker).setGrade(Integer.parseInt(scoreTG.getText()));
+                    currentQuiz.getQuestion(questionTracker + 1).setGrade(Integer.parseInt(scoreTG.getText()));
                     scoreTG.setText("");
                     content.remove(teacherGrading);
                     questionTracker++;
@@ -963,9 +977,9 @@ public class MainGUI extends JComponent implements Runnable {
                         currentLocation = 1;
                         frame.setSize(new Dimension(300, 250));
                     } else {
-                        questionTG.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
-                        answerTG.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
-                                [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
+                        questionTG.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
+                        answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                                [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                         content.add(teacherGrading);
                     }
                     frame.setVisible(true);
@@ -979,15 +993,20 @@ public class MainGUI extends JComponent implements Runnable {
         viewSubSM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (submissionsSM.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a submission",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 content.remove(studentMain);
                 currentQuiz = c.getSubmissions(currentStudent)[submissionsSM.getSelectedIndex()];
                 questionTracker = 0;
                 numQuestions = currentQuiz.getLength();
-                questionSQD.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
-                answerSQD.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
-                        [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
-                int score = currentQuiz.getQuestion(questionTracker).getGrade();
+                questionSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
+                answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                        [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
+                int score = currentQuiz.getQuestion(questionTracker + 1).getGrade();
                 if (score == -1) {
                     scoreSQD.setText("No Score Entered");
                 } else {
@@ -1038,10 +1057,10 @@ public class MainGUI extends JComponent implements Runnable {
                     frame.setSize(new Dimension(300, 275));
 
                 } else {
-                    questionSQD.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
-                    answerSQD.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
-                            [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
-                    int score = currentQuiz.getQuestion(questionTracker).getGrade();
+                    questionSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
+                    answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                            [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
+                    int score = currentQuiz.getQuestion(questionTracker + 1).getGrade();
                     if (score == -1) {
                         scoreSQD.setText("No Score Entered");
                     } else {
@@ -1068,6 +1087,11 @@ public class MainGUI extends JComponent implements Runnable {
         selectCourseSTQ.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (courseListSTQ.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a course",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 content.remove(studentSelectCourse);
                 quizListSTQ.setListData(c.getQuizzes(courseListSTQ.getSelectedValue()));
@@ -1131,6 +1155,11 @@ public class MainGUI extends JComponent implements Runnable {
         selectQuizSTQ.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (quizListSTQ.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a quiz",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
                 currentQuiz = c.getQuiz(courseListSTQ.getSelectedValue(), quizListSTQ.getSelectedValue());
                 if (currentQuiz.isRandomized()) {
@@ -1139,11 +1168,11 @@ public class MainGUI extends JComponent implements Runnable {
                 content.remove(studentSelectQuiz);
                 questionTracker = 0;
                 numQuestions = currentQuiz.getLength();
-                if (currentQuiz.getQuestion(questionTracker).isRandomized()) {
-                    currentQuiz.getQuestion(questionTracker).randomizeChoices();
+                if (currentQuiz.getQuestion(questionTracker + 1).isRandomized()) {
+                    currentQuiz.getQuestion(questionTracker + 1).randomizeChoices();
                 }
-                String[] answers = currentQuiz.getQuestion(questionTracker).getChoices();
-                questionSTQ.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                String[] answers = currentQuiz.getQuestion(questionTracker + 1).getChoices();
+                questionSTQ.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
                 answerOptionsSTQ.setListData(answers);
                 int heightVal = 100;
                 heightVal += 20 * answers.length;
@@ -1157,8 +1186,13 @@ public class MainGUI extends JComponent implements Runnable {
         nextQuestionSTQ.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (answerOptionsSTQ.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select an answer",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 frame.dispose();
-                currentQuiz.getQuestion(questionTracker).setStudentAnswer(answerOptionsSTQ.getSelectedIndex());
+                currentQuiz.getQuestion(questionTracker + 1).setStudentAnswer(answerOptionsSTQ.getSelectedIndex());
                 content.remove(studentTakeQuiz);
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
@@ -1180,11 +1214,11 @@ public class MainGUI extends JComponent implements Runnable {
                     currentLocation = 2;
                     frame.setSize(new Dimension(300, 275));
                 } else {
-                    if (currentQuiz.getQuestion(questionTracker).isRandomized()) {
-                        currentQuiz.getQuestion(questionTracker).randomizeChoices();
+                    if (currentQuiz.getQuestion(questionTracker + 1).isRandomized()) {
+                        currentQuiz.getQuestion(questionTracker + 1).randomizeChoices();
                     }
-                    String[] answers = currentQuiz.getQuestion(questionTracker).getChoices();
-                    questionSTQ.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                    String[] answers = currentQuiz.getQuestion(questionTracker + 1).getChoices();
+                    questionSTQ.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
                     answerOptionsSTQ.setListData(answers);
                     int heightVal = 100;
                     heightVal += 20 * answers.length;
@@ -1198,6 +1232,11 @@ public class MainGUI extends JComponent implements Runnable {
         deleteCourseTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (coursesTM.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a course",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (c.removeCourse(coursesTM.getSelectedValue())) {
                     coursesTM.setListData(c.getCourses());
                     frame.repaint();
@@ -1211,6 +1250,11 @@ public class MainGUI extends JComponent implements Runnable {
         deleteQuizTCD.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (quizzesTCD.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a quiz",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (c.removeQuiz(currentCourse, quizzesTCD.getSelectedValue())) {
                     quizzesTCD.setListData(c.getCourses());
                     frame.repaint();
