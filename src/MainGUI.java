@@ -25,14 +25,14 @@ public class MainGUI extends JComponent implements Runnable {
     JButton openCourseTM;
     JButton deleteCourseTM;
     JButton gradeQuizTM;
-    JList<String> submissionsSM;
+    static JList<String> submissionsSM;
     JScrollPane subScrollSM;
     JButton viewSubSM;
     JButton takeQuizSM;
     JTextField courseNameTAC;
     JButton addCourseTAC;
     JButton cancelTAC;
-    JList<String> quizzesTCD;
+    static JList<String> quizzesTCD;
     JScrollPane quizScrollTCD;
     JButton addQuizTCD;
     JButton editQuizTCD;
@@ -62,11 +62,11 @@ public class MainGUI extends JComponent implements Runnable {
     JLabel scorePromptTG;
     JTextField scoreTG;
     JButton scoreQuesTG;
-    JList<String> studentsTStS;
+    static JList<String> studentsTStS;
     JScrollPane stuScrollTStS;
     JButton selectStuTStS;
     JButton courseMenuTStS;
-    JList<String> subsTSuS;
+    static JList<String> subsTSuS;
     JScrollPane subScrollTSuS;
     JButton selectSubTSuS;
     JButton stuMenuTSuS;
@@ -78,11 +78,11 @@ public class MainGUI extends JComponent implements Runnable {
     JLabel scoreSQD;
     JButton nextQuesSQD;
     JButton exitSQD;
-    JList<String> courseListSTQ;
+    static JList<String> courseListSTQ;
     JScrollPane cListScrollSTQ;
     JButton selectCourseSTQ;
     JButton cancelCourseSTQ;
-    JList<String> quizListSTQ;
+    static JList<String> quizListSTQ;
     JScrollPane qListScrollSTQ;
     JButton selectQuizSTQ;
     JButton changeCourseSTQ;
@@ -115,10 +115,8 @@ public class MainGUI extends JComponent implements Runnable {
     static boolean randomizeQuestion;
 
     static Client c;
-    static boolean inTeacherMain = false;
     static Calendar calendar;
 
-    static JPanel courseList;
 
     public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(new MainGUI());
@@ -126,11 +124,6 @@ public class MainGUI extends JComponent implements Runnable {
             c = new Client();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        while (true) {
-            System.out.println(currentLocation);
-            Thread.sleep(3000);
-            update();
         }
     }
 
@@ -261,7 +254,7 @@ public class MainGUI extends JComponent implements Runnable {
         JPanel centerCreate = new JPanel();
         centerCreate.setLayout(new BoxLayout(centerCreate, BoxLayout.PAGE_AXIS));
 
-        courseList = new JPanel();
+        JPanel courseList = new JPanel();
         courseList.setLayout(new BoxLayout(courseList, BoxLayout.PAGE_AXIS));
         JPanel teacherMain = new JPanel();
         teacherMain.setLayout(new BoxLayout(teacherMain, BoxLayout.PAGE_AXIS));
@@ -814,9 +807,10 @@ public class MainGUI extends JComponent implements Runnable {
                 }
                 currentQuestions[questionTracker].setChoices(currentAnswers);
                 currentQuestions[questionTracker].setQuestion(questionTQE.getText());
+                currentQuiz.setQuestion(questionTracker, currentQuestions[questionTracker]);
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
-
+                    c.modifyQuiz(currentCourse, currentQuiz);
                     content.setLayout(new BorderLayout());
                     quizzesTCD.setListData(c.getQuizzes(currentCourse));
                     content.add(teacherCourseDisplay, BorderLayout.EAST);
@@ -961,7 +955,7 @@ public class MainGUI extends JComponent implements Runnable {
                     content.remove(teacherGrading);
                     questionTracker++;
                     if (questionTracker >= numQuestions) {
-                        //TODO: need a grade quiz method to modify the existing submission
+                        c.submitQuiz(currentStudent, currentQuiz);
                         content.setLayout(new BorderLayout());
                         coursesTM.setListData(c.getCourses());
                         content.add(teacherMain, BorderLayout.EAST);
@@ -1231,10 +1225,42 @@ public class MainGUI extends JComponent implements Runnable {
 
     public static void update() {
         SwingUtilities.invokeLater(new Thread(() -> {
-            if (currentLocation == 1) {
-                coursesTM.setListData(new String[]{"course1", "course2"});
-                frame.repaint();
+            switch (currentLocation) {
+                case 1:
+                    coursesTM.setListData(c.getCourses());
+                    break;
+                case 2:
+                    currentSubmissions = c.getSubmissions(currentStudent);
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
+                    break;
+                case 3:
+                    quizzesTCD.setListData(c.getQuizzes(currentCourse));
+                    break;
+                case 4:
+                    studentsTStS.setListData(c.getStudents());
+                    break;
+                case 5:
+                    currentSubmissions = c.getSubmissions(studentsTStS.getSelectedValue());
+                    String[] subsLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subsLabel[i] = currentSubmissions[i].getName();
+                        subsLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    subsTSuS.setListData(subsLabel);
+                    break;
+                case 6:
+                    courseListSTQ.setListData(c.getCourses());
+                    break;
+                case 7:
+                    quizListSTQ.setListData(c.getQuizzes(courseListSTQ.getSelectedValue()));
+                    break;
             }
+            frame.repaint();
         }));
     }
 }
