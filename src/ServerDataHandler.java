@@ -149,10 +149,12 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Student student = getStudentAccount(username);
             if (isTeacher) {
+                System.out.println("modifying student submission");
                 boolean toReturn = student.overwriteQuizSubmission(quiz);
                 saveAccount(student);
                 return toReturn;
             } else {
+                System.out.println("adding new submission");
                 boolean toReturn = student.addNewQuizSubmission(quiz);
                 saveAccount(student);
                 return toReturn;
