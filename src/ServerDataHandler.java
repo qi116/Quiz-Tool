@@ -71,6 +71,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                     switch (request.request) {
                         case ADD:
                         case MODIFY:
+                            System.out.println("adding / modfying a submission");
                             boolean toReturn = false;
                             toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
