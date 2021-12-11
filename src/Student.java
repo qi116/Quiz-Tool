@@ -32,7 +32,6 @@ public class Student extends Account implements Serializable {
     
     public boolean overwriteQuizSubmission(Quiz q) {
         Quiz qToRemove = getQuiz(q);
-        System.out.println(qToRemove == null ? "found quiz to overwrite" : "failed to find quiz to overwrite");
         if (qToRemove != null) {
             quizSubmissions.remove(qToRemove);
             addQuizSubmission(q);

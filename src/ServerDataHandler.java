@@ -71,7 +71,6 @@ public class ServerDataHandler extends ServerDataAccessor {
                     switch (request.request) {
                         case ADD:
                         case MODIFY:
-                            System.out.println("adding / modfying a submission");
                             boolean toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
                                 callNewUpdate();
@@ -101,7 +100,6 @@ public class ServerDataHandler extends ServerDataAccessor {
                     return new Message(null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return new Message(null);
         }
         return new Message(null);
@@ -149,18 +147,15 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Student student = getStudentAccount(username);
             if (isTeacher) {
-                System.out.println("modifying student submission");
                 boolean toReturn = student.overwriteQuizSubmission(quiz);
                 saveAccount(student);
                 return toReturn;
             } else {
-                System.out.println("adding new submission");
                 boolean toReturn = student.addNewQuizSubmission(quiz);
                 saveAccount(student);
                 return toReturn;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         } 
     }
