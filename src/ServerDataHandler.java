@@ -149,13 +149,16 @@ public class ServerDataHandler extends ServerDataAccessor {
             if (isTeacher) {
                 boolean toReturn = student.overwriteQuizSubmission(quiz);
                 saveAccount(student);
+                System.out.println("overwriting quiz");
                 return toReturn;
             } else {
                 boolean toReturn = student.addNewQuizSubmission(quiz);
                 saveAccount(student);
+                System.out.println("adding new quiz");
                 return toReturn;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         } 
     }
@@ -179,19 +182,21 @@ public class ServerDataHandler extends ServerDataAccessor {
             if (quiz != null)
                 return quiz;
         } catch (NullPointerException e) {
-            //
+            e.printStackTrace();
         }
         return null;
     }
     
     private boolean saveQuiz(String courseName, Quiz quiz) {
         if (!isTeacher) {
-        return false;
+            System.out.println("invalid user, not a teacher");
+            return false;
         }
         Course course;
         try {
             course = getCourse(courseName);
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
         if (course != null) {
