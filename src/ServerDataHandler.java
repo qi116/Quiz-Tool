@@ -162,9 +162,16 @@ public class ServerDataHandler extends ServerDataAccessor {
         } 
     }
 
-    private Quiz[] listQuizAttempts(String userName) throws NullPointerException {
-        Student student = getStudentAccount(userName);
-        return (student.getQuizSubmissions());
+    private Quiz[] listQuizAttempts(String userName) {
+        try {
+            Student student = getStudentAccount(userName);
+            System.out.println("Quiz length before packing: " + student.getQuizSubmissions());
+            return (student.getQuizSubmissions());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("ERROR!");
+        return null;
     }
     
     private Quiz getQuiz(String courseName, String quizName) {
