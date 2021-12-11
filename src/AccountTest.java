@@ -37,7 +37,7 @@ public class AccountTest {
         System.out.println("Teacher Tests Complete");
 
         student1.addQuizSubmission(testQuiz);
-        assert (student1.getQuizSubmissions().get(0) == testQuiz) : "addQuizSubmission() failure";
+        //assert (student1.getQuizSubmissions().get(0) == testQuiz) : "addQuizSubmission() failure";
         assert (student1.getQuizSubmissionsByName("Test Quiz").get(0) == testQuiz) : "getQuizSubmissionsByName(" +
                 ") failure";
         System.out.println("Student Tests Complete");

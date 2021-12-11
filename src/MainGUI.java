@@ -468,12 +468,16 @@ public class MainGUI extends JComponent implements Runnable {
                         content.remove(centerLogin);
                         currentStudent = usernameText.getText();
                         currentSubmissions = c.getSubmissions(currentStudent);
-                        String[] subLabel = new String[currentSubmissions.length];
-                        for (int i = 0; i < currentSubmissions.length; i++) {
-                            subLabel[i] = currentSubmissions[i].getName();
-                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        if (currentSubmissions == null) {
+                            submissionsSM.setListData(new String[0]);
+                        } else {
+                            String[] subLabel = new String[currentSubmissions.length];
+                            for (int i = 0; i < currentSubmissions.length; i++) {
+                                subLabel[i] = currentSubmissions[i].getName();
+                                subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                            }
+                            submissionsSM.setListData(subLabel);
                         }
-                        submissionsSM.setListData(subLabel);
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
@@ -877,12 +881,16 @@ public class MainGUI extends JComponent implements Runnable {
                 content.remove(listStudent);
                 content.remove(teacherStudentSelect);
                 currentSubmissions = c.getSubmissions(studentsTStS.getSelectedValue());
-                String[] subLabel = new String[currentSubmissions.length];
-                for (int i = 0; i < currentSubmissions.length; i++) {
-                    subLabel[i] = currentSubmissions[i].getName();
-                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                if (currentSubmissions == null) {
+                    subsTSuS.setListData(new String[0]);
+                } else {
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    subsTSuS.setListData(subLabel);
                 }
-                subsTSuS.setListData(subLabel);
                 content.add(teacherSelectSubmission, BorderLayout.EAST);
                 content.add(listSubmission, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -1025,12 +1033,16 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(studentQuizDisplay);
                 currentSubmissions = c.getSubmissions(currentStudent);
-                String[] subLabel = new String[currentSubmissions.length];
-                for (int i = 0; i < currentSubmissions.length; i++) {
-                    subLabel[i] = currentSubmissions[i].getName();
-                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                if (currentSubmissions == null) {
+                    submissionsSM.setListData(new String[0]);
+                } else {
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
                 }
-                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
@@ -1046,12 +1058,16 @@ public class MainGUI extends JComponent implements Runnable {
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
                     currentSubmissions = c.getSubmissions(currentStudent);
-                    String[] subLabel = new String[currentSubmissions.length];
-                    for (int i = 0; i < currentSubmissions.length; i++) {
-                        subLabel[i] = currentSubmissions[i].getName();
-                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    if (currentSubmissions == null) {
+                        submissionsSM.setListData(new String[0]);
+                    } else {
+                        String[] subLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subLabel[i] = currentSubmissions[i].getName();
+                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        submissionsSM.setListData(subLabel);
                     }
-                    submissionsSM.setListData(subLabel);
                     content.add(studentMain);
                     currentLocation = 2;
                     frame.setSize(new Dimension(300, 275));
@@ -1108,12 +1124,16 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(studentSelectCourse);
                 currentSubmissions = c.getSubmissions(currentStudent);
-                String[] subLabel = new String[currentSubmissions.length];
-                for (int i = 0; i < currentSubmissions.length; i++) {
-                    subLabel[i] = currentSubmissions[i].getName();
-                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                if (currentSubmissions == null) {
+                    submissionsSM.setListData(new String[0]);
+                } else {
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
                 }
-                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setVisible(true);
                 currentLocation = 2;
@@ -1126,12 +1146,16 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(studentSelectQuiz);
                 currentSubmissions = c.getSubmissions(currentStudent);
-                String[] subLabel = new String[currentSubmissions.length];
-                for (int i = 0; i < currentSubmissions.length; i++) {
-                    subLabel[i] = currentSubmissions[i].getName();
-                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                if (currentSubmissions == null) {
+                    submissionsSM.setListData(new String[0]);
+                } else {
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
                 }
-                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
@@ -1202,14 +1226,18 @@ public class MainGUI extends JComponent implements Runnable {
                             String.format("%2d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
                             String.format("%2d", calendar.get(Calendar.MINUTE)) + ":" +
                             String.format("%2d", calendar.get(Calendar.SECOND)));
-                    c.submitQuiz(currentStudent, currentQuiz);
+                    System.out.println(c.submitQuiz(currentStudent, currentQuiz));
                     currentSubmissions = c.getSubmissions(currentStudent);
-                    String[] subLabel = new String[currentSubmissions.length];
-                    for (int i = 0; i < currentSubmissions.length; i++) {
-                        subLabel[i] = currentSubmissions[i].getName();
-                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    if (currentSubmissions == null) {
+                        submissionsSM.setListData(new String[0]);
+                    } else {
+                        String[] subLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subLabel[i] = currentSubmissions[i].getName();
+                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        submissionsSM.setListData(subLabel);
                     }
-                    submissionsSM.setListData(subLabel);
                     content.add(studentMain);
                     currentLocation = 2;
                     frame.setSize(new Dimension(300, 275));
@@ -1275,12 +1303,16 @@ public class MainGUI extends JComponent implements Runnable {
                     break;
                 case 2:
                     currentSubmissions = c.getSubmissions(currentStudent);
-                    String[] subLabel = new String[currentSubmissions.length];
-                    for (int i = 0; i < currentSubmissions.length; i++) {
-                        subLabel[i] = currentSubmissions[i].getName();
-                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    if (currentSubmissions == null) {
+                        submissionsSM.setListData(new String[0]);
+                    } else {
+                        String[] subLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subLabel[i] = currentSubmissions[i].getName();
+                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        submissionsSM.setListData(subLabel);
                     }
-                    submissionsSM.setListData(subLabel);
                     break;
                 case 3:
                     quizzesTCD.setListData(c.getQuizzes(currentCourse));
@@ -1290,12 +1322,16 @@ public class MainGUI extends JComponent implements Runnable {
                     break;
                 case 5:
                     currentSubmissions = c.getSubmissions(studentsTStS.getSelectedValue());
-                    String[] subsLabel = new String[currentSubmissions.length];
-                    for (int i = 0; i < currentSubmissions.length; i++) {
-                        subsLabel[i] = currentSubmissions[i].getName();
-                        subsLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    if (currentSubmissions == null) {
+                        subsTSuS.setListData(new String[0]);
+                    } else {
+                        String[] subsLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subsLabel[i] = currentSubmissions[i].getName();
+                            subsLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        subsTSuS.setListData(subsLabel);
                     }
-                    subsTSuS.setListData(subsLabel);
                     break;
                 case 6:
                     courseListSTQ.setListData(c.getCourses());
