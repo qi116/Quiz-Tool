@@ -1221,11 +1221,11 @@ public class MainGUI extends JComponent implements Runnable {
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
                     currentQuiz.setTimeStamp(calendar.get(Calendar.YEAR) + "-" +
-                            String.format("%2d", calendar.get(Calendar.MONTH)) + "-" +
-                            String.format("%2d", calendar.get(Calendar.DATE)) + " " +
-                            String.format("%2d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
-                            String.format("%2d", calendar.get(Calendar.MINUTE)) + ":" +
-                            String.format("%2d", calendar.get(Calendar.SECOND)));
+                            String.format("%02d", calendar.get(Calendar.MONTH)) + "-" +
+                            String.format("%02d", calendar.get(Calendar.DATE)) + " " +
+                            String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
+                            String.format("%02d", calendar.get(Calendar.MINUTE)) + ":" +
+                            String.format("%02d", calendar.get(Calendar.SECOND)));
                     c.submitQuiz(currentStudent, currentQuiz);
                     currentSubmissions = c.getSubmissions(currentStudent);
                     if (currentSubmissions == null) {
