@@ -165,12 +165,12 @@ public class ServerDataHandler extends ServerDataAccessor {
     private Quiz[] listQuizAttempts(String userName) {
         try {
             Student student = getStudentAccount(userName);
-            System.out.println("Quiz length before packing: " + student.getQuizSubmissions());
+            //System.out.println("Quiz length before packing: " + student.getQuizSubmissions());
             return (student.getQuizSubmissions());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
-        System.out.println("ERROR!");
+        //System.out.println("ERROR!");
         return null;
     }
     
