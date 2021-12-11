@@ -118,12 +118,19 @@ public class MainGUI extends JComponent implements Runnable {
     static boolean inTeacherMain = false;
     static Calendar calendar;
 
+    static JPanel courseList;
+
     public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(new MainGUI());
         try {
             c = new Client();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        while (true) {
+            System.out.println(currentLocation);
+            Thread.sleep(3000);
+            update();
         }
     }
 
@@ -254,7 +261,7 @@ public class MainGUI extends JComponent implements Runnable {
         JPanel centerCreate = new JPanel();
         centerCreate.setLayout(new BoxLayout(centerCreate, BoxLayout.PAGE_AXIS));
 
-        JPanel courseList = new JPanel();
+        courseList = new JPanel();
         courseList.setLayout(new BoxLayout(courseList, BoxLayout.PAGE_AXIS));
         JPanel teacherMain = new JPanel();
         teacherMain.setLayout(new BoxLayout(teacherMain, BoxLayout.PAGE_AXIS));
@@ -462,6 +469,7 @@ public class MainGUI extends JComponent implements Runnable {
 
                         frame.setSize(new Dimension(300, 250));
                         frame.setVisible(true);
+                        currentLocation = 1;
                     } else {
                         frame.dispose();
                         content.remove(centerLogin);
@@ -476,6 +484,7 @@ public class MainGUI extends JComponent implements Runnable {
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
+                        currentLocation = 2;
                     }
                 }
             }
@@ -496,7 +505,6 @@ public class MainGUI extends JComponent implements Runnable {
                         JOptionPane.showMessageDialog(null, "Account creation failed: username " +
                                         "in use or invalid character(s) used", "Error", JOptionPane.ERROR_MESSAGE);
                     } else if (isTeacher) {
-                        currentLocation = 1;
                         frame.dispose();
                         content.remove(centerCreate);
                         content.setLayout(new BorderLayout());
@@ -505,6 +513,7 @@ public class MainGUI extends JComponent implements Runnable {
                         content.add(courseList, BorderLayout.WEST);
                         frame.setSize(new Dimension(300, 250));
                         frame.setVisible(true);
+                        currentLocation = 1;
                     } else {
                         frame.dispose();
                         content.remove(centerCreate);
@@ -519,6 +528,7 @@ public class MainGUI extends JComponent implements Runnable {
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
+                        currentLocation = 2;
                     }
                 }
             }
@@ -556,6 +566,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.setSize(new Dimension(275, 150));
                 content.add(teacherAddCourse);
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -573,6 +584,7 @@ public class MainGUI extends JComponent implements Runnable {
 
                     frame.setSize(new Dimension(300, 250));
                     frame.setVisible(true);
+                    currentLocation = 1;
                 } else {
                     JOptionPane.showMessageDialog(null, "Course already exists",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -592,6 +604,7 @@ public class MainGUI extends JComponent implements Runnable {
 
                 frame.setSize(new Dimension(300, 250));
                 frame.setVisible(true);
+                currentLocation = 1;
             }
         });
 
@@ -607,6 +620,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(quizList, BorderLayout.WEST);
 
                 frame.setVisible(true);
+                currentLocation = 3;
             }
         });
 
@@ -621,6 +635,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 1;
             }
         });
 
@@ -634,6 +649,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherCreateQuiz);
                 frame.setSize(new Dimension(300, 180));
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -737,6 +753,7 @@ public class MainGUI extends JComponent implements Runnable {
                         quizzesTCD.setListData(c.getQuizzes(currentCourse));
                         content.add(teacherCourseDisplay, BorderLayout.EAST);
                         content.add(quizList, BorderLayout.WEST);
+                        currentLocation = 3;
                         frame.setSize(new Dimension(300, 250));
                     } else {
                         content.add(teacherCreateQuestion);
@@ -783,6 +800,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherEditQuiz);
                 frame.setSize(new Dimension(300, heightVal));
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -803,6 +821,7 @@ public class MainGUI extends JComponent implements Runnable {
                     quizzesTCD.setListData(c.getQuizzes(currentCourse));
                     content.add(teacherCourseDisplay, BorderLayout.EAST);
                     content.add(quizList, BorderLayout.WEST);
+                    currentLocation = 3;
                     frame.setSize(new Dimension(300, 250));
                 } else {
                     currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker);
@@ -844,6 +863,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherStudentSelect, BorderLayout.EAST);
                 content.add(listStudent, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 4;
             }
         });
 
@@ -863,6 +883,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherSelectSubmission, BorderLayout.EAST);
                 content.add(listSubmission, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 5;
             }
         });
 
@@ -876,6 +897,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherStudentSelect, BorderLayout.EAST);
                 content.add(listStudent, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 4;
             }
         });
 
@@ -889,6 +911,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 1;
             }
         });
 
@@ -902,6 +925,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
+                currentLocation = 1;
             }
         });
 
@@ -923,6 +947,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(teacherGrading);
                 frame.setSize(new Dimension(300, 175));
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -941,6 +966,7 @@ public class MainGUI extends JComponent implements Runnable {
                         coursesTM.setListData(c.getCourses());
                         content.add(teacherMain, BorderLayout.EAST);
                         content.add(courseList, BorderLayout.WEST);
+                        currentLocation = 1;
                         frame.setSize(new Dimension(300, 250));
                     } else {
                         questionTG.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
@@ -950,7 +976,8 @@ public class MainGUI extends JComponent implements Runnable {
                     }
                     frame.setVisible(true);
                 } catch (NumberFormatException ex) {
-                    //TODO: error message
+                    JOptionPane.showMessageDialog(null, "Please enter a number",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -975,6 +1002,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentQuizDisplay);
                 frame.setSize(new Dimension(300, 225));
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -993,6 +1021,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
+                currentLocation = 2;
             }
         });
 
@@ -1011,6 +1040,7 @@ public class MainGUI extends JComponent implements Runnable {
                     }
                     submissionsSM.setListData(subLabel);
                     content.add(studentMain);
+                    currentLocation = 2;
                     frame.setSize(new Dimension(300, 275));
 
                 } else {
@@ -1037,6 +1067,7 @@ public class MainGUI extends JComponent implements Runnable {
                 courseListSTQ.setListData(c.getCourses());
                 content.add(studentSelectCourse);
                 frame.setVisible(true);
+                currentLocation = 6;
             }
         });
 
@@ -1049,6 +1080,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentSelectQuiz);
                 frame.setSize(new Dimension(300, 300));
                 frame.setVisible(true);
+                currentLocation = 7;
             }
         });
 
@@ -1066,6 +1098,7 @@ public class MainGUI extends JComponent implements Runnable {
                 submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setVisible(true);
+                currentLocation = 2;
             }
         });
 
@@ -1084,6 +1117,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
+                currentLocation = 2;
             }
         });
 
@@ -1096,6 +1130,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentSelectCourse);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
+                currentLocation = 6;
             }
         });
 
@@ -1121,6 +1156,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.add(studentTakeQuiz);
                 frame.setSize(new Dimension(300, heightVal));
                 frame.setVisible(true);
+                currentLocation = 0;
             }
         });
 
@@ -1147,6 +1183,7 @@ public class MainGUI extends JComponent implements Runnable {
                     }
                     submissionsSM.setListData(subLabel);
                     content.add(studentMain);
+                    currentLocation = 2;
                     frame.setSize(new Dimension(300, 275));
                 } else {
                     if (currentQuiz.getQuestion(questionTracker).isRandomized()) {
@@ -1193,13 +1230,11 @@ public class MainGUI extends JComponent implements Runnable {
     }
 
     public static void update() {
-        SwingUtilities.invokeLater(new Thread(){
-            public void run() {
-                if (currentLocation == 1) {
-                    coursesTM.setListData(new String[]{"course1", "course2"});
-                    frame.repaint();
-                }
+        SwingUtilities.invokeLater(new Thread(() -> {
+            if (currentLocation == 1) {
+                coursesTM.setListData(new String[]{"course1", "course2"});
+                frame.repaint();
             }
-        });
+        }));
     }
 }
