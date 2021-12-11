@@ -1226,6 +1226,7 @@ public class MainGUI extends JComponent implements Runnable {
                             String.format("%2d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
                             String.format("%2d", calendar.get(Calendar.MINUTE)) + ":" +
                             String.format("%2d", calendar.get(Calendar.SECOND)));
+                    c.submitQuiz(currentStudent, currentQuiz);
                     currentSubmissions = c.getSubmissions(currentStudent);
                     if (currentSubmissions == null) {
                         submissionsSM.setListData(new String[0]);
