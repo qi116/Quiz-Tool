@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
 
 public class MainGUI extends JComponent implements Runnable {
     JLabel usernameLabel;
@@ -18,7 +19,7 @@ public class MainGUI extends JComponent implements Runnable {
     JButton createButton;
     JButton switchToLoginButton;
     JButton switchToCreateButton;
-    JList<String> coursesTM;
+    static JList<String> coursesTM;
     JScrollPane courseScrollTM;
     JButton addCourseTM;
     JButton openCourseTM;
@@ -89,15 +90,35 @@ public class MainGUI extends JComponent implements Runnable {
     JLabel questionSTQ;
     JList<String> answerOptionsSTQ;
     JButton nextQuestionSTQ;
+    JCheckBox quizRandomizedTQC;
+    JCheckBox questionRandomizedTKC;
+
 
 
     int numQuestions;
     int numAnswers;
     int questionTracker;
 
-    static Client c;
+    static int currentLocation = 0;
 
-    public static void main(String[] args) {
+    static JFrame frame;
+
+    static String currentCourse = "";
+    static Quiz currentQuiz;
+    static String currentQuizName;
+    static Question[] currentQuestions;
+    static String currentQuesPrompt;
+    static String[] currentAnswers;
+    static Quiz[] currentSubmissions;
+    static String currentStudent;
+    static boolean randomizeQuiz;
+    static boolean randomizeQuestion;
+
+    static Client c;
+    static boolean inTeacherMain = false;
+    static Calendar calendar;
+
+    public static void main(String[] args) throws InterruptedException {
         SwingUtilities.invokeLater(new MainGUI());
         try {
             c = new Client();
@@ -107,7 +128,8 @@ public class MainGUI extends JComponent implements Runnable {
     }
 
     public void run() {
-        JFrame frame = new JFrame("Quiz Tool");
+        calendar = Calendar.getInstance();
+        frame = new JFrame("Quiz Tool");
         Container content = frame.getContentPane();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         frame.setSize(275, 210);
@@ -195,6 +217,8 @@ public class MainGUI extends JComponent implements Runnable {
         selectSubTSuS = new JButton("Select Quiz");
         stuMenuTSuS = new JButton("Change Student");
         courseMenuTSuS = new JButton("Course Menu");
+        quizRandomizedTQC = new JCheckBox("Randomize Question Order");
+        questionRandomizedTKC = new JCheckBox("Randomize Answer Order");
 
 
         //student elements
@@ -337,6 +361,7 @@ public class MainGUI extends JComponent implements Runnable {
         teacherCreateQuiz.add(quizNameTQC);
         teacherCreateQuiz.add(numQuesLabelTQC);
         teacherCreateQuiz.add(numQuestionsTQC);
+        teacherCreateQuiz.add(quizRandomizedTQC);
         teacherCreateQuiz.add(Box.createRigidArea(new Dimension(0, 5)));
         teacherCreateQuiz.add(createQuizTQC);
 
@@ -344,6 +369,7 @@ public class MainGUI extends JComponent implements Runnable {
         teacherCreateQuestion.add(questionNameTKC);
         teacherCreateQuestion.add(numAnsLabelTKC);
         teacherCreateQuestion.add(numAnswersTKC);
+        teacherCreateQuestion.add(questionRandomizedTKC);
         teacherCreateQuestion.add(Box.createRigidArea(new Dimension(0, 5)));
         teacherCreateQuestion.add(createQuesTKC);
 
@@ -414,6 +440,7 @@ public class MainGUI extends JComponent implements Runnable {
         content.add(centerLogin);
         frame.setSize(275, 210);
 
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -429,6 +456,7 @@ public class MainGUI extends JComponent implements Runnable {
                         frame.dispose();
                         content.remove(centerLogin);
                         content.setLayout(new BorderLayout());
+                        coursesTM.setListData(c.getCourses());
                         content.add(teacherMain, BorderLayout.EAST);
                         content.add(courseList, BorderLayout.WEST);
 
@@ -437,6 +465,14 @@ public class MainGUI extends JComponent implements Runnable {
                     } else {
                         frame.dispose();
                         content.remove(centerLogin);
+                        currentStudent = usernameText.getText();
+                        currentSubmissions = c.getSubmissions(currentStudent);
+                        String[] subLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subLabel[i] = currentSubmissions[i].getName();
+                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        submissionsSM.setListData(subLabel);
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
@@ -452,21 +488,38 @@ public class MainGUI extends JComponent implements Runnable {
                         "Select a role...".equals(roleSelect.getSelectedItem())) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                } else if("Teacher".equals(roleSelect.getSelectedItem())) {
-                    frame.dispose();
-                    content.remove(centerCreate);
-                    content.setLayout(new BorderLayout());
-                    content.add(teacherMain, BorderLayout.EAST);
-                    content.add(courseList, BorderLayout.WEST);
-
-                    frame.setSize(new Dimension(300, 250));
-                    frame.setVisible(true);
                 } else {
-                    frame.dispose();
-                    content.remove(centerCreate);
-                    content.add(studentMain);
-                    frame.setSize(new Dimension(300, 275));
-                    frame.setVisible(true);
+                    boolean isTeacher = "Teacher".equals(roleSelect.getSelectedItem());
+                    boolean createAcctSuccess = c.createAccount(usernameTextC.getText(), new
+                            String(passwordTextC.getPassword()), isTeacher);
+                    if (!createAcctSuccess) {
+                        JOptionPane.showMessageDialog(null, "Account creation failed: username " +
+                                        "in use or invalid character(s) used", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (isTeacher) {
+                        currentLocation = 1;
+                        frame.dispose();
+                        content.remove(centerCreate);
+                        content.setLayout(new BorderLayout());
+                        coursesTM.setListData(c.getCourses());
+                        content.add(teacherMain, BorderLayout.EAST);
+                        content.add(courseList, BorderLayout.WEST);
+                        frame.setSize(new Dimension(300, 250));
+                        frame.setVisible(true);
+                    } else {
+                        frame.dispose();
+                        content.remove(centerCreate);
+                        currentStudent = usernameText.getText();
+                        currentSubmissions = c.getSubmissions(currentStudent);
+                        String[] subLabel = new String[currentSubmissions.length];
+                        for (int i = 0; i < currentSubmissions.length; i++) {
+                            subLabel[i] = currentSubmissions[i].getName();
+                            subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                        }
+                        submissionsSM.setListData(subLabel);
+                        content.add(studentMain);
+                        frame.setSize(new Dimension(300, 275));
+                        frame.setVisible(true);
+                    }
                 }
             }
         });
@@ -509,15 +562,21 @@ public class MainGUI extends JComponent implements Runnable {
         addCourseTAC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                content.remove(teacherAddCourse);
-                courseNameTAC.setText("");
-                content.setLayout(new BorderLayout());
-                content.add(teacherMain, BorderLayout.EAST);
-                content.add(courseList, BorderLayout.WEST);
+                if (c.addCourse(courseNameTAC.getText())){
+                    frame.dispose();
+                    content.remove(teacherAddCourse);
+                    courseNameTAC.setText("");
+                    content.setLayout(new BorderLayout());
+                    coursesTM.setListData(c.getCourses());
+                    content.add(teacherMain, BorderLayout.EAST);
+                    content.add(courseList, BorderLayout.WEST);
 
-                frame.setSize(new Dimension(300, 250));
-                frame.setVisible(true);
+                    frame.setSize(new Dimension(300, 250));
+                    frame.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Course already exists",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -527,6 +586,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(teacherAddCourse);
                 content.setLayout(new BorderLayout());
+                coursesTM.setListData(c.getCourses());
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
 
@@ -541,6 +601,8 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(teacherMain);
                 content.remove(courseList);
+                currentCourse = coursesTM.getSelectedValue();
+                quizzesTCD.setListData(c.getQuizzes(currentCourse));
                 content.add(teacherCourseDisplay, BorderLayout.EAST);
                 content.add(quizList, BorderLayout.WEST);
 
@@ -554,6 +616,8 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(teacherCourseDisplay);
                 content.remove(quizList);
+                currentCourse = "";
+                coursesTM.setListData(c.getCourses());
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -568,7 +632,7 @@ public class MainGUI extends JComponent implements Runnable {
                 content.remove(quizList);
                 content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
                 content.add(teacherCreateQuiz);
-                frame.setSize(new Dimension(300, 150));
+                frame.setSize(new Dimension(300, 180));
                 frame.setVisible(true);
             }
         });
@@ -582,7 +646,10 @@ public class MainGUI extends JComponent implements Runnable {
                 } else {
                     try {
                         numQuestions = Integer.parseInt(numQuestionsTQC.getText());
+                        currentQuestions = new Question[numQuestions];
                         questionTracker = 0;
+                        currentQuizName = quizNameTQC.getText();
+                        randomizeQuiz = quizRandomizedTQC.isSelected();
                         frame.dispose();
                         content.remove(teacherCreateQuiz);
                         quizNameTQC.setText("");
@@ -605,7 +672,10 @@ public class MainGUI extends JComponent implements Runnable {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     try {
+                        currentQuesPrompt = questionNameTKC.getText();
                         numAnswers = Integer.parseInt(numAnswersTKC.getText());
+                        currentAnswers = new String[numAnswers];
+                        randomizeQuestion = questionRandomizedTKC.isSelected();
                         frame.dispose();
                         content.remove(teacherCreateQuestion);
                         questionNameTKC.setText("");
@@ -647,18 +717,30 @@ public class MainGUI extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
+                    for (int i = 0; i < numAnswers; i++) {
+                        currentAnswers[i] = answersTAC[i].getText();
+                    }
+                    currentQuestions[questionTracker] = new Question(currentQuesPrompt, currentAnswers);
+                    currentQuestions[questionTracker].setIsRandomized(randomizeQuestion);
                     frame.dispose();
                     content.remove(teacherSetAnswers);
                     teacherSetAnswers.removeAll();
                     questionTracker++;
                     if (questionTracker >= numQuestions) {
+                        currentQuiz = new Quiz(currentQuizName, currentQuestions);
+                        currentQuiz.setIsRandomized(randomizeQuiz);
+                        if (!c.addQuiz(currentCourse, currentQuiz)) {
+                            JOptionPane.showMessageDialog(null, "Quiz creation failed",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                         content.setLayout(new BorderLayout());
+                        quizzesTCD.setListData(c.getQuizzes(currentCourse));
                         content.add(teacherCourseDisplay, BorderLayout.EAST);
                         content.add(quizList, BorderLayout.WEST);
                         frame.setSize(new Dimension(300, 250));
                     } else {
                         content.add(teacherCreateQuestion);
-                        frame.setSize(new Dimension(300, 150));
+                        frame.setSize(new Dimension(300, 180));
                     }
                     frame.setVisible(true);
                 }
@@ -672,22 +754,26 @@ public class MainGUI extends JComponent implements Runnable {
                 content.remove(teacherCourseDisplay);
                 content.remove(quizList);
                 //gets the quiz, sets numQuestions and numAnswers
-                numQuestions = 3;
+                currentQuiz = c.getQuiz(currentCourse, quizzesTCD.getSelectedValue());
+                numQuestions = currentQuiz.getLength();
                 questionTracker = 0;
-                numAnswers = 4;
+                currentQuestions = new Question[numQuestions];
+                currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker);
+                currentAnswers = currentQuestions[questionTracker].getChoices();
+                numAnswers = currentAnswers.length;
                 teacherEditQuiz.removeAll();
                 ansLabelsTQE = new JLabel[numAnswers];
                 answersTQE = new JTextField[numAnswers];
                 teacherEditQuiz.add(quesLabelTQE);
                 //auto-fill text boxes
-                questionTQE.setText("Qestion");
+                questionTQE.setText(currentQuestions[questionTracker].getQuestion());
                 teacherEditQuiz.add(questionTQE);
                 int heightVal = 115;
                 for (int i = 0; i < numAnswers; i++) {
                     ansLabelsTQE[i] = new JLabel("Answer Choice " + (i + 1));
                     answersTQE[i] = new JTextField(40);
                     answersTQE[i].setMaximumSize(answersTQE[i].getPreferredSize());
-                    answersTQE[i].setText("anser");
+                    answersTQE[i].setText(currentAnswers[i]);
                     teacherEditQuiz.add(ansLabelsTQE[i]);
                     teacherEditQuiz.add(answersTQE[i]);
                     heightVal += 35;
@@ -705,28 +791,36 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(teacherEditQuiz);
-                //sets numAnswers
+                for (int i = 0; i < numAnswers; i++) {
+                    currentAnswers[i] = answersTQE[i].getText();
+                }
+                currentQuestions[questionTracker].setChoices(currentAnswers);
+                currentQuestions[questionTracker].setQuestion(questionTQE.getText());
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
+
                     content.setLayout(new BorderLayout());
+                    quizzesTCD.setListData(c.getQuizzes(currentCourse));
                     content.add(teacherCourseDisplay, BorderLayout.EAST);
                     content.add(quizList, BorderLayout.WEST);
                     frame.setSize(new Dimension(300, 250));
                 } else {
-                    numAnswers = 6;
+                    currentQuestions[questionTracker] = currentQuiz.getQuestion(questionTracker);
+                    currentAnswers = currentQuestions[questionTracker].getChoices();
+                    numAnswers = currentAnswers.length;
                     teacherEditQuiz.removeAll();
                     ansLabelsTQE = new JLabel[numAnswers];
                     answersTQE = new JTextField[numAnswers];
                     teacherEditQuiz.add(quesLabelTQE);
                     //auto-fill text boxes
-                    questionTQE.setText("Qestion");
+                    questionTQE.setText(currentQuestions[questionTracker].getQuestion());
                     teacherEditQuiz.add(questionTQE);
                     int heightVal = 115;
                     for (int i = 0; i < numAnswers; i++) {
                         ansLabelsTQE[i] = new JLabel("Answer Choice " + (i + 1));
                         answersTQE[i] = new JTextField(40);
                         answersTQE[i].setMaximumSize(answersTQE[i].getPreferredSize());
-                        answersTQE[i].setText("anser");
+                        answersTQE[i].setText(currentAnswers[i]);
                         teacherEditQuiz.add(ansLabelsTQE[i]);
                         teacherEditQuiz.add(answersTQE[i]);
                         heightVal += 35;
@@ -746,6 +840,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(courseList);
                 content.remove(teacherMain);
+                studentsTStS.setListData(c.getStudents());
                 content.add(teacherStudentSelect, BorderLayout.EAST);
                 content.add(listStudent, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -758,6 +853,13 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(listStudent);
                 content.remove(teacherStudentSelect);
+                currentSubmissions = c.getSubmissions(studentsTStS.getSelectedValue());
+                String[] subLabel = new String[currentSubmissions.length];
+                for (int i = 0; i < currentSubmissions.length; i++) {
+                    subLabel[i] = currentSubmissions[i].getName();
+                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                }
+                subsTSuS.setListData(subLabel);
                 content.add(teacherSelectSubmission, BorderLayout.EAST);
                 content.add(listSubmission, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -770,6 +872,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(listSubmission);
                 content.remove(teacherSelectSubmission);
+                studentsTStS.setListData(c.getStudents());
                 content.add(teacherStudentSelect, BorderLayout.EAST);
                 content.add(listStudent, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -782,6 +885,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(listSubmission);
                 content.remove(teacherSelectSubmission);
+                coursesTM.setListData(c.getCourses());
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -794,6 +898,7 @@ public class MainGUI extends JComponent implements Runnable {
                 frame.dispose();
                 content.remove(listStudent);
                 content.remove(teacherStudentSelect);
+                coursesTM.setListData(c.getCourses());
                 content.add(teacherMain, BorderLayout.EAST);
                 content.add(courseList, BorderLayout.WEST);
                 frame.setVisible(true);
@@ -805,11 +910,13 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 //set number of questions in quiz
-                numQuestions = 3;
+                currentQuiz = currentSubmissions[subsTSuS.getSelectedIndex()];
+                numQuestions = currentQuiz.getLength();
                 questionTracker = 0;
                 //sets questions and answers
-                questionTG.setText("actual question");
-                answerTG.setText("actual answer");
+                questionTG.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                answerTG.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
+                        [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
                 content.remove(listSubmission);
                 content.remove(teacherSelectSubmission);
                 content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -823,20 +930,28 @@ public class MainGUI extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                scoreTG.setText("");
-                content.remove(teacherGrading);
-                questionTracker++;
-                if (questionTracker >= numQuestions) {
-                    content.setLayout(new BorderLayout());
-                    content.add(teacherMain, BorderLayout.EAST);
-                    content.add(courseList, BorderLayout.WEST);
-                    frame.setSize(new Dimension(300, 250));
-                } else {
-                    questionTG.setText("newQuestion");
-                    answerTG.setText("newAns");
-                    content.add(teacherGrading);
+                try {
+                    currentQuiz.getQuestion(questionTracker).setGrade(Integer.parseInt(scoreTG.getText()));
+                    scoreTG.setText("");
+                    content.remove(teacherGrading);
+                    questionTracker++;
+                    if (questionTracker >= numQuestions) {
+                        //TODO: need a grade quiz method to modify the existing submission
+                        content.setLayout(new BorderLayout());
+                        coursesTM.setListData(c.getCourses());
+                        content.add(teacherMain, BorderLayout.EAST);
+                        content.add(courseList, BorderLayout.WEST);
+                        frame.setSize(new Dimension(300, 250));
+                    } else {
+                        questionTG.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                        answerTG.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
+                                [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
+                        content.add(teacherGrading);
+                    }
+                    frame.setVisible(true);
+                } catch (NumberFormatException ex) {
+                    //TODO: error message
                 }
-                frame.setVisible(true);
             }
         });
 
@@ -845,11 +960,13 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentMain);
+                currentQuiz = c.getSubmissions(currentStudent)[submissionsSM.getSelectedIndex()];
                 questionTracker = 0;
-                numQuestions = 3;
-                questionSQD.setText("actual question");
-                answerSQD.setText("actual answer");
-                int score = 2;
+                numQuestions = currentQuiz.getLength();
+                questionSQD.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                answerSQD.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
+                        [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
+                int score = currentQuiz.getQuestion(questionTracker).getGrade();
                 if (score == -1) {
                     scoreSQD.setText("No Score Entered");
                 } else {
@@ -866,6 +983,13 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentQuizDisplay);
+                currentSubmissions = c.getSubmissions(currentStudent);
+                String[] subLabel = new String[currentSubmissions.length];
+                for (int i = 0; i < currentSubmissions.length; i++) {
+                    subLabel[i] = currentSubmissions[i].getName();
+                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                }
+                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
@@ -879,13 +1003,21 @@ public class MainGUI extends JComponent implements Runnable {
                 content.remove(studentQuizDisplay);
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
+                    currentSubmissions = c.getSubmissions(currentStudent);
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
                     content.add(studentMain);
                     frame.setSize(new Dimension(300, 275));
 
                 } else {
-                    questionSQD.setText("actualquestion2");
-                    answerSQD.setText("actualanswer2");
-                    int score = -1;
+                    questionSQD.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
+                    answerSQD.setText(currentQuiz.getQuestion(questionTracker).getOriginalChoices()
+                            [currentQuiz.getQuestion(questionTracker).getStudentAnswer()]);
+                    int score = currentQuiz.getQuestion(questionTracker).getGrade();
                     if (score == -1) {
                         scoreSQD.setText("No Score Entered");
                     } else {
@@ -902,6 +1034,7 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentMain);
+                courseListSTQ.setListData(c.getCourses());
                 content.add(studentSelectCourse);
                 frame.setVisible(true);
             }
@@ -912,6 +1045,7 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentSelectCourse);
+                quizListSTQ.setListData(c.getQuizzes(courseListSTQ.getSelectedValue()));
                 content.add(studentSelectQuiz);
                 frame.setSize(new Dimension(300, 300));
                 frame.setVisible(true);
@@ -923,6 +1057,13 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentSelectCourse);
+                currentSubmissions = c.getSubmissions(currentStudent);
+                String[] subLabel = new String[currentSubmissions.length];
+                for (int i = 0; i < currentSubmissions.length; i++) {
+                    subLabel[i] = currentSubmissions[i].getName();
+                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                }
+                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setVisible(true);
             }
@@ -933,6 +1074,13 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentSelectQuiz);
+                currentSubmissions = c.getSubmissions(currentStudent);
+                String[] subLabel = new String[currentSubmissions.length];
+                for (int i = 0; i < currentSubmissions.length; i++) {
+                    subLabel[i] = currentSubmissions[i].getName();
+                    subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                }
+                submissionsSM.setListData(subLabel);
                 content.add(studentMain);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
@@ -944,6 +1092,7 @@ public class MainGUI extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 content.remove(studentSelectQuiz);
+                courseListSTQ.setListData(c.getCourses());
                 content.add(studentSelectCourse);
                 frame.setSize(new Dimension(300, 275));
                 frame.setVisible(true);
@@ -954,11 +1103,18 @@ public class MainGUI extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                currentQuiz = c.getQuiz(courseListSTQ.getSelectedValue(), quizListSTQ.getSelectedValue());
+                if (currentQuiz.isRandomized()) {
+                    currentQuiz.randomize();
+                }
                 content.remove(studentSelectQuiz);
                 questionTracker = 0;
-                numQuestions = 5;
-                String[] answers = {"answer1", "answer2", "answer3", "a", "a", "a", "a"};
-                questionSTQ.setText("actualQuestion");
+                numQuestions = currentQuiz.getLength();
+                if (currentQuiz.getQuestion(questionTracker).isRandomized()) {
+                    currentQuiz.getQuestion(questionTracker).randomizeChoices();
+                }
+                String[] answers = currentQuiz.getQuestion(questionTracker).getChoices();
+                questionSTQ.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
                 answerOptionsSTQ.setListData(answers);
                 int heightVal = 100;
                 heightVal += 20 * answers.length;
@@ -972,15 +1128,32 @@ public class MainGUI extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                currentQuiz.getQuestion(questionTracker).setStudentAnswer(answerOptionsSTQ.getSelectedIndex());
                 content.remove(studentTakeQuiz);
                 questionTracker++;
                 if (questionTracker >= numQuestions) {
-                    //send quiz
+                    currentQuiz.setTimeStamp(calendar.get(Calendar.YEAR) + "-" +
+                            String.format("%2d", calendar.get(Calendar.MONTH)) + "-" +
+                            String.format("%2d", calendar.get(Calendar.DATE)) + " " +
+                            String.format("%2d", calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
+                            String.format("%2d", calendar.get(Calendar.MINUTE)) + ":" +
+                            String.format("%2d", calendar.get(Calendar.SECOND)));
+                    c.submitQuiz(currentStudent, currentQuiz);
+                    currentSubmissions = c.getSubmissions(currentStudent);
+                    String[] subLabel = new String[currentSubmissions.length];
+                    for (int i = 0; i < currentSubmissions.length; i++) {
+                        subLabel[i] = currentSubmissions[i].getName();
+                        subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                    }
+                    submissionsSM.setListData(subLabel);
                     content.add(studentMain);
                     frame.setSize(new Dimension(300, 275));
                 } else {
-                    String[] answers = {"answer1", "answer2", "answer4"};
-                    questionSTQ.setText("the actual question");
+                    if (currentQuiz.getQuestion(questionTracker).isRandomized()) {
+                        currentQuiz.getQuestion(questionTracker).randomizeChoices();
+                    }
+                    String[] answers = currentQuiz.getQuestion(questionTracker).getChoices();
+                    questionSTQ.setText(currentQuiz.getQuestion(questionTracker).getQuestion());
                     answerOptionsSTQ.setListData(answers);
                     int heightVal = 100;
                     heightVal += 20 * answers.length;
@@ -988,6 +1161,44 @@ public class MainGUI extends JComponent implements Runnable {
                     frame.setSize(new Dimension(300, heightVal));
                 }
                 frame.setVisible(true);
+            }
+        });
+
+        deleteCourseTM.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (c.removeCourse(coursesTM.getSelectedValue())) {
+                    coursesTM.setListData(c.getCourses());
+                    frame.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Course deletion failed",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        deleteQuizTCD.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (c.removeQuiz(currentCourse, quizzesTCD.getSelectedValue())) {
+                    quizzesTCD.setListData(c.getCourses());
+                    frame.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Quiz deletion failed",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+    }
+
+    public static void update() {
+        SwingUtilities.invokeLater(new Thread(){
+            public void run() {
+                if (currentLocation == 1) {
+                    coursesTM.setListData(new String[]{"course1", "course2"});
+                    frame.repaint();
+                }
             }
         });
     }
