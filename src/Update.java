@@ -49,7 +49,7 @@ public class Update implements Runnable{
                 try {
                     Object o = updateReader.readObject();
                     System.out.println("here");
-                    //call Peter's update method;
+                    MainGUI.update();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {

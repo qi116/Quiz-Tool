@@ -116,4 +116,8 @@ public class Question implements Serializable {
     public void setIsRandomized(boolean isRandomized) {
         this.isRandomized = isRandomized;
     }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 }
