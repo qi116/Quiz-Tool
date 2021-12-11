@@ -1,5 +1,10 @@
 import java.io.Serializable;
 
+/**
+ * @author Nathan Leakeas
+ * @author Hawkins Peterson
+ * @version 12/8/2021
+ */
 public class Message implements Serializable {
 
     public enum requestType {
