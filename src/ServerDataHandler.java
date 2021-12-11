@@ -10,7 +10,6 @@ public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
     private Message lastMessage;
     private boolean update;
-    private Account account;
     /**
      * creates an empty ServerDataHandler
      */
@@ -112,7 +111,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Account account = getAccount(username, password);
             isTeacher = account instanceof Teacher;
-            this.account = account;
             return true;
         } catch (NullPointerException e) {
             return false;
@@ -125,7 +123,6 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         super.addData(account, account.getUsername());
         isTeacher = account instanceof Teacher;
-        this.account = account;
         return true;
     }
 
@@ -137,14 +134,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         boolean tempUpdate = update;
         update = false;
         return tempUpdate;
-    }
-
-    /**
-     * Returns account used to log in or sign up
-     * @return account used to log in or sign up
-     */
-    public Account getAccount() {
-        return account;
     }
     
     private Quiz getQuizAttempt(String username, String quizIdentifier) throws NullPointerException {

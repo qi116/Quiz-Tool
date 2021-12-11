@@ -79,8 +79,8 @@ public class DataTest {
         //Logging in to student 2
         request = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, "student2", "Password");
         response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ?
-                "got student 2 out of storage" : "failed to retrieve student 2 from storage");
+        System.out.println(((boolean[]) response.content)[0]);//?
+        //        "got student 2 out of storage" : "failed to retrieve student 2 from storage");
 
         //adding a teacher to storage
         Teacher teacher = new Teacher("teacher", "Password");
@@ -92,7 +92,7 @@ public class DataTest {
         //logging in 2nd handler
         request = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, "teacher", "Password");
         response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ? 
+        System.out.println(((boolean[]) response.content)[0] ? 
                 "logged 2nd handler into teacher" : "failed to log 2nd handler into teacher");
 
         //listing student courses
@@ -194,7 +194,7 @@ public class DataTest {
 
         request = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, "student1", "Password");
         response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ? "Logged in as a student" : "failed to log in as a student");
+        System.out.println(((boolean[]) response.content)[0] ? "Logged in as a student" : "failed to log in as a student");
 
         quiz1.setAttempt(1);
         request = new Message(Message.requestType.ADD, Message.dataType.SUBMISSION, "student1", quiz1);
@@ -209,20 +209,20 @@ public class DataTest {
 
         request = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, "teacher", "Password");
         response = sdh.processRequest(request);
-        System.out.println((boolean) response.content ? 
+        System.out.println(((boolean[]) response.content)[0] ? 
                 "Logged back into teacher account" : "Failed to log into teacher account");
         
         request = new Message(Message.requestType.MODIFY, Message.dataType.SUBMISSION, "student1", quiz1);
         response = sdh.processRequest(request);
         System.out.println((boolean) response.content ? 
                 "Modified quiz attempt" : "Failed to modify quiz attempt");
-
+        
         request = new Message(Message.requestType.LIST, Message.dataType.SUBMISSION, "student1");
         response = sdh.processRequest(request);
         System.out.println("Listing quiz attempts");
-        String[] content = (String[]) response.content;
-        for (String i : content)
-            System.out.println(i);
+        Quiz[] content = (Quiz[]) response.content;
+        for (Quiz i : content)
+            System.out.println(i.getName());
         System.out.print("\n");
 
     } 
