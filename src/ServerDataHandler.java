@@ -72,8 +72,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                         case ADD:
                         case MODIFY:
                             System.out.println("adding / modfying a submission");
-                            boolean toReturn = false;
-                            toReturn = saveQuizAttempt(contentPath, (Quiz) content);
+                            boolean toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
                                 callNewUpdate();
                             return new Message(toReturn);
@@ -161,6 +160,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                 return toReturn;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         } 
     }
