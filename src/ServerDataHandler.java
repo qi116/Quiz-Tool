@@ -10,7 +10,6 @@ public class ServerDataHandler extends ServerDataAccessor {
     private boolean isTeacher;
     private Message lastMessage;
     private boolean update;
-    private Account account;
     /**
      * creates an empty ServerDataHandler
      */
@@ -72,8 +71,7 @@ public class ServerDataHandler extends ServerDataAccessor {
                     switch (request.request) {
                         case ADD:
                         case MODIFY:
-                            boolean toReturn = false;
-                            toReturn = saveQuizAttempt(contentPath, (Quiz) content);
+                            boolean toReturn = saveQuizAttempt(contentPath, (Quiz) content);
                             if (!isTeacher)
                                 callNewUpdate();
                             return new Message(toReturn);
@@ -102,7 +100,6 @@ public class ServerDataHandler extends ServerDataAccessor {
                     return new Message(null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return new Message(null);
         }
         return new Message(null);
@@ -112,7 +109,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         try {
             Account account = getAccount(username, password);
             isTeacher = account instanceof Teacher;
-            this.account = account;
             return true;
         } catch (NullPointerException e) {
             return false;
@@ -125,7 +121,6 @@ public class ServerDataHandler extends ServerDataAccessor {
             return false;
         super.addData(account, account.getUsername());
         isTeacher = account instanceof Teacher;
-        this.account = account;
         return true;
     }
 
@@ -137,14 +132,6 @@ public class ServerDataHandler extends ServerDataAccessor {
         boolean tempUpdate = update;
         update = false;
         return tempUpdate;
-    }
-
-    /**
-     * Returns account used to log in or sign up
-     * @return account used to log in or sign up
-     */
-    public Account getAccount() {
-        return account;
     }
     
     private Quiz getQuizAttempt(String username, String quizIdentifier) throws NullPointerException {
@@ -173,9 +160,16 @@ public class ServerDataHandler extends ServerDataAccessor {
         } 
     }
 
-    private Quiz[] listQuizAttempts(String userName) throws NullPointerException {
-        Student student = getStudentAccount(userName);
-        return (student.getQuizSubmissions());
+    private Quiz[] listQuizAttempts(String userName) {
+        try {
+            Student student = getStudentAccount(userName);
+            //System.out.println("Quiz length before packing: " + student.getQuizSubmissions());
+            return (student.getQuizSubmissions());
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        //System.out.println("ERROR!");
+        return null;
     }
     
     private Quiz getQuiz(String courseName, String quizName) {
