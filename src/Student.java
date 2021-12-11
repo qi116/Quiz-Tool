@@ -43,8 +43,8 @@ public class Student extends Account implements Serializable {
     /**
      * @return ArrayList of all quiz submissions
      */
-    public ArrayList<Quiz> getQuizSubmissions() {
-        return quizSubmissions;
+    public Quiz[] getQuizSubmissions() {
+        return (Quiz[]) quizSubmissions.toArray();
     }
     
     /**

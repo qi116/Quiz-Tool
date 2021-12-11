@@ -173,9 +173,9 @@ public class ServerDataHandler extends ServerDataAccessor {
         } 
     }
 
-    private String[] listQuizAttempts(String userName) throws NullPointerException {
+    private Quiz[] listQuizAttempts(String userName) throws NullPointerException {
         Student student = getStudentAccount(userName);
-        return (student.getQuizIdentifiers());
+        return (student.getQuizSubmissions());
     }
     
     private Quiz getQuiz(String courseName, String quizName) {
