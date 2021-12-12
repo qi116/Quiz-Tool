@@ -381,8 +381,8 @@ public class Client {
             reader.close();
             writer.close();
             socket.close();
-            t.interrupt();
-            
+            Update.stop();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
