@@ -127,9 +127,9 @@ public class MainGUI extends JComponent implements Runnable {
 
 
     public static void main(String[] args) throws InterruptedException {
-        SwingUtilities.invokeLater(new MainGUI());
         try {
             c = new Client();
+            SwingUtilities.invokeLater(new MainGUI());
         } catch (IOException e) {
             e.printStackTrace();
         }
