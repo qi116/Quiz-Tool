@@ -101,11 +101,8 @@ public class ServerDataAccessor {
     protected synchronized boolean removeData(String fileName){
         if (fileExists(fileName)) {
             File toDelete = new File(folderPrefix + fileName.replace(" ", "-") + fileType);
-            System.out.println(toDelete.delete() ? "deleted!" : "failed to delete file");
-            System.out.println("delete successfull " + folderPrefix + fileName + fileType);
             return true;
         }
-        System.out.println("error, " + folderPrefix + fileName + fileType + " doesn't exist");
         return false;
     }
 
