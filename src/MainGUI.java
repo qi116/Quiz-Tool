@@ -168,8 +168,7 @@ public class MainGUI extends JComponent implements Runnable {
         roleSelect.setMaximumSize(roleSelect.getPreferredSize());
 
         //teacher elements
-        String[] exampleList = {"Item One", "Item Two", "Item Also Two", "Wait Where Is Three", "Three"};
-        //truncate list items so it all fits nicely
+        String[] exampleList = {};
         coursesTM = new JList<>(exampleList);
         courseScrollTM = new JScrollPane(coursesTM);
         courseScrollTM.setMaximumSize(new Dimension(150, 300));
@@ -257,11 +256,13 @@ public class MainGUI extends JComponent implements Runnable {
         answerOptionsSTQ = new JList<>(exampleList);
         nextQuestionSTQ = new JButton("Next Question");
 
+        //login panels
         JPanel centerLogin = new JPanel();
         centerLogin.setLayout(new BoxLayout(centerLogin, BoxLayout.PAGE_AXIS));
         JPanel centerCreate = new JPanel();
         centerCreate.setLayout(new BoxLayout(centerCreate, BoxLayout.PAGE_AXIS));
 
+        //teacher panels
         JPanel courseList = new JPanel();
         courseList.setLayout(new BoxLayout(courseList, BoxLayout.PAGE_AXIS));
         JPanel teacherMain = new JPanel();
@@ -291,6 +292,7 @@ public class MainGUI extends JComponent implements Runnable {
         JPanel listSubmission = new JPanel();
         listSubmission.setLayout(new BoxLayout(listSubmission, BoxLayout.PAGE_AXIS));
 
+        //student panels
         JPanel studentMain = new JPanel();
         studentMain.setLayout(new BoxLayout(studentMain, BoxLayout.PAGE_AXIS));
         JPanel studentQuizDisplay = new JPanel();
@@ -302,6 +304,7 @@ public class MainGUI extends JComponent implements Runnable {
         JPanel studentTakeQuiz = new JPanel();
         studentTakeQuiz.setLayout(new BoxLayout(studentTakeQuiz, BoxLayout.PAGE_AXIS));
 
+        //adding components to panels
         centerLogin.add(Box.createRigidArea(new Dimension(0, 5)));
         centerLogin.add(usernameLabel);
         usernameText.setAlignmentX(0f);
@@ -450,6 +453,7 @@ public class MainGUI extends JComponent implements Runnable {
         frame.setSize(275, 210);
 
 
+        //login functionality
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -496,6 +500,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //account creation functionality
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -566,6 +571,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //course adding functionality
         addCourseTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -618,6 +624,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //opens to course-specific menu
         openCourseTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -668,6 +675,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //create quiz functionality
         createQuizTQC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -779,6 +787,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //edit quiz functionality
         editQuizTCD.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -874,6 +883,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //grade quiz functionality
         gradeQuizTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1018,6 +1028,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //submission viewing functionality
         viewSubSM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1036,7 +1047,7 @@ public class MainGUI extends JComponent implements Runnable {
                         [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                 int score = currentQuiz.getQuestion(questionTracker + 1).getGrade();
                 if (score == -1) {
-                    scoreSQD.setText("No Score Entered");
+                    scoreSQD.setText("No Score Entered"); //-1 indicates not scored; is default
                 } else {
                     scoreSQD.setText("" + score);
                 }
@@ -1108,6 +1119,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //quiz taking functionality
         takeQuizSM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1277,6 +1289,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //delete course functionality
         deleteCourseTM.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1295,6 +1308,7 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //delete quiz functionality
         deleteQuizTCD.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1313,17 +1327,18 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        //close program functionality
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 c.closeClient();
-
             }
         });
 
     }
 
+    //called by client when an update is deemed necessary; checks if in a relevant window
     public static void update() {
         SwingUtilities.invokeLater(new Thread(() -> {
             switch (currentLocation) {
