@@ -20,7 +20,7 @@ public class Update implements Runnable{
     private static Socket updateSocket;
     private static ObjectInputStream updateReader;
     private static ObjectOutputStream updateWriter;
-
+    private static boolean run = true;
     static {
         host = "localhost";
         port = 8080;
@@ -45,7 +45,7 @@ public class Update implements Runnable{
         try {
 
             updateWriter.writeObject(new Message(Message.requestType.UPDATE, null, null));
-            while (true) {
+            while (run) {
                 try {
                     Object o = updateReader.readObject();
                     System.out.println("here");
@@ -69,6 +69,9 @@ public class Update implements Runnable{
 
 
 
+        }
+        public static void stop() {
+            run = false;
         }
     }
 
