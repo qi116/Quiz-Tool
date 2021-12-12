@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 /**
@@ -51,9 +52,9 @@ public class Update implements Runnable{
                     System.out.println("here");
                     MainGUI.update();
                 } catch (IOException e) {
-                    e.printStackTrace();
+
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+
                 }
             }
 
