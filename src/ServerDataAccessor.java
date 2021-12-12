@@ -101,7 +101,7 @@ public class ServerDataAccessor {
     protected synchronized boolean removeData(String fileName){
         if (fileExists(fileName)) {
             File toDelete = new File(folderPrefix + fileName + fileType);
-            toDelete.delete();
+            System.out.println(toDelete.delete() ? "deleted!" : "failed to delete file");
             System.out.println("delete successfull " + folderPrefix + fileName + fileType);
             return true;
         }
@@ -140,9 +140,13 @@ public class ServerDataAccessor {
 
     private synchronized void createFolders() {
         try {
-            new File("data").mkdir();
-            new File("data/accounts").mkdir();
-            new File("data/courses").mkdir();
+            File f;
+            f = new File("data");
+            f.mkdir();
+            f = new File("data/accounts");
+            f.mkdir();
+            f = new File("data/courses");
+            f.mkdir();
         } catch (Exception e) {
             //
         }
@@ -153,7 +157,7 @@ public class ServerDataAccessor {
      */
     protected synchronized boolean fileExists(String fileName) throws NullPointerException {
         try {
-            new FileInputStream(folderPrefix + fileName + fileType);
+            FileInputStream f = new FileInputStream(folderPrefix + fileName + fileType);
             return true;
         } catch (FileNotFoundException e) {
             return false;
