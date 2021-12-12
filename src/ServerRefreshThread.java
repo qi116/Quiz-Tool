@@ -17,13 +17,11 @@ public class ServerRefreshThread implements Runnable{
 
     public void run() {
         Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
-        for (ObjectOutputStream out : this.connections) {
+        for (ObjectOutputStream out : this.connections) { //iterate through all socket output streams
             synchronized (out) {
                 try {
-                    out.writeObject(updateMessage);
+                    out.writeObject(updateMessage); //send special update message to current socket
                     out.flush();
-
-                    //send update message from out here
                 } catch (Exception e) {
 
                 }
