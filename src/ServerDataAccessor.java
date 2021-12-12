@@ -100,9 +100,12 @@ public class ServerDataAccessor {
      */
     protected synchronized boolean removeData(String fileName){
         if (fileExists(fileName)) {
-            File toDelete = new File(folderPrefix + fileName.replace(" ", "-") + fileType);
+            File toDelete = new File(folderPrefix + fileName + fileType);
+            System.out.println(toDelete.delete() ? "deleted!" : "failed to delete file");
+            System.out.println("delete successfull " + folderPrefix + fileName + fileType);
             return true;
         }
+        System.out.println("error, " + folderPrefix + fileName + fileType + " doesn't exist");
         return false;
     }
 
@@ -152,12 +155,11 @@ public class ServerDataAccessor {
      * Returns if a file already exists
      * @return if a file already exists
      */
-    protected synchronized boolean fileExists(String fileName) {
+    protected synchronized boolean fileExists(String fileName) throws NullPointerException {
         try {
             FileInputStream f = new FileInputStream(folderPrefix + fileName + fileType);
-            f.close();
             return true;
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             return false;
         } catch (IOException e) {
             return false;

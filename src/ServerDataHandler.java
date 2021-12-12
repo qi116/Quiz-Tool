@@ -149,10 +149,12 @@ public class ServerDataHandler extends ServerDataAccessor {
             if (isTeacher) {
                 boolean toReturn = student.overwriteQuizSubmission(quiz);
                 saveAccount(student);
+                System.out.println("overwriting quiz");
                 return toReturn;
             } else {
                 boolean toReturn = student.addNewQuizSubmission(quiz);
                 saveAccount(student);
+                System.out.println("adding new quiz");
                 return toReturn;
             }
         } catch (Exception e) {
@@ -164,12 +166,12 @@ public class ServerDataHandler extends ServerDataAccessor {
     private Quiz[] listQuizAttempts(String userName) {
         try {
             Student student = getStudentAccount(userName);
-            //I don't know why, but don't touch da comments, these might have fixed the code
+            //System.out.println("Quiz length before packing: " + student.getQuizSubmissions());
             return (student.getQuizSubmissions());
         } catch (Exception e) {
-            //
+            //e.printStackTrace();
         }
-        //
+        //System.out.println("ERROR!");
         return null;
     }
     
@@ -180,19 +182,21 @@ public class ServerDataHandler extends ServerDataAccessor {
             if (quiz != null)
                 return quiz;
         } catch (NullPointerException e) {
-            //
+            e.printStackTrace();
         }
         return null;
     }
     
     private boolean saveQuiz(String courseName, Quiz quiz) {
         if (!isTeacher) {
+            System.out.println("invalid user, not a teacher");
             return false;
         }
         Course course;
         try {
             course = getCourse(courseName);
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
         if (course != null) {
@@ -306,9 +310,11 @@ public class ServerDataHandler extends ServerDataAccessor {
 
     private boolean removeCourse(String courseName) {
         if (!isTeacher) {
+            System.out.println("error, student attempting to close account!");
             return false;
         }
         super.setFolderPrefix("data/courses/");
+        System.out.println("deleting course " + courseName);
         return super.removeData(courseName);
     }
 }
