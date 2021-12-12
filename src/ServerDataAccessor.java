@@ -100,10 +100,11 @@ public class ServerDataAccessor {
      */
     protected synchronized boolean removeData(String fileName){
         if (fileExists(fileName)) {
-            new File(folderPrefix + fileName + fileType).delete();
+            (new File(folderPrefix + fileName + fileType)).delete();
+            System.out.println("delete successfull");
             return true;
         }
-        System.out.println(folderPrefix + fileName + fileType);
+        System.out.println("error, " + folderPrefix + fileName + fileType + " doesn't exist");
         return false;
     }
 

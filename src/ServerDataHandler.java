@@ -310,9 +310,11 @@ public class ServerDataHandler extends ServerDataAccessor {
 
     private boolean removeCourse(String courseName) {
         if (!isTeacher) {
+            System.out.println("error, student attempting to close account!");
             return false;
         }
         super.setFolderPrefix("data/courses/");
+        System.out.println("deleting course " + courseName);
         return super.removeData(courseName);
     }
 }
