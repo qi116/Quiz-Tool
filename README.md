@@ -13,7 +13,13 @@ Our project can be compiled by running the command `javac MainGui.java` and `jav
 The main classes of our project are `Server` and `MainGui`. First,
 run the server with `java Server`. Then, run `java MainGui`.
 
-##Tests
+## Operation
+To faciliate testing, some dummy content has already been added to the application.
+Two dummy courses, `course 1`, and `course 2`, exist. Inside `course 1`,
+a dummy quiz exists. Two dummy acounts also exist, `teacher`, and `student`,
+each with password `pass`.
+
+## Tests
 Manual tests and outcomes are recored in `Tests.md`
 `DataTest.java` tests the storage capabilities of the server 
 
@@ -39,6 +45,10 @@ Manual tests and outcomes are recored in `Tests.md`
   * dataType enum - what kind of data stored inside the message
   or to be returned
     * content - any kind of object, with type specified in dataType enum
+* MainGUI - Peter Olsen
+  * Displays visual user interface
+  * Handles user input and selections
+  * Uses Client program to interact with the server
 * Client - Brian Qi
   * Creates client-side connection with server
   * Handles sending requests to server

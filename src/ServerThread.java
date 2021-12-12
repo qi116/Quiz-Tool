@@ -1,3 +1,4 @@
+import javax.print.attribute.standard.NumberUp;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -52,16 +53,19 @@ public class ServerThread implements Runnable {
                     }
                 }
                 if (this.handler.updateCalled()) {
-                    System.out.println("uodate called");
                     Thread t = new Thread(this.refreshThread);
                     t.start();
                 }
             }
 
-        } catch (IOException e) {
-
         } catch (ClassNotFoundException e) {
 
+        } catch (NullPointerException | IOException e) {
+            try {
+                sock.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
 
     }

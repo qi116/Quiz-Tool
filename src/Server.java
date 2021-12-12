@@ -14,6 +14,7 @@ public class Server {
         ArrayList<Quiz> lockedQuizzes;
         ArrayList<ObjectOutputStream> updateConnections = new ArrayList<>();
         ServerRefreshThread refreshThread = new ServerRefreshThread(updateConnections);
+        System.out.println("Starting server..");
         try (ServerSocket server = new ServerSocket(8080)) {
             while (true) {
                 Socket sock = server.accept();
