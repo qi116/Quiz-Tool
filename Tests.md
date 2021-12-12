@@ -1,3 +1,5 @@
+Note: Before all tests, launch the server via `java Server` after compiling
+
 ##Test 1: Log in
 Steps:
 1. Launch Application
