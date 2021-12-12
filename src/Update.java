@@ -49,7 +49,6 @@ public class Update implements Runnable{
             while (run) {
                 try {
                     Object o = updateReader.readObject();
-                    System.out.println("here");
                     MainGUI.update();
                 } catch (IOException e) {
 
