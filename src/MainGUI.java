@@ -515,8 +515,18 @@ public class MainGUI extends JComponent implements Runnable {
                     } else {
                         frame.dispose();
                         content.remove(centerCreate);
-                        currentStudent = usernameText.getText();
-                        submissionsSM.setListData(new String[0]);
+                        currentStudent = usernameTextC.getText();
+                        currentSubmissions = c.getSubmissions(currentStudent);
+                        if (currentSubmissions == null) {
+                            submissionsSM.setListData(new String[0]);
+                        } else {
+                            String[] subLabel = new String[currentSubmissions.length];
+                            for (int i = 0; i < currentSubmissions.length; i++) {
+                                subLabel[i] = currentSubmissions[i].getName();
+                                subLabel[i] += ":" + currentSubmissions[i].getTimeStamp();
+                            }
+                            submissionsSM.setListData(subLabel);
+                        }
                         content.add(studentMain);
                         frame.setSize(new Dimension(300, 275));
                         frame.setVisible(true);
