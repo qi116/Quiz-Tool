@@ -154,7 +154,7 @@ Expected result: All questions and answers appear, but they appear in a randomiz
 
 Test Result: Passed
 
-## Test 13: Create an already created account (should fail)
+## Test 13: Create an already created account
 1. Launch application
 2. Create an account
 3. Try to sign up with the same account
