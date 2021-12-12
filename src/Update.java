@@ -53,7 +53,7 @@ public class Update implements Runnable {
                     Object o = updateReader.readObject();
                     MainGUI.update();
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    run = false;
                 }
             }
 
