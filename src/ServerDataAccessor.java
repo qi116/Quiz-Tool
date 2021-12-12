@@ -158,6 +158,7 @@ public class ServerDataAccessor {
     protected synchronized boolean fileExists(String fileName) throws NullPointerException {
         try {
             FileInputStream f = new FileInputStream(folderPrefix + fileName + fileType);
+            f.close();
             return true;
         } catch (FileNotFoundException e) {
             return false;
