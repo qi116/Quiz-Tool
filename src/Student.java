@@ -27,7 +27,6 @@ public class Student extends Account implements Serializable {
             addQuizSubmission(q);
             return true;
         }
-        System.out.println("found quiz with that name");
         return false;
     }
     
@@ -89,7 +88,6 @@ public class Student extends Account implements Serializable {
 
         for (Quiz q : quizSubmissions) {
             if (q.getIdentifier().equals(quizIdentifier)) {
-                System.out.println("quiz identifier" + q.getIdentifier());
                 toReturn.add(q);
             }
         }
