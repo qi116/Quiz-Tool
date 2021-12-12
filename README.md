@@ -39,6 +39,10 @@ Manual tests and outcomes are recored in `Tests.md`
   * dataType enum - what kind of data stored inside the message
   or to be returned
     * content - any kind of object, with type specified in dataType enum
+* MainGUI - Peter Olsen
+  * Displays visual user interface
+  * Handles user input and selections
+  * Uses Client program to interact with the server
 * Client - Brian Qi
   * Creates client-side connection with server
   * Handles sending requests to server
