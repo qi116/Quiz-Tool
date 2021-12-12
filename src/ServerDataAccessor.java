@@ -159,6 +159,8 @@ public class ServerDataAccessor {
             return true;
         } catch (Exception e) {
             return false;
+        } catch (IOException e) {
+            return false;
         }
     }
 }
