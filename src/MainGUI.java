@@ -1032,7 +1032,7 @@ public class MainGUI extends JComponent implements Runnable {
                 questionTracker = 0;
                 numQuestions = currentQuiz.getLength();
                 questionSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
-                answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getChoices()
                         [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                 int score = currentQuiz.getQuestion(questionTracker + 1).getGrade();
                 if (score == -1) {
@@ -1094,7 +1094,7 @@ public class MainGUI extends JComponent implements Runnable {
 
                 } else {
                     questionSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
-                    answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                    answerSQD.setText(currentQuiz.getQuestion(questionTracker + 1).getChoices()
                             [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                     int score = currentQuiz.getQuestion(questionTracker + 1).getGrade();
                     if (score == -1) {
