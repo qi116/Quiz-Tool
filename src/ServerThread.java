@@ -40,27 +40,27 @@ public class ServerThread implements Runnable {
             while (cont) {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
-                if (msg.request == Message.requestType.UPDATE) {
-                    updateConnections.add(out);
+                if (msg.request == Message.requestType.UPDATE) { //checks if socket should be an update socket
+                    updateConnections.add(out); //adds socket to list of reserved update sockets
                     return;
                 }
                 Message response = null;
-                response = handler.processRequest(msg);
+                response = handler.processRequest(msg); //pass message off to message handler
                 if (response != null) {
                     synchronized (sock) {
-                        out.writeObject(response);
+                        out.writeObject(response); //send message handler response to client
                         out.flush();
                     }
                 }
-                if (this.handler.updateCalled()) {
-                    Thread t = new Thread(this.refreshThread);
+                if (this.handler.updateCalled()) { //if incoming message modifies data
+                    Thread t = new Thread(this.refreshThread); //start thread responsible for sending out updates
                     t.start();
                 }
             }
 
         } catch (ClassNotFoundException e) {
 
-        } catch (NullPointerException | IOException e) {
+        } catch (NullPointerException | IOException e) { //close socket if fatal errors occur
             try {
                 sock.close();
             } catch (IOException ioException) {

@@ -16,7 +16,7 @@ public class Server {
         ServerRefreshThread refreshThread = new ServerRefreshThread(updateConnections);
         System.out.println("Starting server..");
         try (ServerSocket server = new ServerSocket(8080)) {
-            while (true) {
+            while (true) { //accept connection and create new thread to handle it
                 Socket sock = server.accept();
                 ServerThread serverThread = new ServerThread(sock, updateConnections, refreshThread);
                 Thread t = new Thread(serverThread);
@@ -24,7 +24,7 @@ public class Server {
 
             }
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 }
