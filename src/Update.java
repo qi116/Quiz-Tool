@@ -72,6 +72,11 @@ public class Update implements Runnable{
         }
         public static void stop() {
             run = false;
+            try {
+                updateSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
