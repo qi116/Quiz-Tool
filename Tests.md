@@ -1,4 +1,6 @@
-##Test 1: Log in
+Note: Before all tests, launch the server via `java Server` after compiling
+
+## Test 1: Log in
 Steps:
 1. Launch Application
 2. User enters username into username text box
@@ -10,7 +12,7 @@ Expected result: Server checks username and password, client enters homepage
 Test status: Passed
 
 
-##Test 2: Account Creation
+## Test 2: Account Creation
 Steps:
 1. Launch Application
 2. User selects "create new account" button
@@ -24,4 +26,14 @@ of role selected
 
 Test status: Passed
 
-##Test 3:
+## Test 3: Create course
+Steps:
+1. Launch Application
+2. Login to or create new teacher account
+3. Select create course button
+4. Enter course name into popup
+5. Press OK
+
+Expected result: Server creates new course, client shows course in courselist
+
+Test status: Passed
