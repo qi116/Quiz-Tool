@@ -1305,6 +1305,15 @@ public class MainGUI extends JComponent implements Runnable {
             }
         });
 
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                c.closeClient();
+
+            }
+        });
+
     }
 
     public static void update() {
