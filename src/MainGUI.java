@@ -975,7 +975,7 @@ public class MainGUI extends JComponent implements Runnable {
                 questionTracker = 0;
                 //sets questions and answers
                 questionTG.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
-                answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getChoices()
                         [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                 content.remove(listSubmission);
                 content.remove(teacherSelectSubmission);
@@ -1006,7 +1006,7 @@ public class MainGUI extends JComponent implements Runnable {
                         frame.setSize(new Dimension(300, 250));
                     } else {
                         questionTG.setText(currentQuiz.getQuestion(questionTracker + 1).getQuestion());
-                        answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getOriginalChoices()
+                        answerTG.setText(currentQuiz.getQuestion(questionTracker + 1).getChoices()
                                 [currentQuiz.getQuestion(questionTracker + 1).getStudentAnswer()]);
                         content.add(teacherGrading);
                     }
