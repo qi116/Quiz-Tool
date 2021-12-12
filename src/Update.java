@@ -63,14 +63,7 @@ public class Update implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-
-        }
+    }
         public static void stop() {
             run = false;
 
