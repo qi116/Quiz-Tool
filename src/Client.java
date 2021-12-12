@@ -10,8 +10,8 @@ import java.net.*;
  * @version December 2, 2021
  */
 public class Client {
-    private static final String host;
-    private static final int port;
+    private static String host;
+    private static int port;
     private static Socket socket;
     private static ObjectInputStream reader;
     private static ObjectOutputStream writer;
@@ -66,7 +66,7 @@ public class Client {
      * @return boolean[] gives success and isTeacher
      */
     public boolean[] login(String user, String pass) {
-        Message message = new Message(Message.requestType.LOGIN, Message.dataType.ACCOUNT, user, pass);
+        Message message = new Message(Message.RequestType.LOGIN, Message.DataType.ACCOUNT, user, pass);
         Object o;
         try {
             writer.writeObject(message);
@@ -94,11 +94,11 @@ public class Client {
         Message message;
         if (isTeacher) {
             Teacher acc = new Teacher(user, pass);
-            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
+            message = new Message(Message.RequestType.ADD, Message.DataType.ACCOUNT,
                     acc);
         } else {
             Student acc = new Student(user, pass);
-            message = new Message(Message.requestType.ADD, Message.dataType.ACCOUNT,
+            message = new Message(Message.RequestType.ADD, Message.DataType.ACCOUNT,
                     acc);
         }
 
@@ -121,7 +121,7 @@ public class Client {
      * @return String[] of course names
      */
     public String[] getCourses() {
-        Message message = new Message(Message.requestType.LIST, Message.dataType.COURSE,
+        Message message = new Message(Message.RequestType.LIST, Message.DataType.COURSE,
                 null);
         Object o;
         try {
@@ -143,7 +143,7 @@ public class Client {
      * @return boolean indicating if operation was successful
      */
     public boolean addCourse(String name) {
-        Message message = new Message(Message.requestType.ADD, Message.dataType.COURSE, name);
+        Message message = new Message(Message.RequestType.ADD, Message.DataType.COURSE, name);
         Object o;
         try {
             writer.writeObject(message);
@@ -164,7 +164,7 @@ public class Client {
      * @return boolean indicating if operation was successful
      */
     public boolean removeCourse(String name) {
-        Message message = new Message(Message.requestType.REMOVE, Message.dataType.COURSE, name);
+        Message message = new Message(Message.RequestType.REMOVE, Message.DataType.COURSE, name);
         Object o;
         try {
             writer.writeObject(message);
@@ -185,7 +185,7 @@ public class Client {
      * @return list of Quiz names in given course
      */
     public String[] getQuizzes(String course) {
-        Message message = new Message(Message.requestType.LIST, Message.dataType.QUIZ, course);
+        Message message = new Message(Message.RequestType.LIST, Message.DataType.QUIZ, course);
         Object o;
         try {
             writer.writeObject(message);
@@ -208,8 +208,8 @@ public class Client {
      * @return Quiz
      */
     public Quiz getQuiz(String course, String name) {
-        Message message = new Message(Message.requestType.GET,
-                Message.dataType.QUIZ, course, name);
+        Message message = new Message(Message.RequestType.GET,
+                Message.DataType.QUIZ, course, name);
         Object o;
         try {
             writer.writeObject(message);
@@ -231,8 +231,8 @@ public class Client {
      * @return Quiz
      */
     public boolean removeQuiz(String course, String name) {
-        Message message = new Message(Message.requestType.REMOVE,
-                Message.dataType.QUIZ, course, name);
+        Message message = new Message(Message.RequestType.REMOVE,
+                Message.DataType.QUIZ, course, name);
         Object o;
         try {
             writer.writeObject(message);
@@ -253,7 +253,7 @@ public class Client {
      * @return boolean indicating whether or not submission worked
      */
     public boolean submitQuiz(String account, Quiz quiz) {
-        Message message = new Message(Message.requestType.ADD, Message.dataType.SUBMISSION, account, quiz);
+        Message message = new Message(Message.RequestType.ADD, Message.DataType.SUBMISSION, account, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -274,7 +274,7 @@ public class Client {
      * @return boolean indicating whether operation was successful.
      */
     public boolean modifyQuiz(String course, Quiz quiz) {
-        Message message = new Message(Message.requestType.MODIFY, Message.dataType.QUIZ, course, quiz);
+        Message message = new Message(Message.RequestType.MODIFY, Message.DataType.QUIZ, course, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -296,8 +296,8 @@ public class Client {
      * @return boolean indicating whether quiz was added
      */
     public boolean addQuiz(String course, Quiz quiz) {
-        Message message = new Message(Message.requestType.ADD,
-                Message.dataType.QUIZ, course, quiz);
+        Message message = new Message(Message.RequestType.ADD,
+                Message.DataType.QUIZ, course, quiz);
         Object o;
         try {
             writer.writeObject(message);
@@ -320,8 +320,8 @@ public class Client {
      * @return boolean indicating whether quiz was added
      */
     public boolean addQuiz(String course, String quizName) {
-        Message message = new Message(Message.requestType.ADD,
-                Message.dataType.QUIZ, course, quizName);
+        Message message = new Message(Message.RequestType.ADD,
+                Message.DataType.QUIZ, course, quizName);
         Object o;
         try {
             writer.writeObject(message);
@@ -341,7 +341,7 @@ public class Client {
      */
 
     public String[] getStudents() {
-        Message message = new Message(Message.requestType.LIST, Message.dataType.ACCOUNT,
+        Message message = new Message(Message.RequestType.LIST, Message.DataType.ACCOUNT,
                 null);
         Object o;
         try {
@@ -362,7 +362,7 @@ public class Client {
      * @return list of submissions by student
      */
     public Quiz[] getSubmissions(String name) {
-        Message message = new Message(Message.requestType.LIST, Message.dataType.SUBMISSION,
+        Message message = new Message(Message.RequestType.LIST, Message.DataType.SUBMISSION,
                 name);
         Object o;
         try {

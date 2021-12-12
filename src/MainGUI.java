@@ -589,7 +589,7 @@ public class MainGUI extends JComponent implements Runnable {
         addCourseTAC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (c.addCourse(courseNameTAC.getText())){
+                if (c.addCourse(courseNameTAC.getText())) {
                     frame.dispose();
                     content.remove(teacherAddCourse);
                     courseNameTAC.setText("");

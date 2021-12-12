@@ -69,7 +69,7 @@ public class ServerDataAccessor {
             
             for (int i = 0; i < files.length; i++) {
                 Object o = getObjectFromFile(files[i].getName()
-                        .substring(0,files[i].getName().length() - 4));
+                        .substring(0, files[i].getName().length() - 4));
                 objectsArrayList.add(o);
             }
             objects = new Object[objectsArrayList.size()];
@@ -98,7 +98,7 @@ public class ServerDataAccessor {
      * @return if it worked
      * @param courseName the name of the file to be removed
      */
-    protected synchronized boolean removeData(String fileName){
+    protected synchronized boolean removeData(String fileName) {
         if (fileExists(fileName)) {
             File toDelete = new File(folderPrefix + fileName.replace(" ", "-") + fileType);
             toDelete.delete();

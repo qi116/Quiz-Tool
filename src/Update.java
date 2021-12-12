@@ -15,17 +15,19 @@ import java.net.UnknownHostException;
  * @version December 8, 2021
  */
 
-public class Update implements Runnable{
-    private static final String host;
-    private static final int port;
+public class Update implements Runnable {
+    private static String host;
+    private static int port;
     private static Socket updateSocket;
     private static ObjectInputStream updateReader;
     private static ObjectOutputStream updateWriter;
     private static boolean run = true;
+
     static {
         host = "localhost";
         port = 8080;
     }
+
     public Update() {
         try {
             updateSocket = new Socket(host, port);
@@ -42,38 +44,35 @@ public class Update implements Runnable{
     /**
      * Run method for Update thread
      */
-    public void run () {
+    public void run() {
         try {
 
-            updateWriter.writeObject(new Message(Message.requestType.UPDATE, null, null));
+            updateWriter.writeObject(new Message(Message.RequestType.UPDATE, null, null));
             while (run) {
                 try {
                     Object o = updateReader.readObject();
                     MainGUI.update();
-                } catch (IOException e) {
-
-                } catch (ClassNotFoundException e) {
-
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-        public static void stop() {
-            run = false;
 
-            try {
-                updateReader.close();
-                updateWriter.close();
-                updateSocket.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public static void stop() {
+        run = false;
+
+        try {
+            updateReader.close();
+            updateWriter.close();
+            updateSocket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
 
 

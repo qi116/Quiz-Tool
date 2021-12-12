@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
-    public enum requestType {
+    public enum RequestType {
         LOGIN, //response: LOGIN, ACCOUNT, boolean[]: {success, isTeacher}
         LOGOUT, //response: none
         ADD, //response: ADD, dataType, boolean: success
@@ -18,7 +18,7 @@ public class Message implements Serializable {
         UPDATE //sending update back to client
     };
 
-    public enum dataType {
+    public enum DataType {
         ACCOUNT,
         QUIZ,
         SUBMISSION,
@@ -27,16 +27,16 @@ public class Message implements Serializable {
 
     public Object content;
     public String contentPath;
-    public requestType request;
-    public dataType data;
+    public RequestType request;
+    public DataType data;
 
-    public Message(requestType request, dataType data, Object content) {
+    public Message(RequestType request, DataType data, Object content) {
         this.content = content;
         this.request = request;
         this.data = data;
     }
 
-    public Message(requestType request, dataType data, String contentPath, Object content) {
+    public Message(RequestType request, DataType data, String contentPath, Object content) {
         this.request = request;
         this.data = data;
         this.content = content;

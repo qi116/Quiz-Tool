@@ -16,7 +16,7 @@ public class ServerRefreshThread implements Runnable{
     }
 
     public void run() {
-        Message updateMessage = new Message(Message.requestType.UPDATE, null, null);
+        Message updateMessage = new Message(Message.RequestType.UPDATE, null, null);
         for (ObjectOutputStream out : this.connections) { //iterate through all socket output streams
             synchronized (out) {
                 try {

@@ -200,7 +200,6 @@ public class ServerDataHandler extends ServerDataAccessor {
             saveCourse(course);
             return toReturn;
         } else
-           //stuff n things
         return false;
     }
     

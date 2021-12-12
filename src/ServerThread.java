@@ -17,7 +17,8 @@ public class ServerThread implements Runnable {
     private ObjectInputStream in;
 
 
-    public ServerThread(Socket sock, ArrayList<ObjectOutputStream> updateConnections, ServerRefreshThread refreshThread) {
+    public ServerThread(Socket sock, ArrayList<ObjectOutputStream> updateConnections,
+                        ServerRefreshThread refreshThread) {
         this.sock = sock;
         this.handler = new ServerDataHandler();
         this.updateConnections = updateConnections;
@@ -29,7 +30,7 @@ public class ServerThread implements Runnable {
             InputStream sIn = sock.getInputStream();
             this.in = new ObjectInputStream(sIn);
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -40,7 +41,7 @@ public class ServerThread implements Runnable {
             while (cont) {
                 Object rec = in.readObject();
                 Message msg = (Message) rec;
-                if (msg.request == Message.requestType.UPDATE) { //checks if socket should be an update socket
+                if (msg.request == Message.RequestType.UPDATE) { //checks if socket should be an update socket
                     updateConnections.add(out); //adds socket to list of reserved update sockets
                     return;
                 }
