@@ -52,7 +52,6 @@ public class ServerThread implements Runnable {
                     }
                 }
                 if (this.handler.updateCalled()) {
-                    System.out.println("uodate called");
                     Thread t = new Thread(this.refreshThread);
                     t.start();
                 }
