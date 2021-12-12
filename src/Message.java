@@ -7,6 +7,10 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
+    /**
+     * @author Nathan Leakeas
+     * @version 12/8/2021
+     */
     public enum RequestType {
         LOGIN, //response: LOGIN, ACCOUNT, boolean[]: {success, isTeacher}
         LOGOUT, //response: none
@@ -18,6 +22,10 @@ public class Message implements Serializable {
         UPDATE //sending update back to client
     };
 
+    /**
+     * @author Nathan Leakeas
+     * @version 12/8/2021
+     */
     public enum DataType {
         ACCOUNT,
         QUIZ,

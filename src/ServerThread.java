@@ -60,7 +60,7 @@ public class ServerThread implements Runnable {
             }
 
         } catch (ClassNotFoundException e) {
-
+            e.printStackTrace();
         } catch (NullPointerException | IOException e) { //close socket if fatal errors occur
             try {
                 sock.close();

@@ -199,7 +199,7 @@ public class ServerDataHandler extends ServerDataAccessor {
             boolean toReturn = course.addQuiz(quiz);
             saveCourse(course);
             return toReturn;
-        } else
+        }
         return false;
     }
     

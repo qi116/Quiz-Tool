@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author Nathan Leakeas
  * @version 12/8/2021
  */
-public class ServerRefreshThread implements Runnable{
+public class ServerRefreshThread implements Runnable {
 
     ArrayList<ObjectOutputStream> connections;
 
@@ -23,7 +23,7 @@ public class ServerRefreshThread implements Runnable{
                     out.writeObject(updateMessage); //send special update message to current socket
                     out.flush();
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
 
