@@ -24,4 +24,14 @@ of role selected
 
 Test status: Passed
 
-##Test 3:
+##Test 3: Create course
+Steps:
+1. Launch Application
+2. Login to or create new teacher account
+3. Select create course button
+4. Enter course name into popup
+5. Press OK
+
+Expected result: Server creates new course, client shows course in courselist
+
+Test status: Passed

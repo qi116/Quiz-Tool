@@ -4,6 +4,14 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Main GUI for the quiz tool. Call this program's
+ * main function to open the client system.
+ *
+ * @author Peter Olsen
+ * @version 2021-12-12
+ */
+
 public class MainGUI extends JComponent implements Runnable {
     JLabel usernameLabel;
     JLabel usernameLabelC;
