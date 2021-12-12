@@ -15,6 +15,7 @@ public class Client {
     private static Socket socket;
     private static ObjectInputStream reader;
     private static ObjectOutputStream writer;
+    private static Thread t;
 
     static {
         host = "localhost";
@@ -34,7 +35,7 @@ public class Client {
         reader = new ObjectInputStream(socket.getInputStream());
         writer = new ObjectOutputStream(socket.getOutputStream());
 
-        Thread t = new Thread(new Update());
+        t = new Thread(new Update());
         t.start();
 
 
@@ -374,5 +375,16 @@ public class Client {
         Message msg = (Message) o;
         Quiz[] submissions = (Quiz[]) msg.content;
         return submissions;
+    }
+    public void closeClient() {
+        try {
+            reader.close();
+            writer.close();
+            socket.close();
+            t.interrupt();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
